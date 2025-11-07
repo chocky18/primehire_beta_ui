@@ -1,24 +1,20 @@
-/* ===================================================
-   ✅ LINKEDIN WRAPPER (CENTERED AND SAFE)
-=================================================== */
+/* Wrapper centers the poster safely */
 .linkedin-wrapper {
   position: fixed;
-  inset: 0;                  /* top:0; right:0; bottom:0; left:0 */
+  inset: 0;                  /* top:0; left:0; right:0; bottom:0 */
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;             /* spacing for small screens */
+  padding: 10px;             /* Ensure some spacing on small screens */
   z-index: 9999;
-  overflow: auto;            /* scrolls if content exceeds viewport */
+  overflow: auto;            /* Allows scrolling if screen is small */
 }
 
-/* ===================================================
-   ✅ LINKEDIN POSTER BOX
-=================================================== */
+/* Poster Box */
 .linkedin-poster-box {
-  width: 300px;                       /* Reduced width */
-  max-width: 90vw;                    /* Responsive max width */
-  max-height: 90vh;                   /* Responsive max height */
+  width: 300px;               /* Reduced width */
+  max-width: 90vw;            /* Never exceed viewport width */
+  max-height: 90vh;           /* Never exceed viewport height */
   background: linear-gradient(145deg, #ffffff, #f0f9ff);
   border-radius: 20px;
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
@@ -28,30 +24,18 @@
   gap: 16px;
   text-align: center;
   border: 2px solid #dbeafe;
-  overflow-y: auto;                   /* Scroll if content is too tall */
-  transition: all 0.3s ease;
+  overflow-y: auto;           /* Scroll if content exceeds max-height */
 }
 
-/* Hover lift effect */
-.linkedin-poster-box:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 15px 35px rgba(37, 99, 235, 0.2);
-}
-
-/* ===================================================
-   ✅ TITLE
-=================================================== */
+/* Title */
 .linkedin-title {
   font-size: 1.3rem;
   font-weight: 700;
   color: #0a66c2;
   margin-bottom: 6px;
-  letter-spacing: 0.5px;
 }
 
-/* ===================================================
-   ✅ BUTTONS
-=================================================== */
+/* Buttons */
 .linkedin-btn,
 .linkedin-post-btn {
   width: 100%;
@@ -62,85 +46,33 @@
   transition: all 0.3s ease;
   font-size: 14px;
   border: none;
-  outline: none;
-  position: relative;
-  overflow: hidden;
 }
 
-/* Sky Blue Outline Button */
+/* Outline Button */
 .linkedin-btn {
   color: #0a66c2;
   background: #e0f2fe;
   border: 2px solid #0a66c2;
-  box-shadow: 0 4px 10px rgba(10, 102, 194, 0.1);
 }
 
 .linkedin-btn:hover {
   background: #0a66c2;
   color: #fff;
-  box-shadow: 0 8px 16px rgba(10, 102, 194, 0.25);
   transform: scale(1.05);
 }
 
-/* Connected State */
-.linkedin-btn.connected {
-  background: linear-gradient(90deg, #10b981, #34d399);
-  color: white;
-  border: 2px solid #059669;
-  box-shadow: 0 8px 16px rgba(16, 185, 129, 0.25);
-}
-
-/* Sky Blue Filled Button */
+/* Filled Button */
 .linkedin-post-btn {
   background: linear-gradient(90deg, #3b82f6, #0ea5e9);
   color: white;
   border: 2px solid #0a66c2;
-  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
 }
 
 .linkedin-post-btn:hover {
-  background: linear-gradient(90deg, #2563eb, #0284c7);
   transform: scale(1.05);
-  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.35);
 }
 
-/* Disabled Button */
-.linkedin-post-btn:disabled {
-  background: #cbd5e1;
-  color: #64748b;
-  cursor: not-allowed;
-  box-shadow: none;
-  transform: none;
-}
-
-/* ===================================================
-   ✅ ANIMATIONS
-=================================================== */
-@keyframes fadeInUp {
-  from {
-    transform: translateY(-20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ===================================================
-   ✅ RESPONSIVE
-=================================================== */
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .linkedin-poster-box {
     width: 95vw;
