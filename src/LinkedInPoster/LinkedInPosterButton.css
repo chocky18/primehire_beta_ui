@@ -6,11 +6,11 @@
   top: 67%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 300px;                       /* Reduced from 360px */
+  width: 200px;                       /* Reduced from 360px */
   background: linear-gradient(145deg, #ffffff, #f0f9ff);
   border-radius: 20px;
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);  /* Slightly smaller shadow */
-  padding: 24px 20px;                  /* Reduced padding for smaller height */
+  padding: 24px 10px;                  /* Reduced padding for smaller height */
   display: flex;
   flex-direction: column;
   gap: 16px;                           /* Slightly smaller gap */
