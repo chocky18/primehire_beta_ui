@@ -1,56 +1,70 @@
 /* ===================================================
-   ✅ LINKEDIN POSTER PANEL (CENTERED)
+   ✅ LINKEDIN WRAPPER (CENTERED AND SAFE)
+=================================================== */
+.linkedin-wrapper {
+  position: fixed;
+  inset: 0;                  /* top:0; right:0; bottom:0; left:0 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;             /* spacing for small screens */
+  z-index: 9999;
+  overflow: auto;            /* scrolls if content exceeds viewport */
+}
+
+/* ===================================================
+   ✅ LINKEDIN POSTER BOX
 =================================================== */
 .linkedin-poster-box {
-  position: fixed;
-  top: 67%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 200px;                       /* Reduced from 360px */
+  width: 300px;                       /* Reduced width */
+  max-width: 90vw;                    /* Responsive max width */
+  max-height: 90vh;                   /* Responsive max height */
   background: linear-gradient(145deg, #ffffff, #f0f9ff);
   border-radius: 20px;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);  /* Slightly smaller shadow */
-  padding: 24px 10px;                  /* Reduced padding for smaller height */
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+  padding: 24px 20px;
   display: flex;
   flex-direction: column;
-  gap: 16px;                           /* Slightly smaller gap */
+  gap: 16px;
   text-align: center;
-  transition: all 0.3s ease;
   border: 2px solid #dbeafe;
-  animation: fadeInUp 0.8s ease forwards;
-  z-index: 9999;
+  overflow-y: auto;                   /* Scroll if content is too tall */
+  transition: all 0.3s ease;
 }
 
 /* Hover lift effect */
 .linkedin-poster-box:hover {
-  transform: translate(-50%, -52%);
+  transform: translateY(-4px);
   box-shadow: 0 15px 35px rgba(37, 99, 235, 0.2);
 }
 
-/* Title */
+/* ===================================================
+   ✅ TITLE
+=================================================== */
 .linkedin-title {
-  font-size: 1.3rem;   /* Slightly smaller font */
+  font-size: 1.3rem;
   font-weight: 700;
   color: #0a66c2;
-  margin-bottom: 6px;  /* Reduced margin */
+  margin-bottom: 6px;
   letter-spacing: 0.5px;
-  animation: fadeIn 1s ease;
 }
 
-/* Buttons */
+/* ===================================================
+   ✅ BUTTONS
+=================================================== */
 .linkedin-btn,
 .linkedin-post-btn {
   width: 100%;
-  padding: 12px 18px;  /* Reduced padding for smaller height */
+  padding: 12px 18px;
   font-weight: 600;
-  border-radius: 28px;  /* Slightly smaller radius */
+  border-radius: 28px;
   cursor: pointer;
   transition: all 0.3s ease;
+  font-size: 14px;
   border: none;
   outline: none;
   position: relative;
   overflow: hidden;
-  font-size: 14px;      /* Slightly smaller font */
 }
 
 /* Sky Blue Outline Button */
@@ -99,14 +113,16 @@
   transform: none;
 }
 
-/* Animations */
+/* ===================================================
+   ✅ ANIMATIONS
+=================================================== */
 @keyframes fadeInUp {
   from {
-    transform: translate(-50%, -30%);
+    transform: translateY(-20px);
     opacity: 0;
   }
   to {
-    transform: translate(-50%, -50%);
+    transform: translateY(0);
     opacity: 1;
   }
 }
@@ -122,10 +138,12 @@
   }
 }
 
-/* Responsive */
+/* ===================================================
+   ✅ RESPONSIVE
+=================================================== */
 @media (max-width: 768px) {
   .linkedin-poster-box {
-    width: 85%;           /* Slightly smaller than 90% for mobile */
+    width: 95vw;
     padding: 20px;
   }
 

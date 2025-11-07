@@ -163,25 +163,28 @@ export default function LinkedInPosterButton({ jobData }) {
     };
 
     return (
-        <div className="linkedin-poster-box">
-            <h3 className="linkedin-title">LinkedIn Poster</h3>
-            
-            <Button
-                variant="outline"
-                onClick={handleConnectLinkedIn}
-                className={`linkedin-btn ${isLoggedIn ? "connected" : ""}`}
-            >
-                {isLoggedIn ? "✅ LinkedIn Connected" : "Connect LinkedIn"}
-            </Button>
-            
-            <Button
-                variant="default"
-                onClick={handlePostJD}
-                disabled={!canPost}
-                className="linkedin-post-btn"
-            >
-                🚀 Auto Post JD
-            </Button>
+        <div className="linkedin-wrapper">
+            <div className="linkedin-poster-box">
+                <h3 className="linkedin-title">LinkedIn Poster</h3>
+
+                <Button
+                    variant="outline"
+                    onClick={handleConnectLinkedIn}
+                    className={`linkedin-btn ${isLoggedIn ? "connected" : ""}`}
+                >
+                    {isLoggedIn ? "✅ LinkedIn Connected" : "Connect LinkedIn"}
+                </Button>
+
+                <Button
+                    variant="default"
+                    onClick={handlePostJD}
+                    disabled={!canPost}
+                    className="linkedin-post-btn"
+                >
+                    🚀 Auto Post JD
+                </Button>
+            </div>
         </div>
     );
 }
+
