@@ -77,7 +77,7 @@ export default function CertificateData() {
       {/* Navbar */}
       <nav className="navbar">
         <div className="navbar-logo">
-          <img src={logo} alt="PrimeHire" className="nav-logo" />
+         <Link to={"/"}><img src={logo} alt="PrimeHire" className="nav-logo" /></Link>
         </div>
       </nav>
 
