@@ -1,73 +1,242 @@
-# Welcome to your Lovable project
+## 🤖 **PrimeHire — Agentic AI for Recruiting**
 
-## Project info
+> *Your all-in-one recruitment assistant for sourcing, matching, validating, and interviewing candidates.*
 
-**URL**: https://lovable.dev/projects/a25ba784-67e1-4343-aaf2-d2da2ef43ea9
+---
 
-## How can I edit this code?
+### 🌟 **Overview**
 
-There are several ways of editing your application.
+**PrimeHire** is an **AI-powered recruitment automation platform** that integrates seamlessly with external CRMs, mail systems, and job portals to simplify end-to-end hiring.
+It connects with Zoho, LinkedIn, and email systems — and uses advanced LLM + VectorDB pipelines for resume parsing, JD creation, and candidate matching.
 
-**Use Lovable**
+Built with **React**, **FastAPI**, and **Pinecone**, PrimeHire combines automation and intelligence into a single, modular platform.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/a25ba784-67e1-4343-aaf2-d2da2ef43ea9) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🧩 **Core Features**
 
-**Use your preferred IDE**
+### 🧠 PrimeHire Brain
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+> Central intelligence that powers all modules of PrimeHire.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+* AI-driven **candidate database** for storing and analyzing resumes.
+* Integrates with **PostgreSQL** and **Pinecone Vector DB**.
+* Supports **semantic search**, **skill gap analysis**, and **profile insights**.
+* Acts as the main “brain” syncing data between modules.
 
-Follow these steps:
+---
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### 🧾 JD Creator
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+> AI-powered Job Description generator.
 
-# Step 3: Install the necessary dependencies.
-npm i
+* Generates contextual **Job Descriptions** based on role titles.
+* Interactively asks **clarifying questions** to refine output.
+* Allows **exporting and sharing** JDs instantly.
+* Perfect for roles like *Data Scientist, ML Engineer, etc.*
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+---
+
+### 🧍‍♂️ Profile Matcher
+
+> Matches JDs to best-fit candidate profiles.
+
+* Uses **semantic search** & **vector embeddings**.
+* Matches candidates from **PrimeHire Brain** or **Zoho Recruit**.
+* Supports **side-by-side comparison** of resume vs job role.
+
+---
+
+### 📥 Upload Resumes
+
+> Upload and manage candidate data efficiently.
+
+* Upload **PDF/DOC resumes** manually or in bulk.
+* Automatically parses data and stores vectors in Pinecone.
+* Enables **fast retrieval** and **AI-powered insights**.
+
+---
+
+### 💌 MailMind
+
+> Extract candidate resumes and emails from Outlook or HR inboxes.
+
+* Fetches candidate attachments automatically.
+* Parses resumes directly from email bodies or attachments.
+* Analyzes patterns and aggregates candidate data into PrimeHire Brain.
+
+---
+
+### 🔗 ZohoBridge
+
+> Connects seamlessly with **Zoho Recruit API**.
+
+* Fetch Zoho candidates & job data.
+* Update candidate status automatically.
+* Sync job postings and resume data with Zoho in real time.
+
+---
+
+### 🧑‍💼 Interview Bot
+
+> AI-driven interviewer with candidate identity validation.
+
+* Conducts **automated interviews** with real-time video capture.
+* Performs **face validation** (via webcam).
+* Generates structured **evaluation reports**.
+* Supports **speech-to-text**, **transcript review**, and **automated scoring**.
+
+---
+
+### 💼 LinkedIn Poster
+
+> Automate your recruitment marketing.
+
+* Integrates with **LinkedIn Pages API**.
+* Allows your company page to **post job openings** automatically.
+* Manage or edit job posts directly from PrimeHire.
+
+---
+
+### 🧠 Match History
+
+> View all previous matches, evaluations, and candidate interactions in one place.
+
+---
+
+## 🧭 **Available Tasks & Actions**
+
+| Module              | Action                                    |
+| ------------------- | ----------------------------------------- |
+| **JD Creator**      | Create job descriptions with context      |
+| **Profile Matcher** | Match JDs with candidate resumes          |
+| **Upload Resumes**  | Upload single or bulk resumes             |
+| **Interview Bot**   | Validate and interview candidates         |
+| **ZohoBridge**      | Sync with Zoho Recruit data               |
+| **MailMind**        | Parse resumes from email inboxes          |
+| **LinkedIn Poster** | Auto-post openings to LinkedIn            |
+| **PrimeHire Brain** | Store, search, and analyze all candidates |
+| **Match History**   | Review all candidate match results        |
+
+---
+
+## 🧰 **Tech Stack**
+
+| Layer          | Technology                                 |
+| -------------- | ------------------------------------------ |
+| **Frontend**   | React + Vite                               |
+| **Styling**    | TailwindCSS / CSS Modules                  |
+| **Backend**    | FastAPI / Django REST                      |
+| **Database**   | PostgreSQL + Pinecone (Vector DB)          |
+| **APIs**       | Zoho Recruit API, LinkedIn Pages API       |
+| **Deployment** | Vercel (frontend) + Render / EC2 (backend) |
+| **Auth**       | Firebase Authentication                    |
+
+---
+
+## ⚙️ **Installation & Setup**
+
+```bash
+# Clone repo
+git clone https://github.com/chocky18/primehire_beta_ui.git
+cd primehire_beta_ui
+
+# Install dependencies
+npm install
+
+# Run locally
 npm run dev
+
+# Build for production
+npm run build
 ```
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 🧾 **Environment Variables**
 
-**Use GitHub Codespaces**
+Create a `.env.local` file in your project root:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```env
+VITE_API_BASE=https://your-backend-api-url.com
+VITE_PINECONE_KEY=your_pinecone_api_key
+VITE_ZOHO_CLIENT_ID=your_zoho_client_id
+VITE_ZOHO_CLIENT_SECRET=your_zoho_client_secret
+VITE_LINKEDIN_ACCESS_TOKEN=your_linkedin_token
+```
+### Using CLI
 
-## What technologies are used for this project?
+```bash
+npm i -g vercel
+vercel login
+vercel --prod
+```
 
-This project is built with:
+---
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 📁 **Folder Structure**
 
-## How can I deploy this project?
+```
+primehire_beta_ui/
+│
+├── src/
+│   ├── InterviewBot/        # Candidate validation + face capture
+│   ├── chat/                # Chatbot UI (agentic interaction)
+│   ├── components/          # Sidebar, Header, common UI
+│   ├── pages/               # JD Creator, Resume Upload, Profile Matcher
+│   ├── hooks/               # useJDCreator, useWebSocket, etc.
+│   ├── assets/              # Images, logos, etc.
+│   ├── main.jsx             # React entry point
+│   └── App.jsx              # Root application
+│
+├── public/
+├── package.json
+├── vite.config.js
+├── .gitignore
+└── README.md
+```
 
-Simply open [Lovable](https://lovable.dev/projects/a25ba784-67e1-4343-aaf2-d2da2ef43ea9) and click on Share -> Publish.
+---
 
-## Can I connect a custom domain to my Lovable project?
+## 🔧 **Scripts**
 
-Yes, you can!
+| Command           | Description              |
+| ----------------- | ------------------------ |
+| `npm install`     | Install dependencies     |
+| `npm run dev`     | Run development server   |
+| `npm run build`   | Build production assets  |
+| `npm run preview` | Preview production build |
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+---
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## 🧑‍💻 **Team & Contributors**
+
+| Role                    | Name                 | GitHub                                   |
+| ----------------------- | -------------------- | ---------------------------------------- |
+| Founder / Lead Engineer | **Naresh Tinnaluri** | [@chocky18](https://github.com/chocky18) |
+| Core Developer          | **Ravi Teja**        | —                                        |
+
+
+---
+
+## 💡 **Future Roadmap**
+
+* 🔜 Candidate Analytics Dashboard
+* 🔜 HR Feedback Integration
+* 🔜 WhatsApp & Slack Recruitment Bot
+* 🔜 Resume Auto-Scoring & Ranking
+* 🔜 Multi-organization Access Support
+
+---
+
+## 🛡️ **License**
+
+This project is licensed under the MIT License.
+See the [LICENSE](LICENSE) file for details.
+
+---
+
+### 🧩 **PrimeHire — Smarter Hiring with AI**
+
+> “Transforming recruitment from reactive to predictive.”
+
