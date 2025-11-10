@@ -1,11 +1,27 @@
 /* Sidebar Base */
-.sidebar-content {
+/* ✅ Keep sidebar content below sticky header */
+/* ✅ Push sidebar below fixed header */
+.sidebar {
+  position: fixed;
+  top: 64px;
+  /* match header height */
+  left: 0;
+  height: calc(100vh - 64px);
   background: linear-gradient(180deg, #ffffff, #f7f8fa);
-  height: 100%;
   border-right: 1px solid #e5e7eb;
-  padding-top: 1rem;
-  transition: all 0.3s ease-in-out;
+  z-index: 20;
+  /* stays below header but above main content */
 }
+
+/* Sidebar inner scroll area */
+.sidebar-content {
+  height: 100%;
+  overflow-y: auto;
+  padding-top: 1rem;
+  background: transparent;
+}
+
+
 
 /* Sidebar Label */
 .sidebar-label {
@@ -121,4 +137,47 @@
 
 .pulse-highlight {
   animation: pulse 1.3s ease-out;
+}
+
+/* ✅ Fix ShadCN sidebar offset below fixed header */
+/* ✅ Final Fix: Sidebar offset below sticky header (ShadCN-compatible) */
+
+/* Target the actual ShadCN sidebar wrappers */
+[data-sidebar="wrapper"],
+[data-sidebar="root"],
+[data-sidebar="content"] {
+  position: fixed !important;
+  top: 64px !important;
+  /* match your header height */
+  left: 0 !important;
+  height: calc(100vh - 64px) !important;
+  width: var(--sidebar-width, 260px) !important;
+  background: linear-gradient(180deg, #ffffff, #f7f8fa) !important;
+  border-right: 1px solid #e5e7eb !important;
+  z-index: 25 !important;
+}
+
+/* ✅ Make sure the sidebar content still scrolls */
+[data-sidebar="content"] {
+  overflow-y: auto !important;
+  padding-top: 1rem !important;
+  height: 100% !important;
+  scrollbar-width: thin;
+}
+
+/* ✅ Prevent double scroll when sidebar collapses */
+[data-sidebar="wrapper"]>div {
+  height: 100%;
+  overflow: hidden !important;
+}
+
+/* Optional: shadow divider for premium UI */
+[data-sidebar="wrapper"]::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -1px;
+  height: 100%;
+  width: 1px;
+  background: rgba(0, 0, 0, 0.05);
 }
