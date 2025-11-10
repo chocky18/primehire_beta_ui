@@ -1,15 +1,19 @@
-/* Header Container */
+/* 🔥 Fixed Header — Always Visible on Scroll */
 .header {
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 50;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: 64px;
   background: linear-gradient(to bottom, #ffffff, #fefefe);
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   backdrop-filter: blur(12px);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
+/* ✅ Keep container centered and responsive */
 .header-container {
   display: flex;
   align-items: center;
@@ -18,6 +22,15 @@
   max-width: 100%;
   margin: 0 auto;
 }
+
+/* 👇 Add padding below main layout to prevent content overlap */
+body,
+.main-content,
+.chat-container {
+  padding-top: 64px;
+  /* Same height as header */
+}
+
 
 /* Left Side */
 .header-left {
@@ -69,7 +82,7 @@
   gap: 8px;
   position: relative;
   overflow: hidden;
-  box-shadow: 
+  box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
@@ -82,14 +95,12 @@
   left: -150%;
   width: 150%;
   height: 100%;
-  background: linear-gradient(
-    110deg,
-    transparent 0%,
-    transparent 40%,
-    rgba(255, 255, 255, 0.5) 50%,
-    transparent 60%,
-    transparent 100%
-  );
+  background: linear-gradient(110deg,
+      transparent 0%,
+      transparent 40%,
+      rgba(255, 255, 255, 0.5) 50%,
+      transparent 60%,
+      transparent 100%);
   transform: skewX(-25deg);
   transition: left 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -103,7 +114,7 @@
   background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%) !important;
   color: white !important;
   transform: translateY(-2px);
-  box-shadow: 
+  box-shadow:
     0 8px 16px -6px rgba(56, 189, 248, 0.4),
     0 4px 8px -4px rgba(14, 165, 233, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
@@ -111,7 +122,7 @@
 
 .refresh-button:active {
   transform: translateY(0) scale(0.98);
-  box-shadow: 
+  box-shadow:
     0 2px 4px rgba(14, 165, 233, 0.2),
     inset 0 1px 2px rgba(0, 0, 0, 0.1) !important;
   transition: all 0.1s ease;
@@ -128,9 +139,12 @@
 }
 
 @keyframes elegant-rotate {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: rotate(0deg);
   }
+
   50% {
     transform: rotate(180deg);
   }
@@ -152,28 +166,29 @@
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
   position: relative;
   overflow: hidden;
-  box-shadow: 
+  box-shadow:
     0 4px 12px -4px rgba(14, 165, 233, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 /* Gradient flow animation */
 @keyframes gradient-flow {
-  0%, 100% {
+
+  0%,
+  100% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
 }
 
 .signin-button {
-  background: linear-gradient(
-    135deg,
-    #0ea5e9 0%,
-    #0284c7 50%,
-    #0ea5e9 100%
-  ) !important;
+  background: linear-gradient(135deg,
+      #0ea5e9 0%,
+      #0284c7 50%,
+      #0ea5e9 100%) !important;
   background-size: 200% 200%;
   animation: gradient-flow 4s ease infinite;
 }
@@ -185,14 +200,12 @@
   left: -150%;
   width: 150%;
   height: 100%;
-  background: linear-gradient(
-    110deg,
-    transparent 0%,
-    transparent 40%,
-    rgba(255, 255, 255, 0.3) 50%,
-    transparent 60%,
-    transparent 100%
-  );
+  background: linear-gradient(110deg,
+      transparent 0%,
+      transparent 40%,
+      rgba(255, 255, 255, 0.3) 50%,
+      transparent 60%,
+      transparent 100%);
   transform: skewX(-25deg);
   transition: left 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -203,7 +216,7 @@
 
 .signin-button:hover {
   transform: translateY(-2px) scale(1.03);
-  box-shadow: 
+  box-shadow:
     0 12px 24px -8px rgba(14, 165, 233, 0.5),
     0 6px 12px -6px rgba(14, 165, 233, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
@@ -211,7 +224,7 @@
 
 .signin-button:active {
   transform: translateY(0) scale(0.98);
-  box-shadow: 
+  box-shadow:
     0 2px 4px rgba(14, 165, 233, 0.3),
     inset 0 1px 2px rgba(0, 0, 0, 0.15) !important;
   transition: all 0.1s ease;
@@ -273,6 +286,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
