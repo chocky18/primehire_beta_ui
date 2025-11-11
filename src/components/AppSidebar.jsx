@@ -217,7 +217,7 @@ const features = [
     { id: "MailMind", label: "MailMind", icon: <BrainIcon className="h-4 w-4" /> },
     { id: "PrimeHireBrain", label: "PrimeHire Brain", icon: <CpuIcon className="h-4 w-4" /> },
     { id: "InterviewBot", label: "Interview Bot", icon: <BotIcon className="h-4 w-4" /> },
-    { id: "LinkedInPoster", label: "LinkedIn Poster", icon: <Share2 className="h-4 w-4" /> },
+    { id: "LinkedInPoster", label: "LinkedIn Poster", icon: <ShareIcon className="h-4 w-4" /> },
     { id: "ProfileMatchHistory", label: "Match History", icon: <HistoryIcon className="h-4 w-4" /> },
 ];
 
