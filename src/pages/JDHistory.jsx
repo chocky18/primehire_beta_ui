@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Copy, Eye, RefreshCcw } from "lucide-react";
 import { API_BASE } from "@/utils/constants";
 import "./JDHistory.css";
+import ProfileTable from "@/chat/ProfileTable";
 
 const JDHistory = () => {
     const [history, setHistory] = useState([]);
@@ -59,6 +60,7 @@ const JDHistory = () => {
                         <tr>
                             <th>Designation</th>
                             <th>Skills</th>
+                            <th>Matches</th>
                             <th>Created</th>
                             <th>Actions</th>
                         </tr>
@@ -68,6 +70,7 @@ const JDHistory = () => {
                             <tr key={row.id}>
                                 <td>{row.designation}</td>
                                 <td>{row.skills}</td>
+                                <td>{row.match_count}</td>
                                 <td>{new Date(row.created_at).toLocaleString()}</td>
                                 <td className="jd-actions">
                                     <button
@@ -91,9 +94,21 @@ const JDHistory = () => {
                         <button className="jd-modal-close" onClick={() => setSelected(null)}>
                             ✖
                         </button>
+
                         <h2 className="jd-modal-title">{selected.designation}</h2>
                         <p className="jd-modal-skills">Skills: {selected.skills}</p>
+
+                        {/* JD TEXT */}
                         <div className="jd-modal-text">{selected.jd_text}</div>
+
+                        {/* ✅ ADD THIS MATCHES SECTION */}
+                        {selected.matches?.length > 0 && (
+                            <div className="jd-matches-table">
+                                <ProfileTable data={selected.matches} index={9999} />
+                            </div>
+                        )}
+
+
                         <button className="jd-copy-button" onClick={() => copyJD(selected.jd_text)}>
                             <Copy size={16} />
                             {copySuccess ? "Copied!" : "Copy JD"}

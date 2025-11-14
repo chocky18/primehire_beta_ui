@@ -15,19 +15,24 @@ const normalizeArray = (val) => {
 export const generateJd = async (inputs, setMessages, setIsLoading) => {
   const payload = {
     role: inputs.role || "",
+    company_name: inputs.company_name || "",
     location: inputs.location || "",
     years: parseInt(inputs.experience) || 0,
     job_type: inputs.jobType || "Full-time",
     skills: [
-      ...(Array.isArray(inputs.skillsMandatory) ? inputs.skillsMandatory : []),
-      ...(Array.isArray(inputs.skillsPreferred) ? inputs.skillsPreferred : []),
+      ...(inputs.skillsMandatory || []),
+      ...(inputs.skillsPreferred || [])
     ],
     responsibilities: normalizeArray(inputs.responsibilities),
     about_company: inputs.about || "",
-    qualifications: normalizeArray(inputs.perks),
+    qualifications: normalizeArray(inputs.perks || []),
+    perks: normalizeArray(inputs.perks || [])
   };
 
   try {
+    // -----------------------------------------
+    // 📝 1️⃣ Generate JD
+    // -----------------------------------------
     const response = await fetch(`${API_BASE}/mcp/tools/jd/generate`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -41,9 +46,7 @@ export const generateJd = async (inputs, setMessages, setIsLoading) => {
     const jdText = result?.result?.markdown_jd || "";
     window.__LAST_GENERATED_JD__ = jdText;
 
-    // -----------------------------------------
-    // ✅ SHOW GENERATED JD IN CHAT
-    // -----------------------------------------
+    // Show JD in chat
     setMessages((prev) => [
       ...prev,
       {
@@ -53,7 +56,7 @@ export const generateJd = async (inputs, setMessages, setIsLoading) => {
     ]);
 
     // -----------------------------------------
-    // ✅ SAVE JD TO DATABASE
+    // 💾 2️⃣ Save JD to DB
     // -----------------------------------------
     const designation = inputs.role || "";
     const skills = [
@@ -61,7 +64,7 @@ export const generateJd = async (inputs, setMessages, setIsLoading) => {
       ...(inputs.skillsPreferred || []),
     ].join(", ");
 
-    await fetch(`${API_BASE}/mcp/tools/jd_history/jd/save`, {
+    const saveRes = await fetch(`${API_BASE}/mcp/tools/jd_history/jd/save`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -71,7 +74,67 @@ export const generateJd = async (inputs, setMessages, setIsLoading) => {
       }),
     });
 
-    console.log("💾 JD saved to DB successfully!");
+    if (saveRes.ok) {
+      console.log("💾 JD saved to DB successfully!");
+    } else {
+      console.warn("⚠️ JD saved returned non-200:", await saveRes.text());
+    }
+
+    // -----------------------------------------
+    // 🔎 3️⃣ TRIGGER PROFILE MATCHING
+    // -----------------------------------------
+    setMessages((prev) => [
+      ...prev,
+      { role: "assistant", content: "🔎 Matching candidates..." },
+    ]);
+
+    console.log("🔎 Triggering /profile/match endpoint...", jdText.slice(0, 120));
+
+    const matchRes = await fetch(
+      `${API_BASE}/mcp/tools/match/profile/match`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ jd_text: jdText }),
+      }
+    );
+
+    if (!matchRes.ok) {
+      const body = await matchRes.text();
+      console.error("❌ profile/match failed:", matchRes.status, body);
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: "⚠️ Unable to match profiles. Please try manually.",
+        },
+      ]);
+
+    } else {
+      const matchData = await matchRes.json();
+
+      console.log("✅ profile/match response:", matchData);
+
+      const count = matchData?.candidates?.length || 0;
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: `🎯 Matching completed — Found ${count} candidates.`,
+        },
+        {
+          role: "assistant",
+          type: "profile_table",
+          data: matchData.candidates || [],
+        },
+      ]);
+
+      // Refresh JD history (notify JDHistory component)
+      window.dispatchEvent(new CustomEvent("jd_history_refreshed"));
+    }
+
   } catch (err) {
     console.error("❌ generateJd error:", err);
 
@@ -86,6 +149,82 @@ export const generateJd = async (inputs, setMessages, setIsLoading) => {
     setIsLoading(false);
   }
 };
+
+
+// export const generateJd = async (inputs, setMessages, setIsLoading) => {
+//   const payload = {
+//     role: inputs.role || "",
+//     location: inputs.location || "",
+//     years: parseInt(inputs.experience) || 0,
+//     job_type: inputs.jobType || "Full-time",
+//     skills: [
+//       ...(Array.isArray(inputs.skillsMandatory) ? inputs.skillsMandatory : []),
+//       ...(Array.isArray(inputs.skillsPreferred) ? inputs.skillsPreferred : []),
+//     ],
+//     responsibilities: normalizeArray(inputs.responsibilities),
+//     about_company: inputs.about || "",
+//     qualifications: normalizeArray(inputs.perks),
+//   };
+
+//   try {
+//     const response = await fetch(`${API_BASE}/mcp/tools/jd/generate`, {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify(payload),
+//     });
+
+//     if (!response.ok)
+//       throw new Error(`JD generation failed: ${response.status}`);
+
+//     const result = await response.json();
+//     const jdText = result?.result?.markdown_jd || "";
+//     window.__LAST_GENERATED_JD__ = jdText;
+
+//     // -----------------------------------------
+//     // ✅ SHOW GENERATED JD IN CHAT
+//     // -----------------------------------------
+//     setMessages((prev) => [
+//       ...prev,
+//       {
+//         role: "assistant",
+//         content: jdText || "✅ JD generated",
+//       },
+//     ]);
+
+//     // -----------------------------------------
+//     // ✅ SAVE JD TO DATABASE
+//     // -----------------------------------------
+//     const designation = inputs.role || "";
+//     const skills = [
+//       ...(inputs.skillsMandatory || []),
+//       ...(inputs.skillsPreferred || []),
+//     ].join(", ");
+
+//     await fetch(`${API_BASE}/mcp/tools/jd_history/jd/save`, {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({
+//         designation,
+//         skills,
+//         jd_text: jdText,
+//       }),
+//     });
+
+//     console.log("💾 JD saved to DB successfully!");
+//   } catch (err) {
+//     console.error("❌ generateJd error:", err);
+
+//     setMessages((prev) => [
+//       ...prev,
+//       {
+//         role: "assistant",
+//         content: "❌ Failed to generate JD. Please try again.",
+//       },
+//     ]);
+//   } finally {
+//     setIsLoading(false);
+//   }
+// };
 
 
 export const uploadResumes = async (files) => {
