@@ -147,7 +147,7 @@ import { CheckCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import "./ZohoLoginButton.css";
 
-const ZOHO_AUTH_URL = `https://accounts.zoho.com/oauth/v2/auth?client_id=1000.7EDK5QI3TSUU214UOL80N0VMWKMKYO&response_type=code&scope=ZohoRecruit.modules.ALL&redirect_uri=http://54.167.210.32:8000/callback&access_type=offline&prompt=consent`;
+const ZOHO_AUTH_URL = `https://accounts.zoho.com/oauth/v2/auth?client_id=1000.7EDK5QI3TSUU214UOL80N0VMWKMKYO&response_type=code&scope=ZohoRecruit.modules.ALL&redirect_uri=https://primehire.nirmataneurotech.com/callback&access_type=offline&prompt=consent`;
 
 export default function ZohoLoginButton() {
   const [activeButton, setActiveButton] = useState("");
@@ -199,7 +199,7 @@ export default function ZohoLoginButton() {
     setError("");
     try {
       const res = await fetch(
-        "http://54.167.210.32:8000/fetch_candidates?email=director@nirmataneurotech.com&page=1&per_page=50"
+        "https://primehire.nirmataneurotech.com/fetch_candidates?email=director@nirmataneurotech.com&page=1&per_page=50"
       );
       if (!res.ok) throw new Error("Failed to fetch candidates");
       const data = await res.json();
