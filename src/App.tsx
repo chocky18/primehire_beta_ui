@@ -7,8 +7,8 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import CertificateData from "./pages/CertificateData";
 import WebcamRecorder from "./InterviewBot/WebcamRecorder";
+import InstructionsPrompt from "./InterviewBot/InstructionsPrompt"
 const queryClient = new QueryClient();
-import JDHistory from "@/pages/JDHistory";
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -19,13 +19,13 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/webcam-recorder" element={<WebcamRecorder />} />
-          <Route path="/certificatedata" element={<CertificateData />} /> {/* ✅ Add this route */}
+          <Route path="/certificatedata" element={<CertificateData />} />
+          <Route path="/instructions" element={<InstructionsPrompt />} /> {/* ✅ Add this route */}
           <Route path="*" element={<NotFound />} />
-          <Route path="/jd-history" element={<JDHistory />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
 );
 
-export default App;
+export default App; 

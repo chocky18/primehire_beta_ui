@@ -1,0 +1,224 @@
+/* InstructionsPrompt.css */
+
+.instructions-wrapper {
+    min-height: 100vh;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.instructions-navbar {
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.navbar-logo {
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+}
+
+.instructions-card {
+    width: 100%;
+    max-width: 700px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.instructions-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 16px 16px 0 0;
+    padding: 30px;
+}
+
+.instructions-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+    text-align: center;
+}
+
+.instructions-card .card-content {
+    padding: 40px;
+}
+
+.instructions-text {
+    font-size: 16px;
+    color: #4a5568;
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+.instructions-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 32px 0;
+}
+
+.instructions-list li {
+    padding: 14px 20px 14px 50px;
+    margin-bottom: 12px;
+    background: #f7fafc;
+    border-left: 4px solid #667eea;
+    border-radius: 8px;
+    font-size: 15px;
+    color: #2d3748;
+    line-height: 1.6;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.instructions-list li::before {
+    content: "→";
+    position: absolute;
+    left: 20px;
+    font-size: 20px;
+    color: #667eea;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    animation: arrowPulse 2s ease-in-out infinite;
+}
+
+@keyframes arrowPulse {
+
+    0%,
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    50% {
+        transform: translateX(5px);
+        opacity: 0.7;
+    }
+}
+
+.instructions-list li:hover {
+    background: #edf2f7;
+    transform: translateX(5px);
+}
+
+.instructions-list li:hover::before {
+    transform: translateX(8px);
+    color: #764ba2;
+    animation: none;
+}
+
+.confirm-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px;
+    background: #fff5f5;
+    border: 2px solid #feb2b2;
+    border-radius: 12px;
+    margin-top: 24px;
+}
+
+.confirm-checkbox label {
+    font-size: 15px;
+    font-weight: 500;
+    color: #2d3748;
+    cursor: pointer;
+    user-select: none;
+}
+
+.instructions-card footer {
+    padding: 30px 40px;
+    background: #f7fafc;
+    border-radius: 0 0 16px 16px;
+    display: flex;
+    justify-content: center;
+}
+
+.instructions-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 14px 48px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.instructions-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.instructions-btn:disabled {
+    background: #cbd5e0;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .instructions-navbar {
+        padding: 15px 20px;
+    }
+
+    .navbar-logo {
+        height: 40px;
+    }
+
+    .instructions-card {
+        max-width: 100%;
+    }
+
+    .instructions-header {
+        padding: 24px;
+    }
+
+    .instructions-title {
+        font-size: 24px;
+    }
+
+    .instructions-card .card-content {
+        padding: 30px 24px;
+    }
+
+    .instructions-list li {
+        font-size: 14px;
+        padding: 12px 16px 12px 45px;
+    }
+
+    .instructions-list li::before {
+        left: 16px;
+        font-size: 18px;
+    }
+
+    .instructions-card footer {
+        padding: 24px;
+    }
+
+    .instructions-btn {
+        width: 100%;
+        padding: 14px 24px;
+    }
+}

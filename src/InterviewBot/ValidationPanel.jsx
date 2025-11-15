@@ -231,7 +231,8 @@ import { Button } from "@/components/ui/button";
 import { API_BASE } from "@/utils/constants";
 import "./ValidationPanel.css";
 import { v4 as uuidv4 } from "uuid";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 
 const ValidationPanel = ({
   candidateName,
@@ -359,8 +360,8 @@ const ValidationPanel = ({
         {validationResult && (
           <div
             className={`validation-result ${validationResult.valid_name
-                ? "validation-success"
-                : "validation-error"
+              ? "validation-success"
+              : "validation-error"
               }`}
           >
             <p className="validation-result-item">
@@ -403,7 +404,7 @@ const ValidationPanel = ({
           )}
           {isSaved && <p className="face-ok">✅ Face image saved!</p>}
 
-          <Button
+          <Link to={"./instructions"}><Button
             variant="outline"
             size="sm"
             onClick={handleStartInterview}
@@ -411,10 +412,12 @@ const ValidationPanel = ({
             className="start-interview-button"
           >
             🎯 Start Interview
-          </Button>
+          </Button></Link>
         </div>
       )}
+
     </div>
+
   );
 };
 
