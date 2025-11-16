@@ -8,6 +8,7 @@ import NotFound from "./pages/NotFound";
 import CertificateData from "./pages/CertificateData";
 import WebcamRecorder from "./InterviewBot/WebcamRecorder";
 import InstructionsPrompt from "./InterviewBot/InstructionsPrompt"
+import ValidationPanel from "./InterviewBot/ValidationPanel";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -21,6 +22,7 @@ const App = () => (
           <Route path="/webcam-recorder" element={<WebcamRecorder />} />
           <Route path="/certificatedata" element={<CertificateData />} />
           <Route path="/instructions" element={<InstructionsPrompt />} /> {/* ✅ Add this route */}
+          <Route path="/validation_panel" element={<ValidationPanel />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

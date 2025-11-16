@@ -1,363 +1,126 @@
-/* ================= PREMIUM VALIDATION PANEL ================= */
-
+/* =======================
+   Container
+========================== */
 .validation-container {
-  display: flex;
-  gap: 24px;
-  padding: 24px;
-  max-width: 1200px;
-  margin: 0 auto;
-  animation: fade-in-up 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-/* ============= LEFT SIDE PANEL (PAN VALIDATION) ============= */
-
-.validation-panel {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* Input Field */
-.validation-input {
-  border: 2px solid #1a1a1a;
-  background: linear-gradient(to bottom, #ffffff, #fafafa);
-  color: #1a1a1a;
-  font-weight: 600;
-  padding: 12px 16px;
-  border-radius: 12px;
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-}
-
-.validation-input:focus {
-  outline: none;
-  border-color: #38bdf8;
-  background: white;
-  box-shadow: 0 8px 16px -8px rgba(56, 189, 248, 0.25),
-    0 0 0 3px rgba(56, 189, 248, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  transform: translateY(-2px);
-}
-
-.validation-input::placeholder {
-  color: #9ca3af;
-  font-weight: 500;
-}
-
-/* Upload Section */
-.file-upload-section {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.file-input {
-  border: 2px dashed #1a1a1a;
-  background: linear-gradient(to bottom, #ffffff, #fafafa);
-  padding: 12px 16px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  font-weight: 600;
-  color: #1a1a1a;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.file-input:hover {
-  border-color: #38bdf8;
-  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px -8px rgba(56, 189, 248, 0.2);
-}
-
-.file-input::file-selector-button {
-  background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
-  border: none;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
-  margin-right: 12px;
-  transition: all 0.3s ease;
-}
-
-.file-input::file-selector-button:hover {
-  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
-  transform: scale(1.05);
-}
-
-.file-upload-help {
-  font-size: 14px;
-  color: #1a1a1a;
-  font-weight: 600;
-  padding-left: 4px;
-}
-
-/* Validate Button */
-.validate-button {
-  border: 2px solid #1a1a1a !important;
-  background: linear-gradient(to bottom, #ffffff, #fafafa) !important;
-  color: #1a1a1a !important;
-  font-weight: 700 !important;
-  padding: 12px 20px !important;
-  border-radius: 12px !important;
-  transition: all 0.4s ease !important;
-  position: relative;
-  overflow: hidden;
-}
-
-.validate-button::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -150%;
-  width: 150%;
-  height: 100%;
-  background: linear-gradient(
-    110deg,
-    transparent 0%,
-    transparent 40%,
-    rgba(255, 255, 255, 0.5) 50%,
-    transparent 60%,
-    transparent 100%
-  );
-  transform: skewX(-25deg);
-  transition: left 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.validate-button:hover::before {
-  left: 150%;
-}
-
-.validate-button:hover {
-  border-color: #38bdf8 !important;
-  background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%) !important;
-  color: white !important;
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px -10px rgba(56, 189, 248, 0.35),
-    0 8px 16px -8px rgba(14, 165, 233, 0.25);
-}
-
-.validate-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  animation: loading-shimmer 1.5s infinite;
-  background: linear-gradient(
-    90deg,
-    #f0f0f0 25%,
-    #e0e0e0 50%,
-    #f0f0f0 75%
-  ) !important;
-  background-size: 200% 100%;
-}
-
-/* Validation Result */
-.validation-result {
-  padding: 16px;
-  border-radius: 12px;
-  border: 2px solid transparent;
-  transition: all 0.4s ease;
-  animation: slide-in 0.5s ease;
-}
-
-.validation-result.valid {
-  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-  border-color: #10b981;
-  box-shadow: 0 8px 16px -8px rgba(16, 185, 129, 0.25);
-}
-
-.validation-result.invalid {
-  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-  border-color: #ef4444;
-  box-shadow: 0 8px 16px -8px rgba(239, 68, 68, 0.25);
-}
-
-.validation-result p {
-  margin: 6px 0;
-  font-weight: 600;
-  color: #1a1a1a;
-}
-
-/* ============= RIGHT SIDE PANEL (FACE CAPTURE) ============= */
-
-.face-capture {
-  flex: 0 0 280px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  width: 100%;
+  max-width: 900px;
+  margin: 20px auto;
   padding: 20px;
-  background: linear-gradient(to bottom, #ffffff, #fafafa);
-  border: 2px solid #1a1a1a;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  align-items: center;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.face-capture video {
-  border-radius: 12px;
-  border: 2px solid #1a1a1a;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.validation-container h2 {
+  font-size: 22px;
+  font-weight: 600;
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+
+/* =======================
+   Input Field
+========================== */
+.validation-container input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+.validation-container input:focus {
+  border-color: #4b6bff;
+  background: #fff;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(75, 107, 255, 0.15);
+}
+
+
+/* =======================
+   Camera + Buttons Layout
+========================== */
+.face-section {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  margin-top: 15px;
+}
+
+video {
+  border-radius: 10px;
+  border: 2px solid #e5e5e5;
+  background: #000;
 }
 
 .face-preview {
-  width: 200px;
-  height: 150px;
-  border-radius: 12px;
-  border: 2px solid #10b981;
-  box-shadow: 0 8px 16px -8px rgba(16, 185, 129, 0.25);
+  width: 320px;
+  height: 240px;
   object-fit: cover;
-  animation: slide-in 0.5s ease;
+  border-radius: 10px;
+  border: 2px solid #4b6bff;
+  margin-top: 10px;
 }
 
 .face-buttons {
   display: flex;
-  gap: 8px;
-  width: 100%;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.face-buttons button {
-  flex: 1;
-  border: 2px solid #1a1a1a !important;
-  background: linear-gradient(to bottom, #ffffff, #fafafa) !important;
-  color: #1a1a1a !important;
-  font-weight: 700 !important;
-  padding: 8px 12px !important;
-  border-radius: 10px !important;
-  transition: all 0.4s ease !important;
-}
 
-.face-buttons button:hover {
-  border-color: #38bdf8 !important;
-  background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%) !important;
-  color: white !important;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 16px -8px rgba(56, 189, 248, 0.3);
+/* =======================
+   Status Messages
+========================== */
+.face-ok {
+  color: #0aa90a;
+  font-weight: 600;
+  margin-top: 6px;
 }
 
 .face-warn {
-  text-align: center;
-  color: #f59e0b;
-  font-weight: 700;
-  font-size: 14px;
-  padding: 8px;
-  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #b88a00;
+  font-weight: 500;
+  margin-top: 6px;
+}
+
+
+/* =======================
+   Debug Section
+========================== */
+.debug-box {
+  margin-top: 15px;
+  padding: 10px;
+  background: #f5f5f5;
   border-radius: 8px;
-  border: 2px solid #f59e0b;
-  animation: pulse-warn 2s ease-in-out infinite;
+  font-size: 13px;
+  opacity: 0.8;
 }
 
-.face-ok {
-  color: #10b981;
-  font-weight: 700;
-  font-size: 14px;
-  text-align: center;
-  animation: bounce-in 0.6s ease;
-}
 
-/* Start Interview Button */
-.start-interview-button {
-  border: 2px solid #1a1a1a !important;
-  background: linear-gradient(to bottom, #ffffff, #fafafa) !important;
-  color: #1a1a1a !important;
-  font-weight: 700 !important;
-  padding: 12px 20px !important;
-  border-radius: 12px !important;
-  transition: all 0.4s ease !important;
-  width: 100%;
-}
-
-.start-interview-button:not(:disabled):hover {
-  border-color: #10b981 !important;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-  color: white !important;
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px -10px rgba(16, 185, 129, 0.35),
-    0 8px 16px -8px rgba(5, 150, 105, 0.25);
-}
-
-.start-interview-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* ===================== ANIMATIONS ===================== */
-
-@keyframes slide-in {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes pulse-warn {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 0 8px rgba(245, 158, 11, 0);
-  }
-}
-
-@keyframes bounce-in {
-  0% {
-    opacity: 0;
-    transform: scale(0.3);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  70% {
-    transform: scale(0.9);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes loading-shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-/* ===================== RESPONSIVE ===================== */
-
+/* =======================
+   Responsive Design
+========================== */
 @media (max-width: 768px) {
-  .validation-container {
+  .face-section {
     flex-direction: column;
+    align-items: center;
   }
-  .face-capture {
-    flex: 1;
-    width: 100%;
-  }
-}
 
-/* Text Rendering Optimization */
-.validation-container * {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+  video,
+  .face-preview {
+    width: 260px !important;
+    height: 200px !important;
+  }
+
+  .face-buttons {
+    width: 100%;
+    align-items: center;
+  }
 }

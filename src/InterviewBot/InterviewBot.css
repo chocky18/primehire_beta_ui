@@ -1,75 +1,92 @@
-/* Main container */
 .interviewbot-containerOne {
-  max-width: 1200px;
+  width: 100%;
+  max-width: 850px;
   margin: 0 auto;
-  padding: 30px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  padding: 28px;
+  background: linear-gradient(to bottom, #ffffff, #fafafa);
+  border: 2px solid #1a1a1a;
+  border-radius: 18px;
+  box-shadow:
+    0 14px 26px -12px rgba(0, 0, 0, 0.12),
+    0 10px 20px -10px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  position: relative;
+  overflow: hidden;
+  animation: luxuryEntrance 0.6s ease-out backwards;
 }
 
-/* Title */
+/* Shine sweep animation */
+.interviewbot-containerOne::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 150%;
+  height: 100%;
+  background: linear-gradient(110deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.25) 50%,
+      transparent 100%);
+  transform: skewX(-25deg);
+  animation: boxShine 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+
+/* =================================================
+                TITLE
+================================================= */
+
 .interviewbot-titleOne {
-  font-size: 28px;
-  font-weight: 700;
-  color: #1e293b;
   text-align: center;
-  margin-bottom: 10px;
+  font-size: 26px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 24px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  letter-spacing: 0.4px;
 }
 
-/* Validation panel wrapper before interview starts */
-.validation-wrapper {
-  background: #ffffff;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  max-width: 450px;
-  margin: 0 auto;
-  text-align: center;
+
+/* =================================================
+                ANIMATIONS
+================================================= */
+
+@keyframes luxuryEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Input fields */
-.validation-wrapper input {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #cbd5e1;
-  font-size: 15px;
-  margin-bottom: 12px;
+@keyframes boxShine {
+
+  0%,
+  100% {
+    left: -150%;
+  }
+
+  50% {
+    left: 150%;
+  }
 }
 
-/* Buttons */
-.validation-wrapper button {
-  width: 100%;
-  font-size: 15px;
-  font-weight: 600;
-  padding: 10px;
-}
 
-/* ✅ When WebcamRecorder is shown */
-.interview-live-container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
+/* =================================================
+                RESPONSIVE
+================================================= */
 
-/* Keep same background as main system */
-body {
-  background-color: #f8fafc;
-}
-
-/* Tablet / Mobile */
 @media (max-width: 768px) {
   .interviewbot-containerOne {
-    padding: 15px;
+    padding: 20px;
   }
 
   .interviewbot-titleOne {
     font-size: 22px;
-  }
-
-  .validation-wrapper {
-    padding: 18px;
   }
 }

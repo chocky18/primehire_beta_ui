@@ -1,9 +1,6 @@
-/* ===================================================
-   ProfileTable.css
-   ✨ Premium Elegant Professional Design
-=================================================== */
-
-/* ===== Base Profile Box ===== */
+/* =================================================
+   MAIN PROFILE BOX
+================================================= */
 .profile-box {
   background: linear-gradient(to bottom, #ffffff, #fafafa);
   padding: 24px;
@@ -19,19 +16,7 @@
   overflow: hidden;
 }
 
-@keyframes luxury-entrance {
-  0% {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ===== Shine Overlay ===== */
+/* Shine Animation */
 .profile-box::before {
   content: '';
   position: absolute;
@@ -45,22 +30,13 @@
       transparent 100%);
   transform: skewX(-25deg);
   animation: box-shine 6s ease-in-out infinite;
-  pointer-events: none;
 }
 
-@keyframes box-shine {
 
-  0%,
-  100% {
-    left: -150%;
-  }
+/* =================================================
+      FILTERS
+================================================= */
 
-  50% {
-    left: 150%;
-  }
-}
-
-/* ===== Filters Row ===== */
 .filters-row {
   display: flex;
   justify-content: space-between;
@@ -76,14 +52,12 @@
   color: #1a1a1a;
 }
 
-/* ===== Input Row ===== */
 .filter-inputs {
   display: flex;
   gap: 12px;
   align-items: center;
 }
 
-/* ===== Input Boxes ===== */
 .input-box {
   border: 2px solid #1a1a1a;
   background: linear-gradient(to bottom, #ffffff, #f9fafb);
@@ -98,7 +72,7 @@
   outline: none;
   border-color: #38bdf8;
   background: #ffffff;
-  box-shadow: 0 4px 10px rgba(56, 189, 248, 0.2);
+  box-shadow: 0 4px 10px rgba(56, 189, 248, 0.25);
   transform: translateY(-2px);
 }
 
@@ -106,7 +80,6 @@
   width: 120px;
 }
 
-/* ===== Sort Button ===== */
 .sort-btn {
   border: 2px solid #1a1a1a;
   background: linear-gradient(to bottom, #ffffff, #fafafa);
@@ -129,37 +102,126 @@
     0 4px 8px rgba(14, 165, 233, 0.2);
 }
 
-/* ===== Clear Filter Button ===== */
-.clear-category {
-  background: #fee2e2;
-  border: 2px solid #f87171;
-  color: #991b1b;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-weight: 600;
+
+/* =================================================
+      SELECT ALL + CHECKBOXES
+================================================= */
+
+.profiles-table input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
   cursor: pointer;
-  margin-bottom: 16px;
-  transition: all 0.25s ease;
+  appearance: none;
+  border: 2px solid #cbd5e1;
+  border-radius: 4px;
+  position: relative;
+  transition: all 0.2s ease-in-out;
 }
 
-.clear-category:hover {
-  background: #fecaca;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(248, 113, 113, 0.3);
+.profiles-table input[type="checkbox"]:checked {
+  background-color: #0284c7;
+  border-color: #0284c7;
 }
 
-/* ===== Profiles Table ===== */
+.profiles-table input[type="checkbox"]:checked::after {
+  content: "✓";
+  position: absolute;
+  top: -2px;
+  left: 2px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.profiles-table input[type="checkbox"]:hover {
+  border-color: #38bdf8;
+}
+
+.profiles-table td:first-child,
+.profiles-table th:first-child {
+  width: 40px;
+  text-align: center;
+}
+
+
+/* =================================================
+      BULK SEND BUTTON + DROPDOWN
+================================================= */
+
+.bulk-send-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.bulk-send-btn {
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  color: white;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bulk-send-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(56, 189, 248, 0.25);
+}
+
+.send-dropdown {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  width: 200px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.2s ease-out;
+}
+
+.send-option {
+  padding: 12px 14px;
+  text-align: left;
+  font-size: 14px;
+  border-bottom: 1px solid #f1f5f9;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.send-option:hover {
+  background: #f0f9ff;
+  color: #0284c7;
+}
+
+.send-option:last-child {
+  border-bottom: none;
+}
+
+
+/* =================================================
+      TABLE STYLING
+================================================= */
+
 .profiles-table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
+  margin-top: 12px;
   background: #ffffff;
   border-radius: 12px;
   overflow: hidden;
   box-shadow:
     0 4px 8px rgba(0, 0, 0, 0.05),
     0 1px 3px rgba(0, 0, 0, 0.08);
-  font-size: 14px;
 }
 
 .profiles-table th {
@@ -168,213 +230,261 @@
   text-align: left;
   font-weight: 700;
   padding: 14px 12px;
-  text-transform: uppercase;
   font-size: 12px;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 .profiles-table td {
-  border-bottom: 1px solid #e5e7eb;
   padding: 14px 12px;
+  border-bottom: 1px solid #e2e8f0;
   background: #ffffff;
-  transition: all 0.25s ease;
-  vertical-align: middle;
+  transition: 0.2s ease;
 }
 
-/* ===== Hover Row Effect ===== */
 .profiles-table tbody tr:hover {
-  transform: translateX(4px);
-  background: linear-gradient(90deg, rgba(56, 189, 248, 0.04), #ffffff);
-  box-shadow:
-    -4px 0 0 0 #38bdf8,
-    0 4px 10px rgba(56, 189, 248, 0.15);
+  background: rgba(56, 189, 248, 0.06);
+  transform: translateX(5px);
 }
 
-/* ===== Name Cell & Labels ===== */
-.name-cell .name {
-  font-weight: 700;
-  color: #1a1a1a;
-  font-size: 15px;
-  margin-bottom: 4px;
-  display: block;
-}
 
-.profiles-table tbody tr:hover .name-cell .name {
-  color: #0ea5e9;
-}
+/* =================================================
+      ACTION BUTTONS (VERTICAL)
+================================================= */
 
-/* ===== Match Labels ===== */
-.match-label {
-  font-size: 11px;
-  padding: 4px 10px;
-  border-radius: 8px;
-  margin-top: 6px;
-  display: inline-block;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-}
-
-.match-best {
-  background: linear-gradient(135deg, #d1fae5, #a7f3d0);
-  color: #065f46;
-  border: 2px solid #34d399;
-}
-
-.match-good {
-  background: linear-gradient(135deg, #fef3c7, #fde68a);
-  color: #92400e;
-  border: 2px solid #fbbf24;
-}
-
-.match-partial {
-  background: linear-gradient(135deg, #fee2e2, #fecaca);
-  color: #991b1b;
-  border: 2px solid #f87171;
-}
-
-/* ===== Match Bar ===== */
-.match-bar {
-  width: 115px;
-  height: 8px;
-  background: #e5e7eb;
-  border-radius: 9999px;
-  overflow: hidden;
-  margin-top: 6px;
-}
-
-.bar-fill {
-  height: 100%;
-  transition: width 0.8s ease;
-}
-
-.bar-fill.best {
-  background: linear-gradient(90deg, #10b981, #059669);
-}
-
-.bar-fill.good {
-  background: linear-gradient(90deg, #facc15, #eab308);
-}
-
-.bar-fill.partial {
-  background: linear-gradient(90deg, #ef4444, #dc2626);
-}
-
-/* ===== Action Buttons ===== */
 .actions-cell {
-  text-align: center;
+  min-width: 200px;
 }
 
 .action-group {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   gap: 10px;
-  flex-wrap: wrap;
+  align-items: flex-start;
 }
 
 .action-btn {
+  width: 100%;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
+  gap: 8px;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
+  padding: 10px 14px;
   border-radius: 10px;
-  border: 2px solid transparent;
+  border: 2px solid #e5e7eb;
+  background: #ffffff;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: 0.25s ease;
 }
 
-/* MAIL */
+.action-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Mail Button */
 .action-btn.mail {
-  background: linear-gradient(135deg, #dbeafe, #bfdbfe);
-  color: #1e40af;
-  border-color: #93c5fd;
+  border-color: #0284c7;
+  color: #0284c7;
 }
 
 .action-btn.mail:hover {
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
-  color: #ffffff;
-  border-color: #2563eb;
+  background: #e0f2fe;
+  transform: translateY(-2px);
 }
 
-/* WHATSAPP */
+/* WhatsApp Button */
 .action-btn.whatsapp {
-  background: linear-gradient(135deg, #dcfce7, #bbf7d0);
-  color: #166534;
-  border-color: #86efac;
+  border-color: #22c55e;
+  color: #16a34a;
 }
 
 .action-btn.whatsapp:hover {
-  background: linear-gradient(135deg, #22c55e, #16a34a);
-  color: #ffffff;
-  border-color: #16a34a;
+  background: #dcfce7;
+  transform: translateY(-2px);
 }
 
-/* DISABLED WhatsApp */
 .action-btn.whatsapp.disabled {
-  background: linear-gradient(to bottom, #f2f2f2, #e5e5e5);
-  color: #888888;
-  border-color: #d1d1d1;
+  opacity: 0.5;
   cursor: not-allowed;
-  opacity: 0.6;
 }
 
-/* BOT */
+/* AI Button */
 .action-btn.bot {
-  background: linear-gradient(135deg, #fef3c7, #fde68a);
-  color: #92400e;
-  border-color: #fcd34d;
+  border-color: #7c3aed;
+  color: #6d28d9;
 }
 
 .action-btn.bot:hover {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  color: #ffffff;
-  border-color: #d97706;
+  background: #ede9fe;
+  transform: translateY(-2px);
 }
 
-/* ===== Score Cell ===== */
-.score {
+
+/* =================================================
+      NAME + SCORE + LABEL
+================================================= */
+
+.name {
   font-weight: 700;
   font-size: 15px;
-  text-align: center;
-  color: #1a1a1a;
 }
 
-/* ===== Summary Cards ===== */
-.summary-box {
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 2px solid #e5e7eb;
+.match-label {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: inline-block;
+  margin: 4px 0;
 }
+
+.match-best {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #34d399;
+}
+
+/* Dropdown Container */
+.send-dropdown {
+  position: absolute;
+  top: 138px;
+  right: 0;
+  background: white;
+  border: 2px solid #38bdf8;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  width: 160px;
+  padding: 6px 0;
+  z-index: 30;
+}
+
+/* Buttons inside dropdown */
+.send-option {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #0f172a;
+  /* slate-900 */
+  transition: 0.2s ease;
+}
+
+/* Match your action button look */
+.action-style {
+  border-radius: 8px;
+}
+
+.send-option:hover {
+  background: #e0f7ff;
+  /* light blue hover */
+}
+
+/* Icon style */
+.send-option svg {
+  color: #0284c7;
+  /* Blue accent like your action icons */
+}
+
+.match-good {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fbbf24;
+}
+
+.match-partial {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #f87171;
+}
+
+.score {
+  font-weight: 700;
+  text-align: center;
+  color: #0284c7;
+}
+
+
+/* =================================================
+      SUMMARY CARDS
+================================================= */
 
 .review-cards {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
+  margin-top: 20px;
 }
 
 .review-card {
-  padding: 16px 20px;
+  background: linear-gradient(to bottom, #ffffff, #f8fafc);
+  padding: 18px 20px;
   border-radius: 12px;
-  border: 2px solid #e5e7eb;
-  background: linear-gradient(to bottom, #ffffff, #fafafa);
+  border: 2px solid #e2e8f0;
   cursor: pointer;
-  transition: all 0.25s ease;
-  min-width: 140px;
+  transition: 0.25s ease;
+  min-width: 150px;
   text-align: center;
   font-weight: 600;
 }
 
 .review-card:hover {
+  background: #f0f9ff;
   border-color: #38bdf8;
-  background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
   transform: translateY(-3px);
 }
 
 .review-card.active {
-  border-color: #0ea5e9;
-  background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
   color: #ffffff;
+  border-color: #0284c7;
   transform: translateY(-3px);
+}
+
+
+/* =================================================
+      ANIMATIONS
+================================================= */
+
+@keyframes luxury-entrance {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes box-shine {
+
+  0%,
+  100% {
+    left: -150%;
+  }
+
+  50% {
+    left: 150%;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

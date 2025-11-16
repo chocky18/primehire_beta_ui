@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { API_BASE } from "@/utils/constants";
+import { Loader2 } from "lucide-react"; // spinner icon
 import "./MailMindButton.css";
 
 const MailMindButton = () => {
@@ -16,20 +17,24 @@ const MailMindButton = () => {
   const [password, setPassword] = useState("");
   const [platform, setPlatform] = useState("gmail");
   const [connected, setConnected] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [resumes, setResumes] = useState([]);
   const [previewFile, setPreviewFile] = useState(null);
 
+  // Separate loading states
+  const [loadingLogin, setLoadingLogin] = useState(false);
+  const [loadingExtract, setLoadingExtract] = useState(false);
+
   const handleConnect = async () => {
-    if (!email || !password || !platform) return;
-    setLoading(true);
+    setLoadingLogin(true); // start login loading
     try {
       const res = await fetch(`${API_BASE}/mcp/tools/mailmind/connect`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, platform }),
       });
+
       if (!res.ok) throw new Error(await res.text());
+
       await res.json();
       setConnected(true);
       alert(`✅ Login Successful: ${email} (${platform})`);
@@ -37,21 +42,24 @@ const MailMindButton = () => {
       console.error(err);
       alert("❌ Failed to connect. Check credentials or IMAP settings.");
     } finally {
-      setLoading(false);
+      setLoadingLogin(false); // stop login loading
     }
   };
 
   const handleExtract = async () => {
-    setLoading(true);
+    setLoadingExtract(true); // start extract loading
     try {
       const res = await fetch(`${API_BASE}/mcp/tools/mailmind/fetch-resumes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, platform }),
       });
+
       if (!res.ok) throw new Error(await res.text());
+
       const data = await res.json();
-      if (data.result && data.result.length) {
+
+      if (data.result?.length) {
         setResumes(data.result);
         alert(`✅ Extracted ${data.result.length} resumes`);
       } else if (data.message) {
@@ -61,19 +69,12 @@ const MailMindButton = () => {
       console.error(err);
       alert("❌ Failed to extract resumes.");
     } finally {
-      setLoading(false);
+      setLoadingExtract(false); // stop extract loading
     }
   };
 
   return (
     <div className="mailmind-container">
-      {loading && (
-        <div className="loading-overlay">
-          <div className="loading-spinner"></div>
-          <div className="loading-text">LOADING...</div>
-        </div>
-      )}
-
       <h3 className="mailmind-title">📬 MailMind</h3>
 
       {!connected && (
@@ -82,31 +83,39 @@ const MailMindButton = () => {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="rounded-full mailmind-input"
+            className="mailmind-input"
           />
+
           <Input
             type="password"
             placeholder="Password / App Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="rounded-full mailmind-input"
+            className="mailmind-input"
           />
+
           <Select onValueChange={setPlatform} defaultValue={platform}>
-            <SelectTrigger className="w-full rounded-full mailmind-select">
+            <SelectTrigger className="mailmind-select">
               <SelectValue placeholder="Select Platform" />
             </SelectTrigger>
             <SelectContent>
-              {/* <SelectItem value="gmail">Gmail</SelectItem> */}
               <SelectItem value="outlook">Outlook</SelectItem>
-              {/* <SelectItem value="godaddy">GoDaddy</SelectItem> */}
             </SelectContent>
           </Select>
+
           <Button
             onClick={handleConnect}
-            disabled={loading || !email || !password || !platform}
-            className="w-full rounded-full mailmind-btn"
+            className="mailmind-btn"
+            disabled={loadingLogin} // disable while login loading
           >
-            {loading ? "Connecting..." : "Login to Mail"}
+            {loadingLogin ? (
+              <span className="flex items-center gap-2">
+                <Loader2 className="animate-spin w-4 h-4" />
+                Connecting...
+              </span>
+            ) : (
+              "Login to Mail"
+            )}
           </Button>
         </>
       )}
@@ -115,25 +124,31 @@ const MailMindButton = () => {
         <>
           <Button
             onClick={handleExtract}
-            disabled={loading}
-            className="w-full rounded-full mailmind-extract-btn"
+            className="mailmind-extract-btn"
+            disabled={loadingExtract} // disable while extracting
           >
-            <span role="img" aria-label="extract">
-              📄
-            </span>
-            {loading ? "Extracting Resumes..." : "Extract Resumes"}
+            {loadingExtract ? (
+              <span className="flex items-center gap-2">
+                <Loader2 className="animate-spin w-4 h-4" />
+                Extracting...
+              </span>
+            ) : (
+              "📄 Extract Resumes"
+            )}
           </Button>
 
           {resumes.length > 0 && (
             <div className="mailmind-resume-list">
-              <h4 className="font-semibold">Extracted Resumes:</h4>
-              <ul>
+              <h4 className="resume-heading">Extracted Resumes:</h4>
+
+              <div className="resume-container">
                 {resumes.map((url) => {
                   const filename = url.split("/").pop();
                   const isPdf = filename.toLowerCase().endsWith(".pdf");
                   const fileUrl = `${API_BASE}${url}`;
+
                   return (
-                    <li key={url}>
+                    <div className="resume-item" key={url}>
                       {isPdf ? (
                         <span
                           className="resume-link"
@@ -142,27 +157,31 @@ const MailMindButton = () => {
                           {filename}
                         </span>
                       ) : (
-                        <span className="text-gray-800">{filename}</span>
+                        <span className="resume-filename">{filename}</span>
                       )}
+
                       <a href={fileUrl} download className="resume-download">
                         Download
                       </a>
-                    </li>
+                    </div>
                   );
                 })}
-              </ul>
+              </div>
             </div>
           )}
 
           {previewFile && (
             <div className="mailmind-preview">
-              <h5>Preview PDF:</h5>
+              <h5 className="preview-title">Preview PDF:</h5>
+
               <iframe
                 src={previewFile}
                 width="100%"
                 height="500px"
                 title="PDF Preview"
+                className="preview-frame"
               />
+
               <Button
                 onClick={() => setPreviewFile(null)}
                 className="close-preview-btn"

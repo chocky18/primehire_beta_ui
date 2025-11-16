@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
     Card,
@@ -8,75 +9,76 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import WebcamRecorder from "./WebcamRecorder";
-import logo from "../assets/primehire_logo.png"; // Your logo
+import { useNavigate, useLocation } from "react-router-dom";
+import { ChevronRight } from "lucide-react"; //  ✅ Arrow icon
+import logo from "../assets/primehire_logo.png";
 import "./InstructionsPrompt.css";
 
-const InstructionsPrompt = () => {
+export default function InstructionsPrompt() {
     const [checked, setChecked] = useState(false);
-    const [startInterview, setStartInterview] = useState(false);
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const candidateName = location.state?.candidateName || null;
+    const candidateId = location.state?.candidateId || null;
 
     const handleStart = () => {
-        setStartInterview(true);
+        if (!candidateName || !candidateId) {
+            alert("❌ Missing candidate details. Please go back and validate again.");
+            return;
+        }
+
+        navigate("/webcam-recorder", { state: { candidateName, candidateId } });
     };
 
-    if (startInterview) {
-        return <WebcamRecorder />;
-    }
-
     return (
-        <div className="instructions-wrapper">
-            {/* Navbar */}
-            <nav className="instructions-navbar">
-                <img src={logo} alt="PrimeHire Logo" className="navbar-logo" />
+        <div className="inst-wrapper">
+            <nav className="inst-navbar">
+                <img src={logo} alt="PrimeHire Logo" className="inst-logo" />
             </nav>
 
-            {/* Card */}
-            <Card className="instructions-card">
-                <CardHeader className="instructions-header">
-                    <CardTitle className="instructions-title header-title">
-                        Interview Instructions
-                    </CardTitle>
+            <Card className="inst-card">
+                <CardHeader className="inst-header">
+                    <CardTitle className="inst-title">Interview Instructions</CardTitle>
                 </CardHeader>
 
                 <CardContent>
-                    <p className="instructions-text">
-                        Please read and confirm the instructions before starting your
-                        interview:
+                    <p className="inst-desc">
+                        Please read and accept the instructions before continuing.
                     </p>
 
-                    <ul className="instructions-list">
-                        <li>Interview will be recorded (video + audio + responses).</li>
-                        <li>Your data will be used for evaluation purposes.</li>
-                        <li>Do not share personal or sensitive information.</li>
-                        <li>Give honest answers without external help.</li>
-                        <li>Ensure camera, mic, and internet are working properly.</li>
+                    <ul className="inst-list">
+                        <li><ChevronRight className="inst-arrow" /> Interview will be recorded (video + audio + responses).</li>
+                        <li><ChevronRight className="inst-arrow" /> Your data will be used for evaluation purposes.</li>
+                        <li><ChevronRight className="inst-arrow" /> Do not share personal or sensitive information.</li>
+                        <li><ChevronRight className="inst-arrow" /> Give honest answers without external help.</li>
+                        <li><ChevronRight className="inst-arrow" /> Ensure camera, mic, and internet are working properly.</li>
                     </ul>
 
-                    <div className="confirm-checkbox">
-                        <Checkbox
-                            id="agree"
-                            checked={checked}
-                            onCheckedChange={setChecked}
-                        />
-                        <label htmlFor="agree">
+                    <div className="inst-checkbox">
+                        <Checkbox id="agree" checked={checked} onCheckedChange={setChecked} />
+                        <label htmlFor="agree" className="inst-checkbox-label">
                             I have read and agree to these instructions.
                         </label>
                     </div>
                 </CardContent>
 
-                <CardFooter>
+                <CardFooter className="inst-footer">
                     <Button
-                        className="instructions-btn"
+                        className="inst-start-btn"
                         disabled={!checked}
                         onClick={handleStart}
                     >
                         Start Interview
                     </Button>
                 </CardFooter>
+
             </Card>
+
+            <div className="inst-debug">
+                Debug: candidateName: {candidateName || "NULL"} | candidateId:{" "}
+                {candidateId || "NULL"}
+            </div>
         </div>
     );
-};
-
-export default InstructionsPrompt;
+}

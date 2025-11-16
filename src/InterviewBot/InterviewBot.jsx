@@ -1,10 +1,11 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import WebcamRecorder from "./WebcamRecorder";
 import "./InterviewBot.css";
- 
+
 import ValidationPanel from "./ValidationPanel";
- 
+
 
 const InterviewBot = () => {
     const [interviewStep, setInterviewStep] = useState(0);

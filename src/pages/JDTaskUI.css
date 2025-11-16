@@ -8,6 +8,146 @@
     max-width: 920px;
 }
 
+.jd-input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.jd-input {
+    flex: 1;
+}
+
+.jd-send {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    background: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.add-question-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: #38bdf8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: 0.2s ease;
+    box-shadow: 0 2px 4px rgba(56, 189, 248, 0.25);
+}
+
+.add-question-btn:hover {
+    background: #0ea5e9;
+    box-shadow: 0 4px 10px rgba(56, 189, 248, 0.35);
+}
+
+.add-question-btn .add-label {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+
+/* Popup */
+.add-question-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99;
+}
+
+.add-question-box {
+    background: white;
+    padding: 22px;
+    width: 360px;
+    border-radius: 12px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+}
+
+.add-question-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.add-question-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 14px;
+    gap: 10px;
+}
+
+.jd-edit-box {
+    width: 100%;
+    min-height: 220px;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    background: #fff;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.jd-edit-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.btn.primary {
+    background: #1a73e8;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 8px;
+}
+
+.btn.secondary {
+    background: #eee;
+    padding: 8px 16px;
+    border-radius: 8px;
+}
+
+.btn-cancel {
+    padding: 8px 14px;
+    background: #eee;
+    border-radius: 6px;
+}
+
+.btn-save {
+    padding: 8px 14px;
+    background: #1a73e8;
+    color: white;
+    border-radius: 6px;
+}
+
+.jd-skip {
+    padding: 8px 14px;
+    background: #f3f3f3;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+.jd-skip:hover {
+    background: #e2e2e2;
+}
+
 .jd-header {
     display: flex;
     justify-content: space-between;
