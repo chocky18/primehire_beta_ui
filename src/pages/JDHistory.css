@@ -1,18 +1,21 @@
-/* ===== Container ===== */
+/* =========================
+   MAIN CONTAINER
+========================= */
 .jd-history-container {
     padding: 24px;
-    background: linear-gradient(to bottom, #ffffff, #fafafa);
+    background: linear-gradient(to bottom, #ffffff, #f3f4f6);
     border-radius: 16px;
     border: 2px solid #1a1a1a;
     box-shadow:
         0 12px 24px -10px rgba(0, 0, 0, 0.1),
-        0 8px 16px -8px rgba(0, 0, 0, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        0 8px 16px -8px rgba(0, 0, 0, 0.08);
     animation: luxury-entrance 0.6s ease-out backwards;
     overflow: hidden;
 }
 
-/* ===== Header ===== */
+/* =========================
+   HEADER
+========================= */
 .jd-header {
     display: flex;
     justify-content: space-between;
@@ -21,11 +24,13 @@
 }
 
 .jd-title {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: 700;
 }
 
-/* ===== Buttons ===== */
+/* =========================
+   BUTTONS
+========================= */
 .jd-button {
     display: flex;
     align-items: center;
@@ -33,8 +38,8 @@
     padding: 8px 14px;
     font-weight: 600;
     border-radius: 10px;
-    border: 2px solid transparent;
     cursor: pointer;
+    border: 2px solid transparent;
     transition: all 0.25s ease;
 }
 
@@ -42,6 +47,7 @@
     transform: translateY(-2px);
 }
 
+/* Refresh */
 .jd-refresh {
     background: #e0f2fe;
     color: #0369a1;
@@ -52,6 +58,7 @@
     background: #bae6fd;
 }
 
+/* View */
 .jd-view {
     background: linear-gradient(135deg, #dbeafe, #bfdbfe);
     color: #1e40af;
@@ -61,20 +68,43 @@
 .jd-view:hover {
     background: linear-gradient(135deg, #3b82f6, #2563eb);
     color: #ffffff;
-    border-color: #2563eb;
 }
 
-/* ===== Table ===== */
+/* Matcher Button */
+.jd-button.jd-matcher {
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    color: #1e40af;
+    border-color: #93c5fd;
+}
+
+.jd-button.jd-matcher:hover {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+}
+
+/* Add Questions Button */
+.jd-button.jd-add-questions {
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    color: #1e40af;
+    border-color: #93c5fd;
+}
+
+.jd-button.jd-add-questions:hover {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+}
+
+/* =========================
+   TABLE
+========================= */
 .jd-table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow:
-        0 4px 8px rgba(0, 0, 0, 0.05),
-        0 1px 3px rgba(0, 0, 0, 0.08);
     font-size: 14px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
 .jd-table th {
@@ -84,20 +114,17 @@
     font-weight: 700;
     text-transform: uppercase;
     font-size: 12px;
-    text-align: left;
 }
 
 .jd-table td {
     border-bottom: 1px solid #e5e7eb;
     padding: 12px 10px;
-    vertical-align: middle;
 }
 
 .jd-table tbody tr:hover {
-    background: linear-gradient(90deg, rgba(56, 189, 248, 0.04), #fff);
-    transform: translateX(4px);
+    background: rgba(56, 189, 248, 0.04);
     box-shadow:
-        -4px 0 0 0 #38bdf8,
+        inset 3px 0 0 #38bdf8,
         0 4px 10px rgba(56, 189, 248, 0.15);
 }
 
@@ -107,75 +134,310 @@
     gap: 8px;
 }
 
-/* ===== Modal ===== */
+/* =========================
+   MODAL
+========================= */
 .jd-modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.45);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 50;
+    z-index: 99;
 }
+
+/* QUESTIONS CONTAINER */
+.questions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 15px;
+    padding: 15px;
+    background: #f9fafb;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+}
+
+/* QUESTION INPUT */
+.question-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+    transition: all 0.2s ease;
+    background: #fff;
+}
+
+.question-input:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
+}
+
+/* ADD MORE BUTTON */
+.jd-add-questions {
+    margin-top: 8px;
+    background: #ffffff;
+    color: #4f46e5;
+    border: 1px dashed #4f46e5;
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+.jd-add-questions:hover {
+    background: #eef2ff;
+}
+
+/* SAVE BUTTON */
+.jd-save {
+    margin-top: 18px;
+    width: 100%;
+    padding: 12px 16px;
+    background: #10b981;
+    color: white;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.jd-save:hover {
+    background: #059669;
+}
+
+
 
 .jd-modal {
-    background: #fff;
-    /* width: 650px; */
-    max-height: 75vh;
+    background: white;
     padding: 24px;
-    border-radius: 16px;
+    /* max-width: 650px; */
+    width: 95%;
+    max-height: 85vh;
     overflow-y: auto;
+    border-radius: 16px;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.25);
+    animation: luxury-entrance 0.4s ease-out;
     position: relative;
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
-    animation: luxury-entrance 0.5s ease-out backwards;
 }
 
+/* ------------------------------
+   EDIT JD BUTTON
+------------------------------ */
+.jd-button.jd-edit {
+    background: linear-gradient(135deg, #ff8a00, #ff4f1f);
+    color: white;
+    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: 0.25s ease;
+    margin: 5px;
+}
+
+.jd-button.jd-edit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 128, 0, 0.35);
+}
+
+/* ------------------------------
+   AI INTERVIEW QUESTIONS BUTTON
+------------------------------ */
+.jd-button.jd-ai-generate {
+    background: linear-gradient(135deg, #4b79ff, #5b9dff);
+    color: white;
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    margin: 14px 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.25s ease;
+}
+
+.jd-button.jd-ai-generate:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(75, 121, 255, 0.35);
+}
+
+/* ------------------------------
+   AI QUESTIONS BOX UI
+------------------------------ */
+.ai-questions-box {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f4f8ff;
+    border-radius: 10px;
+    border: 1px solid #d8e4ff;
+}
+
+.ai-questions-box h3 {
+    margin-bottom: 10px;
+    color: #2e5cff;
+    font-weight: 700;
+}
+
+.ai-question-item {
+    background: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin: 6px 0;
+    border: 1px solid #d6e2ff;
+    font-size: 14px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.q-number {
+    font-weight: bold;
+    color: #325dff;
+}
+
+/* ------------------------------
+   SAVE BUTTON
+------------------------------ */
+.jd-button.jd-save {
+    background: linear-gradient(135deg, #00c76f, #03a85f);
+    color: white;
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    margin-top: 16px;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.jd-button.jd-save:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 199, 112, 0.35);
+}
+
+/* Close Button */
 .jd-modal-close {
     position: absolute;
     top: 12px;
     right: 12px;
     font-size: 20px;
     cursor: pointer;
-    color: #555;
-
+    background: transparent;
+    border: none;
 }
 
-.jd-modal-close:hover {
-    color: #000;
+.view-questions-list {
+    margin-top: 15px;
+    padding: 15px;
+    background: #fafafa;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+}
+
+.view-question-item {
+    display: flex;
+    align-items: flex-start;
+    font-size: 15px;
+    margin-bottom: 10px;
+    color: #374151;
+    line-height: 22px;
+}
+
+.q-number {
+    font-weight: 700;
+    margin-right: 8px;
+    color: #4f46e5;
+    min-width: 24px;
+}
+
+.no-questions {
+    text-align: center;
+    padding: 10px 0;
+    color: #9ca3af;
+    font-size: 14px;
 }
 
 .jd-modal-title {
     font-size: 20px;
     font-weight: 700;
-    margin-bottom: 8px;
 }
 
 .jd-modal-skills {
-    font-size: 14px;
     color: #555;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 }
 
+/* JD text */
 .jd-modal-text {
     background: #f3f4f6;
-    padding: 16px;
-    border-radius: 12px;
-    font-size: 14px;
-    white-space: pre-wrap;
+    padding: 14px;
+    border-radius: 10px;
+    white-space: pre-line;
+    font-family: monospace;
     margin-bottom: 16px;
 }
 
+/* =========================
+   MANUAL QUESTIONS
+========================= */
+.jd-manual-questions {
+    margin-top: 20px;
+    padding: 16px;
+    background: #f9fafb;
+    border: 1px solid #e4e4e7;
+    border-radius: 12px;
+}
+
+.jd-manual-questions h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.jd-manual-questions ul {
+    padding-left: 20px;
+}
+
+.jd-manual-questions li {
+    padding: 6px;
+    margin-bottom: 8px;
+    background: #f8fafc;
+    border-radius: 6px;
+    transition: 0.2s;
+    border-left: 3px solid #38bdf8;
+}
+
+.jd-manual-questions li:hover {
+    background: #e0f7ff;
+}
+
+/* =========================
+   COPY BUTTON
+========================= */
 .jd-copy-button {
     display: flex;
     align-items: center;
+    padding: 10px 16px;
     gap: 8px;
-    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
-    color: #fff;
-    padding: 8px 14px;
-    border-radius: 10px;
     font-weight: 700;
+    border-radius: 10px;
     cursor: pointer;
-    transition: all 0.25s ease;
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+    color: white;
+    border: none;
+    transition: 0.25s ease;
 }
 
 .jd-copy-button:hover {
@@ -183,11 +445,13 @@
     box-shadow: 0 6px 14px rgba(14, 165, 233, 0.4);
 }
 
-/* ===== Animations ===== */
+/* =========================
+   ANIMATIONS
+========================= */
 @keyframes luxury-entrance {
     0% {
         opacity: 0;
-        transform: translFateY(16px);
+        transform: translateY(16px);
     }
 
     100% {
