@@ -39,20 +39,41 @@ const JDHistory = () => {
         setLoading(false);
     };
 
+    // const openJD = async (id) => {
+    //     try {
+    //         const res = await fetch(`${API_BASE}/mcp/tools/jd_history/jd/history/${id}`);
+    //         const data = await res.json();
+
+    //         setSelected({
+    //             ...data,
+    //             manualQuestions: manualQuestions[id] || [],
+    //             aiQuestions: data.ai_questions || [],
+    //         });
+    //     } catch (err) {
+    //         console.error("Failed to fetch JD:", err);
+    //     }
+    // };
     const openJD = async (id) => {
         try {
             const res = await fetch(`${API_BASE}/mcp/tools/jd_history/jd/history/${id}`);
             const data = await res.json();
 
+            // Extract AI questions stored in DB (inside matches_json)
+            const aiQs =
+                data?.matches?.ai_questions ??
+                data?.ai_questions ??
+                [];
+
             setSelected({
                 ...data,
                 manualQuestions: manualQuestions[id] || [],
-                aiQuestions: data.ai_questions || [],
+                aiQuestions: aiQs,  // <-- IMPORTANT FIX
             });
         } catch (err) {
             console.error("Failed to fetch JD:", err);
         }
     };
+
 
     // ---------------------------------------------------------
     // COPY JD
@@ -152,12 +173,13 @@ const JDHistory = () => {
     };
 
     // ---------------------------------------------------------
-    // GENERATE AI INTERVIEW QUESTIONS (NEW)
+    // GENERATE AI INTERVIEW QUESTIONS (NEW + FIXED)
     // ---------------------------------------------------------
     const generateAIQuestions = async () => {
         if (!selected) return;
 
         try {
+            // 1️⃣ Trigger backend generation
             const res = await fetch(
                 `${API_BASE}/mcp/tools/jd_history/jd/generate_ai_questions/${selected.id}`,
                 { method: "POST" }
@@ -165,18 +187,37 @@ const JDHistory = () => {
 
             const data = await res.json();
 
-            if (!data.questions || data.questions.length === 0) {
-                alert("AI could not generate questions.");
+            if (!res.ok) {
+                alert("❌ " + data.detail);
                 return;
             }
 
-            // Update live AI questions
+            // 2️⃣ Immediately fetch updated JD (where questions are saved)
+            const refRes = await fetch(
+                `${API_BASE}/mcp/tools/jd_history/jd/history/${selected.id}`
+            );
+            const refData = await refRes.json();
+
+            // 3️⃣ Extract ai_questions from matches_json (DB structure)
+            const savedQuestions =
+                refData?.matches?.ai_questions ??
+                refData?.ai_questions ??
+                data.questions ??
+                [];
+
+            if (!savedQuestions.length) {
+                alert("⚠️ No questions returned after saving.");
+                return;
+            }
+
+            // 4️⃣ Update UI
             setSelected((prev) => ({
                 ...prev,
-                aiQuestions: data.questions,
+                aiQuestions: savedQuestions,
             }));
 
-            alert("AI Questions Generated Successfully!");
+            alert("🤖 AI Questions Generated & Saved!");
+
         } catch (err) {
             console.error("AI questions failed:", err);
             alert("Failed to generate AI questions.");
