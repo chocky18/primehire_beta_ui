@@ -58,24 +58,21 @@ const JDHistory = () => {
             const res = await fetch(`${API_BASE}/mcp/tools/jd_history/jd/history/${id}`);
             const data = await res.json();
 
-            const aiQs =
-                data?.matches?.ai_questions ??
-                data?.ai_questions ??
-                [];
-
-            const manualQs =
-                data?.matches?.manual_questions ??
-                [];
+            const aiQs = data.matches?.ai_questions ?? [];
+            const manualQs = data.matches?.manual_questions ?? [];
 
             setSelected({
                 ...data,
-                manualQuestions: manualQs,
                 aiQuestions: aiQs,
+                manualQuestions: manualQs,
             });
+
         } catch (err) {
             console.error("Failed to fetch JD:", err);
         }
     };
+
+
 
 
 
