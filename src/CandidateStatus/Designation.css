@@ -1,0 +1,45 @@
+.designation-container {
+    width: 100%;
+    padding: 20px 30px;
+    font-family: "Inter", sans-serif;
+}
+
+.heading {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 18px;
+    color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.designation-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 2px solid transparent;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    text-decoration: none;
+    color: #222;
+    transition: 0.2s ease;
+}
+
+.designation-card:hover {
+    border-color: #3cb9ff;
+    background-color: rgba(60, 185, 255, 0.08);
+}
+
+.jd-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.arrow-icon {
+    opacity: 0.7;
+}

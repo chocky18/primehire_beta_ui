@@ -8,7 +8,11 @@ import NotFound from "./pages/NotFound";
 import CertificateData from "./pages/CertificateData";
 import WebcamRecorder from "./InterviewBot/WebcamRecorder";
 import InstructionsPrompt from "./InterviewBot/InstructionsPrompt"
-import ValidationPanel from "./InterviewBot/ValidationPanel";
+import CandidateOverview from "./CandidateStatus/CandidateOverview";
+import CandidateStatus from "./CandidateStatus/CandidateStatus"
+import ValidationPanel from "./InterviewBot/ValidationPanel"
+
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -21,8 +25,10 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/webcam-recorder" element={<WebcamRecorder />} />
           <Route path="/certificatedata" element={<CertificateData />} />
-          <Route path="/instructions" element={<InstructionsPrompt />} /> {/* ✅ Add this route */}
+          <Route path="/instructions" element={<InstructionsPrompt />} />
+          <Route path="/candidate-status/:id" element={<CandidateStatus />} />
           <Route path="/validation_panel" element={<ValidationPanel />} />
+          <Route path="/candidate-overview" element={<CandidateOverview />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
@@ -30,4 +36,4 @@ const App = () => (
   </QueryClientProvider>
 );
 
-export default App; 
+export default App;
