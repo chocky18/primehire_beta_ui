@@ -1,0 +1,153 @@
+.candidates-container {
+    background: #ffffff;
+    padding: 18px 22px;
+    border-radius: 12px;
+    border: 1px solid #e4e4e7;
+    width: 100%;
+    overflow-x: auto;
+    font-family: "Inter", sans-serif;
+}
+
+
+.status-tabs {
+    display: flex;
+    gap: 20px;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.status-tabs button {
+    background: none;
+    border: none;
+    font-size: 14px;
+    color: #6b7280;
+    padding: 6px 2px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.status-tabs button:hover {
+    color: #111827;
+}
+
+.status-tabs button.active {
+    color: #111827;
+    font-weight: 600;
+    border-bottom: 2px solid #111827;
+}
+
+
+.actions-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.search-input {
+    height: 36px;
+    width: 240px;
+    border-radius: 8px;
+    padding: 0px 12px;
+    font-size: 14px;
+    border: 1px solid #d1d5db;
+    outline: none;
+}
+
+.search-input:focus {
+    border-color: #6366f1;
+}
+
+.add-btn {
+    background: #111;
+    color: #fff;
+    font-size: 14px;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+.add-btn:hover {
+    background: #222;
+}
+
+
+.candidates-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    min-width: 800px;
+}
+
+.candidates-table th {
+    text-align: left;
+    padding: 10px 0;
+    color: #6b7280;
+    font-weight: 500;
+    font-size: 13px;
+}
+
+.candidates-table td {
+    border-top: 1px solid #e5e7eb;
+    padding: 14px 0;
+}
+
+.name-col {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #111827;
+    font-weight: 500;
+}
+
+.name-col img {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+}
+
+
+.status-badge {
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 10px;
+    padding: 4px 12px;
+    text-transform: capitalize;
+}
+
+.status-badge.inprogress,
+.status-badge.in\ progress {
+    background: #ebe3ff;
+    color: #6d4cc2;
+}
+
+.status-badge.hired {
+    background: #dcfce7;
+    color: #1b6b3f;
+}
+
+.status-badge.rejected {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.actions-btn {
+    background: #f3f4f6;
+    font-size: 12px;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    color: #3f3f46;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.actions-btn:hover {
+    background: #e5e7eb;
+}

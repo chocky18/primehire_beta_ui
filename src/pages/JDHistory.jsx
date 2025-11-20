@@ -343,7 +343,7 @@ const JDHistory = () => {
 
                         <div className="matcher-content">
                             {matcherJD.matches && matcherJD.matches.length > 0 ? (
-                                <ProfileTable data={matcherJD.matches} index={9999} />
+                                <ProfileTable data={matcherJD.matches} index={9999} jdId={matcherJD.id} />
                             ) : (
                                 <p className="no-matches-text">❌ No matching profiles found.</p>
                             )}

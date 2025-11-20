@@ -372,7 +372,14 @@ const ProfileTableRow = ({
       <td className="actions-cell">
         <div className="action-group">
           {/* EMAIL */}
-          <button className="action-btn mail" onClick={() => sendMailMessage(item, jdId)}>
+          <button
+            className="action-btn mail"
+            onClick={() => {
+              if (!jdId) return alert("JD ID missing! Cannot send email.");
+              onSendMail(item, jdId);
+            }}
+          >
+
             <Mail size={16} /> Mail
           </button>
 
