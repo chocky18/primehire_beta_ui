@@ -1,4 +1,3 @@
-
 // // src/components/WebcamRecorder.jsx
 // import React, { useState, useEffect, useRef } from "react";
 // import { Button } from "@/components/ui/button";
@@ -169,6 +168,7 @@ import { Button } from "@/components/ui/button";
 import TranscriptPanel from "../InterviewBot/TranscriptPanel";
 import { useLocation, useNavigate } from "react-router-dom";
 import { API_BASE } from "@/utils/constants";
+import logo from "../assets/primehire_logo.png"
 import "./WebcamRecorder.css";
 
 export default function WebcamRecorder() {
@@ -178,8 +178,8 @@ export default function WebcamRecorder() {
   const candidateName = location.state?.candidateName || "Anonymous";
   const initialId = location.state?.candidateId || null;
 
-  const jd_text = location.state?.jd_text || "";   // 🔥 Auto-passed
-  const jd_id = location.state?.jd_id || "";       // 🔥 ID available too
+  const jd_text = location.state?.jd_text || "";
+  const jd_id = location.state?.jd_id || "";
 
   const [candidateId, setCandidateId] = useState(initialId);
   const [started, setStarted] = useState(false);
@@ -196,7 +196,7 @@ export default function WebcamRecorder() {
       candidateName,
       candidateId,
       jd_id,
-      jd_text
+      jd_text,
     });
     setJobDescription(jd_text);
   }, []);
@@ -235,10 +235,13 @@ export default function WebcamRecorder() {
     if (candidateId) fd.append("candidate_id", candidateId);
 
     try {
-      const res = await fetch(`${API_BASE}/mcp/interview_bot_beta/process-answer`, {
-        method: "POST",
-        body: fd,
-      });
+      const res = await fetch(
+        `${API_BASE}/mcp/interview_bot_beta/process-answer`,
+        {
+          method: "POST",
+          body: fd,
+        }
+      );
       const d = await res.json();
 
       if (d.ok) {
@@ -259,10 +262,13 @@ export default function WebcamRecorder() {
     fd.append("job_description", jobDescription);
 
     try {
-      const res = await fetch(`${API_BASE}/mcp/interview_bot_beta/evaluate-transcript`, {
-        method: "POST",
-        body: fd,
-      });
+      const res = await fetch(
+        `${API_BASE}/mcp/interview_bot_beta/evaluate-transcript`,
+        {
+          method: "POST",
+          body: fd,
+        }
+      );
 
       const d = await res.json();
 
@@ -287,39 +293,52 @@ export default function WebcamRecorder() {
   };
 
   return (
-    <div className="webcam-interview-container">
-      <div className="webcam-left-panel">
-        <h3>Candidate: {candidateName}</h3>
+    <div className="webcam-interview-wrapper">
 
-        <textarea
-          placeholder="Job Description"
-          value={jobDescription}
-          onChange={(e) => setJobDescription(e.target.value)}
+      {/* 🔹 Top Navbar with Logo */}
+      <div className="webcam-navbar">
+        <img
+          src={logo} // <-- Replace with your actual logo path
+          alt="Company Logo"
+          className="navbar-logo"
         />
 
-        <video ref={videoRef} autoPlay muted />
-
-        {!started ? (
-          <Button onClick={handleStartInterview}>Start Interview</Button>
-        ) : (
-          <Button variant="destructive" onClick={handleStopInterview}>
-            Stop & Evaluate
-          </Button>
-        )}
-
-        <div className="debug-info">
-          Debug → name: {candidateName} | id: {candidateId} <br />
-          JD Loaded: {jobDescription?.slice(0, 50)}...
-        </div>
       </div>
 
-      <div className="webcam-right-panel">
-        <TranscriptPanel
-          candidateName={candidateName}
-          candidateId={candidateId}
-          jobDescription={jobDescription}
-          firstQuestion={firstQuestion}
-        />
+      <div className="webcam-interview-container">
+        <div className="webcam-left-panel">
+          <h3>Candidate: {candidateName}</h3>
+
+          <textarea
+            placeholder="Job Description"
+            value={jobDescription}
+            onChange={(e) => setJobDescription(e.target.value)}
+          />
+
+          <video ref={videoRef} autoPlay muted />
+
+          {!started ? (
+            <Button onClick={handleStartInterview}>Start Interview</Button>
+          ) : (
+            <Button variant="destructive" onClick={handleStopInterview}>
+              Stop & Evaluate
+            </Button>
+          )}
+
+          <div className="debug-info">
+            Debug → name: {candidateName} | id: {candidateId} <br />
+            JD Loaded: {jobDescription?.slice(0, 50)}...
+          </div>
+        </div>
+
+        <div className="webcam-right-panel">
+          <TranscriptPanel
+            candidateName={candidateName}
+            candidateId={candidateId}
+            jobDescription={jobDescription}
+            firstQuestion={firstQuestion}
+          />
+        </div>
       </div>
     </div>
   );

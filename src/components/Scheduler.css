@@ -1,0 +1,72 @@
+.scheduler-box {
+    padding: 12px;
+    background: #fff;
+    border-radius: 8px;
+    color: #102a43;
+    max-width: 720px;
+}
+
+.scheduler-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.slots-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.slot-btn {
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    cursor: pointer;
+}
+
+.slot-btn.disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.slot-btn.selected {
+    background: #102a43;
+    color: #fff;
+    border-color: #0b2440;
+}
+
+.selected-row {
+    margin-top: 10px;
+}
+
+.btn-primary {
+    background: #0b2c52;
+    color: #fff;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-secondary {
+    background: #f1f5f9;
+    color: #102a43;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.message.success {
+    color: green;
+    margin-top: 10px;
+}
+
+.message.error {
+    color: red;
+    margin-top: 10px;
+}

@@ -149,7 +149,8 @@ export default function ValidationPanel() {
   const params = new URLSearchParams(location.search);
 
   const [candidateName, setCandidateName] = useState("");
-  const [candidateId, setCandidateId] = useState(() => uuidv4());
+  const [candidateId, setCandidateId] = useState(null);
+
   const [jdId, setJdId] = useState(null);
   const [jdText, setJdText] = useState("");
 

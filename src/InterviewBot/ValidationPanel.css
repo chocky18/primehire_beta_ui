@@ -1,126 +1,85 @@
-/* =======================
-   Container
-========================== */
+/* =====================================
+   VALIDATION PANEL (Premium Blue Accent)
+   ===================================== */
+
 .validation-container {
   width: 100%;
-  max-width: 900px;
-  margin: 20px auto;
-  padding: 20px;
+  max-width: 720px;
+  margin: 40px auto;
+  padding: 28px;
   background: #ffffff;
-  border-radius: 14px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  border-radius: 18px;
+  border: 3px solid #38bdf8;
+  box-shadow: 0 12px 28px rgba(56, 189, 248, 0.18),
+    0 6px 14px rgba(0, 0, 0, 0.08);
+  animation: fadeUp 0.4s ease;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .validation-container h2 {
-  font-size: 22px;
-  font-weight: 600;
-  text-align: left;
-  margin-bottom: 10px;
+  margin: 0 0 16px 0;
+  font-size: 26px;
+  font-weight: 700;
+  color: #0f172a;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e2e8f0;
 }
 
-
-/* =======================
-   Input Field
-========================== */
+/* ========== INPUT ========== */
 .validation-container input {
   width: 100%;
-  padding: 10px 14px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background: #fafafa;
+  padding: 12px 14px;
+  border: 2px solid #cbd5e1;
+  border-radius: 12px;
   font-size: 15px;
-  transition: 0.2s;
+  outline: none;
+  transition: 0.25s;
+  background: #f8fafc;
 }
 
 .validation-container input:focus {
-  border-color: #4b6bff;
-  background: #fff;
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(75, 107, 255, 0.15);
+  border-color: #38bdf8;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.18);
 }
 
-
-/* =======================
-   Camera + Buttons Layout
-========================== */
-.face-section {
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
-  margin-top: 15px;
+/* ========== CAMERA & ACTIONS ========== */
+.validation-container video {
+  border-radius: 14px;
+  border: 3px solid #38bdf8;
+  box-shadow: 0 6px 18px rgba(56, 189, 248, 0.25);
+  /* background: #000; */
 }
 
-video {
-  border-radius: 10px;
-  border: 2px solid #e5e5e5;
-  background: #000;
-}
-
-.face-preview {
-  width: 320px;
-  height: 240px;
-  object-fit: cover;
-  border-radius: 10px;
-  border: 2px solid #4b6bff;
-  margin-top: 10px;
-}
-
-.face-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-
-/* =======================
-   Status Messages
-========================== */
-.face-ok {
-  color: #0aa90a;
+/* ========== STATUS TEXT ========== */
+.validation-container .success-status {
+  color: #10b981;
   font-weight: 600;
-  margin-top: 6px;
 }
 
-.face-warn {
-  color: #b88a00;
+.validation-container .waiting-status {
+  color: #64748b;
   font-weight: 500;
-  margin-top: 6px;
 }
 
-
-/* =======================
-   Debug Section
-========================== */
-.debug-box {
-  margin-top: 15px;
+/* ========== DEBUG SECTION ========== */
+.validation-container pre {
+  max-height: 100px;
+  overflow: auto;
+  background: #f1f5f9;
+  border-radius: 10px;
   padding: 10px;
-  background: #f5f5f5;
-  border-radius: 8px;
-  font-size: 13px;
-  opacity: 0.8;
-}
-
-
-/* =======================
-   Responsive Design
-========================== */
-@media (max-width: 768px) {
-  .face-section {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  video,
-  .face-preview {
-    width: 260px !important;
-    height: 200px !important;
-  }
-
-  .face-buttons {
-    width: 100%;
-    align-items: center;
-  }
+  font-size: 14px;
+  color: #475569;
 }

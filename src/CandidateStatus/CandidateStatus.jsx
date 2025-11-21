@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
 import "./CandidateStatus.css";
 
-// 📊 Recharts
 import {
     BarChart,
     Bar,
@@ -10,51 +10,80 @@ import {
     Tooltip,
     ResponsiveContainer,
 } from "recharts";
-import { Link } from "react-router-dom";
+
+import { API_BASE } from "@/utils/constants";
 
 const CandidateStatus = () => {
-    // Bar chart data
+    const { id } = useParams(); // jd_id
+    const [jdData, setJDData] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    const fetchJDDetails = async () => {
+        try {
+            const res = await fetch(`${API_BASE}/mcp/tools/jd_history/jd/history/${id}`);
+            const data = await res.json();
+            setJDData(data);
+        } catch (err) {
+            console.error("Failed to load JD details:", err);
+        }
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        fetchJDDetails();
+    }, []);
+
+    if (loading) return <p>Loading...</p>;
+    if (!jdData) return <p>JD not found.</p>;
+
+    const matches = jdData.matches || [];
+
+    // Chart values
     const chartData = [
-        { name: "Applied", value: 250 },
-        { name: "Shortlisted", value: 70 },
-        { name: "Interview", value: 25 },
-        { name: "Onboarding", value: 12 },
+        { name: "Matched", value: matches.length },
+        { name: "Shortlisted", value: matches.filter(m => m.scores.final_score >= 75).length },
+        { name: "Moderate", value: matches.filter(m => m.scores.final_score >= 50 && m.scores.final_score < 75).length },
+        { name: "Low Fit", value: matches.filter(m => m.scores.final_score < 50).length },
     ];
 
     return (
         <div className="dashboard-container">
-            <h2 className="dashboard-title">Candidate Status Dashboard</h2>
+            <h2 className="dashboard-title">
+                Candidate Status — <span style={{ color: "#4a90e2" }}>{jdData.designation}</span>
+            </h2>
 
-            {/* Stats Section */}
+            {/* Stats */}
             <div className="stats-container">
                 <div className="stat-card">
-                    <p>Total Candidates</p>
-                    <h3>432</h3>
-                </div>
-                <div className="stat-card">
-                    <p>Pending Screening</p>
-                    <h3>24</h3>
-                </div>
-                <div className="stat-card">
-                    <p>Offers Released</p>
-                    <h3>6</h3>
-                </div>
-                <div className="stat-card">
-                    <p>Profile Match Score</p>
-                    <h3>75%</h3>
+                    <p>Total Matched Candidates</p>
+                    <h3>{matches.length}</h3>
                 </div>
 
-                {/* Search */}
+                <div className="stat-card">
+                    <p>High Match Score</p>
+                    <h3>{chartData[1].value}</h3>
+                </div>
+
+                <div className="stat-card">
+                    <p>Moderate Fit</p>
+                    <h3>{chartData[2].value}</h3>
+                </div>
+
+                <div className="stat-card">
+                    <p>Low Fit</p>
+                    <h3>{chartData[3].value}</h3>
+                </div>
+
                 <div className="search-box">
-                    <input type="text" placeholder="Search..." />
+                    <input type="text" placeholder="Search candidates…" />
                 </div>
             </div>
 
             {/* Bottom Section */}
             <div className="bottom-section">
-                {/* Chart Section */}
+                {/* Chart */}
                 <div className="chart-box">
-                    <h3>Candidate Status</h3>
+                    <h3>Match Distribution</h3>
 
                     <ResponsiveContainer width="100%" height={260}>
                         <BarChart data={chartData}>
@@ -66,54 +95,46 @@ const CandidateStatus = () => {
                     </ResponsiveContainer>
                 </div>
 
-                {/* Table Section */}
+                {/* Candidate Table */}
                 <div className="table-box">
-                    <h3>Candidates</h3>
+                    <h3>Matched Candidates</h3>
+
                     <table>
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Email</th>
+                                <th>Designation</th>
                                 <th>Phone</th>
-                                <th>Interview Round</th>
-                                <th>Status</th>
+                                <th>Email</th>
+                                <th>Score</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
+
                         <tbody>
-                            <tr>
-                                <td>
-                                    <Link to="/candidate-overview" className="candidate-link">
-                                        Jane Smith
-                                    </Link>
-                                </td>
-                                <td>janesmith@example.com</td>
-                                <td>(123) 456-7830</td>
-                                <td>Round 2</td>
-                                <td className="status-shortlisted">Shortlisted</td>
-                            </tr>
-                            <tr>
-                                <td>John Doe</td>
-                                <td>johndoe@example.com</td>
-                                <td>(997) 654-3210</td>
-                                <td>Applied</td>
-                                <td>Applied</td>
-                            </tr>
-                            <tr>
-                                <td>Emily Johns</td>
-                                <td>emilyj@example.com</td>
-                                <td>(555) 123-4567</td>
-                                <td>Reported</td>
-                                <td className="status-completed">Interview Completed</td>
-                            </tr>
-                            <tr>
-                                <td>Michael Brown</td>
-                                <td>mbrown@example.com</td>
-                                <td>(444) 567-8801</td>
-                                <td>Round 1</td>
-                                <td>Applied</td>
-                            </tr>
+                            {matches.map((m, i) => (
+                                <tr key={i}>
+                                    <td>{m.name}</td>
+                                    <td>{m.designation}</td>
+                                    <td>{m.phone || "—"}</td>
+                                    <td>{m.email || "—"}</td>
+                                    <td>{m.scores?.final_score}</td>
+                                    <td>
+                                        <Link
+                                            to={`/candidate-overview/${m.candidate_id}`}
+                                            className="candidate-link"
+                                        >
+                                            View
+                                        </Link>
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
+
+                    {matches.length === 0 && (
+                        <p style={{ padding: "12px", color: "gray" }}>No matched candidates.</p>
+                    )}
                 </div>
             </div>
         </div>
