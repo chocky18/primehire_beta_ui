@@ -1,59 +1,67 @@
 import React, { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
 import { API_BASE } from "@/utils/constants";
+import "./CandidateStatus.css";
 
 export default function CandidateStatus() {
+  const { jd_id } = useParams();
+  console.log("JD ID from route:", jd_id);
   const [attempts, setAttempts] = useState([]);
-  const [loading, setLoading] = useState(false);
 
   const fetchAttempts = async () => {
-    setLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/mcp/tools/jd_history/scheduler/attempts/all`);
+      const res = await fetch(`${API_BASE}/mcp/tools/jd_history/scheduler/attempts/${jd_id}`);
       const data = await res.json();
       if (data.ok) setAttempts(data.attempts);
     } catch (err) {
       console.error("Error fetching attempts:", err);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
     fetchAttempts();
-
-    // Auto-refresh every 10 seconds
-    const interval = setInterval(() => fetchAttempts(), 10000);
+    const interval = setInterval(fetchAttempts, 10000);
     return () => clearInterval(interval);
-  }, []);
+  }, [jd_id]);
 
   return (
-    <div style={{ padding: 20 }}>
-      <h2>📊 Candidate Interview Status</h2>
+    <div className="candidate-container">
+      <div className="table-header">
+        <h4>📊 Candidate Interview Status — {attempts[0]?.designation || "Loading..."}</h4>
+      </div>
 
-      {loading && <div>Loading...</div>}
-
-      <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "center" }}>
-        <thead style={{ background: "#f0f0f0" }}>
+      <table className="test-table">
+        <thead>
           <tr>
             <th>Name</th>
             <th>Email</th>
-            <th>JD ID</th>
             <th>Scheduled Time</th>
             <th>Status</th>
             <th>Total Score</th>
           </tr>
         </thead>
+
         <tbody>
           {attempts.map((a) => (
-            <tr key={a.attempt_id} style={{ borderBottom: "1px solid #ddd" }}>
+            <tr key={a.attempt_id}>
               <td>{a.name}</td>
-              <td>{a.email}</td>
-              <td>{a.jd_id}</td>
-              <td>{new Date(a.slot_start).toLocaleString()}</td>
+
+              <td>
+                <Link
+                  to={`/candidate/${a.attempt_id}`}
+                  style={{ textDecoration: "none", color: "#007bff", cursor: "pointer" }}
+                >
+                  {a.email}
+                </Link>
+              </td>
+
+              <td>{a.slot_start ? new Date(a.slot_start).toLocaleString() : "—"}</td>
               <td>{a.progress}</td>
               <td>{a.totalScore ?? "—"}</td>
             </tr>
           ))}
         </tbody>
+
       </table>
     </div>
   );
