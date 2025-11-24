@@ -1,72 +1,395 @@
-.scheduler-box {
-    padding: 12px;
-    background: #fff;
-    border-radius: 8px;
-    color: #102a43;
-    max-width: 720px;
+/* =====================================
+   SCHEDULER - Interview Scheduling
+   ===================================== */
+
+.scheduler-container {
+  max-width: 800px;
+  margin: 3rem auto;
+  padding: 2.5rem;
+  background: #ffffff;
+  border-radius: 20px;
+  border: 3px solid #38bdf8;
+  box-shadow: 
+    0 12px 32px rgba(56, 189, 248, 0.2),
+    0 6px 16px rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.5s ease;
 }
 
-.scheduler-row {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin-bottom: 8px;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========== HEADING ========== */
+.scheduler-container h2 {
+  margin: 0 0 1.5rem 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0f172a;
+  text-align: center;
+  padding-bottom: 1rem;
+  border-bottom: 3px solid #38bdf8;
+  background: linear-gradient(135deg, #0f172a 0%, #1e40af 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ========== INFO TEXT ========== */
+.scheduler-container > p {
+  font-size: 1rem;
+  color: #475569;
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+
+.scheduler-container > p strong {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+/* ========== DATE SECTION ========== */
+.date-section {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 2px solid #bae6fd;
+  border-radius: 12px;
+}
+
+.date-section label {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #0c4a6e;
+  margin-bottom: 0.75rem;
+}
+
+.date-input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 2px solid #0ea5e9;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #0f172a;
+  background: #ffffff;
+  outline: none;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.date-input:focus {
+  border-color: #0284c7;
+  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.2);
+  transform: translateY(-1px);
+}
+
+.date-input:hover {
+  border-color: #0284c7;
+}
+
+/* ========== SLOTS SECTION ========== */
+.slots-section {
+  margin: 2rem 0;
+}
+
+.slots-section h4 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 1rem;
+  padding-left: 0.5rem;
+  border-left: 4px solid #0ea5e9;
 }
 
 .slots-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
 }
 
-.slot-btn {
-    padding: 8px 10px;
-    border-radius: 6px;
-    border: 1px solid #e2e8f0;
-    background: #f8fafc;
-    cursor: pointer;
+/* ========== SLOT BUTTONS ========== */
+.slot-button {
+  padding: 0.75rem 0.5rem;
+  border: 2px solid #cbd5e1;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #475569;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-align: center;
 }
 
-.slot-btn.disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
+.slot-button:hover {
+  background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+  border-color: #0ea5e9;
+  color: #0c4a6e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
 }
 
-.slot-btn.selected {
-    background: #102a43;
-    color: #fff;
-    border-color: #0b2440;
+.slot-button:active {
+  transform: translateY(0);
 }
 
-.selected-row {
-    margin-top: 10px;
+.slot-button.selected {
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+  border-color: #0284c7;
+  color: #ffffff;
+  box-shadow: 0 6px 16px rgba(14, 165, 233, 0.35);
+  transform: translateY(-2px);
 }
 
-.btn-primary {
-    background: #0b2c52;
-    color: #fff;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+.slot-button.selected:hover {
+  background: linear-gradient(135deg, #0284c7, #0369a1);
+  box-shadow: 0 8px 20px rgba(14, 165, 233, 0.4);
 }
 
-.btn-secondary {
-    background: #f1f5f9;
-    color: #102a43;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+/* ========== ACTIONS SECTION ========== */
+.actions-section {
+  display: flex;
+  gap: 1rem;
+  margin: 2.5rem 0 2rem 0;
+  justify-content: center;
 }
 
-.message.success {
-    color: green;
-    margin-top: 10px;
+/* ========== BUTTONS ========== */
+.confirm-button {
+  flex: 1;
+  max-width: 250px;
+  padding: 0.95rem 2rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: linear-gradient(135deg, #10b981, #059669);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.message.error {
-    color: red;
-    margin-top: 10px;
+.confirm-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #059669, #047857);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+}
+
+.confirm-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.confirm-button:disabled {
+  background: linear-gradient(135deg, #cbd5e1, #94a3b8);
+  cursor: not-allowed;
+  opacity: 0.7;
+  box-shadow: none;
+}
+
+.cancel-button {
+  flex: 1;
+  max-width: 200px;
+  padding: 0.95rem 2rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #dc2626;
+  background: #ffffff;
+  border: 2px solid #dc2626;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cancel-button:hover {
+  background: #dc2626;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(220, 38, 38, 0.3);
+}
+
+.cancel-button:active {
+  transform: translateY(0);
+}
+
+/* ========== CONFIRMATION BOX ========== */
+.confirmation-box {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  border: 3px solid #10b981;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.2);
+  animation: slideIn 0.4s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.confirmation-box h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #065f46;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.confirmation-box h4::before {
+  content: "✓";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 1rem;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.confirmation-box > div {
+  padding: 0.6rem 0;
+  font-size: 0.95rem;
+  color: #065f46;
+  border-bottom: 1px solid #6ee7b7;
+}
+
+.confirmation-box > div:last-child {
+  border-bottom: none;
+}
+
+.confirmation-box > div strong {
+  font-weight: 700;
+  color: #064e3b;
+}
+
+/* ========== RESPONSIVE DESIGN ========== */
+@media (max-width: 768px) {
+  .scheduler-container {
+    margin: 2rem 1rem;
+    padding: 2rem 1.5rem;
+  }
+
+  .scheduler-container h2 {
+    font-size: 1.75rem;
+  }
+
+  .slots-grid {
+    grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+    gap: 0.6rem;
+  }
+
+  .slot-button {
+    padding: 0.65rem 0.4rem;
+    font-size: 0.9rem;
+  }
+
+  .actions-section {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .confirm-button,
+  .cancel-button {
+    max-width: 100%;
+    padding: 0.85rem 1.5rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .scheduler-container {
+    margin: 1.5rem 0.75rem;
+    padding: 1.5rem 1rem;
+  }
+
+  .scheduler-container h2 {
+    font-size: 1.5rem;
+  }
+
+  .scheduler-container > p {
+    font-size: 0.95rem;
+  }
+
+  .date-section {
+    padding: 1.25rem;
+  }
+
+  .slots-grid {
+    grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .slot-button {
+    padding: 0.6rem 0.3rem;
+    font-size: 0.85rem;
+  }
+
+  .confirmation-box {
+    padding: 1.25rem;
+  }
+
+  .confirmation-box h4 {
+    font-size: 1.1rem;
+  }
+
+  .confirmation-box > div {
+    font-size: 0.9rem;
+  }
+}
+
+/* ========== LOADING STATE ========== */
+.confirm-button:disabled::after {
+  content: "";
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-left: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ========== PRINT STYLES ========== */
+@media print {
+  .actions-section {
+    display: none;
+  }
+
+  .scheduler-container {
+    box-shadow: none;
+    border: 2px solid #e5e7eb;
+  }
 }
