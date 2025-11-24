@@ -1,6 +1,5 @@
-/* =============================
-   TRANSCRIPT PANEL (Premium UI)
-============================= */
+/* TranscriptPanel.css */
+
 .transcript-panel {
   position: fixed;
   top: 0;
@@ -8,7 +7,6 @@
   width: 50%;
   height: 100vh;
   background: #ffffff;
-
   box-shadow: -8px 0 24px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
@@ -25,7 +23,6 @@
     transform: translateX(50px);
     opacity: 0;
   }
-
   to {
     transform: translateX(0);
     opacity: 1;
@@ -56,7 +53,6 @@
 
 .transcript-actions button {
   padding: 10px 16px;
-
   border: none;
   color: #fff;
   border-radius: 10px;
@@ -64,19 +60,71 @@
   font-size: 14px;
   font-weight: 600;
   transition: 0.2s ease-in-out;
-  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
-.transcript-actions button:hover {
+/* Start / Next Question Button - Blue/Cyan */
+.transcript-actions button:nth-child(1) {
+  background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);
+}
 
+.transcript-actions button:nth-child(1):hover:not(:disabled) {
+  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
   transform: translateY(-2px);
   box-shadow: 0 6px 18px rgba(56, 189, 248, 0.35);
 }
 
-.transcript-actions button:active {
+/* Record Button - Green */
+.transcript-actions button:nth-child(2) {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+
+.transcript-actions button:nth-child(2):hover:not(:disabled) {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35);
+}
+
+/* Stop & Send Button - Red/Orange (when recording) */
+.transcript-actions button:nth-child(2).recording {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.transcript-actions button:nth-child(2).recording:hover:not(:disabled) {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(239, 68, 68, 0.35);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(239, 68, 68, 0.5);
+  }
+}
+
+/* Disabled state for all buttons */
+.transcript-actions button:disabled {
+  background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%);
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
+}
+
+.transcript-actions button:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.transcript-actions button:active:not(:disabled) {
   transform: scale(0.97);
 }
 
@@ -109,9 +157,8 @@
 .transcript-messages::-webkit-scrollbar {
   width: 6px;
 }
-
 .transcript-messages::-webkit-scrollbar-thumb {
-
+  background: #cbd5e1;
   border-radius: 4px;
 }
 
@@ -148,17 +195,15 @@
 .ai-row {
   justify-content: flex-start;
 }
-
 .ai-row .transcript-message {
   background: rgba(56, 189, 248, 0.12);
-
+  border-left: 4px solid #38bdf8;
 }
 
 /* User Message */
 .user-row {
   justify-content: flex-end;
 }
-
 .user-row .transcript-message {
   background: rgba(16, 185, 129, 0.13);
   border-right: 4px solid #10b981;
