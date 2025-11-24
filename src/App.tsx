@@ -26,12 +26,18 @@ const App = () => (
           <Route path="/webcam-recorder" element={<WebcamRecorder />} />
           <Route path="/certificatedata" element={<CertificateData />} />
           <Route path="/instructions" element={<InstructionsPrompt />} />
-          <Route path="/candidate-status/:id" element={<CandidateStatus />} />
-          <Route path="/validation_panel" element={<ValidationPanel />} />
+
+          {/* ⬇ move this before wildcard */}
+          <Route path="/candidate-status/:jd_id" element={<CandidateStatus />} />
+
           <Route path="/candidate/:id" element={<CandidateOverview />} />
+          <Route path="/validation_panel" element={<ValidationPanel />} />
           <Route path="/scheduler" element={<Scheduler />} />
+
+          {/* ⬇ If this appears above the param route, it breaks params */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
