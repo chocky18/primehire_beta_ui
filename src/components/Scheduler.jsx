@@ -57,7 +57,7 @@ export default function Scheduler() {
 
         // End time after 20 minutes
         const endDt = new Date(startDt.getTime() + 20 * 60 * 1000);
-        console.log("PAYLOAD >>>", payload);
+        
         const payload = {
             candidate_id: candidateId,
             jd_id: parseInt(jdId, 10),
@@ -66,6 +66,7 @@ export default function Scheduler() {
             slot_minutes: 20,
         };
         console.log("JD PARAMS >>>", jdId, typeof jdId);
+        console.log("PAYLOAD >>>", payload);
         try {
             const res = await fetch(`${API_BASE}/mcp/tools/jd_history/scheduler/schedule`, {
                 method: "POST",
