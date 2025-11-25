@@ -8,49 +8,82 @@ export default function UploadUI() {
     const [uploading, setUploading] = React.useState(false);
     const [uploadedData, setUploadedData] = React.useState([]);
 
-    const { progressData, isProcessing } = useUploadProgress();
+    const {
+        progressData,
+        isProcessing,
+        isCompleted,
+        setProgressData,
+        setIsCompleted
+    } = useUploadProgress();
 
-    // handler functions here...
-    const handleFileChange = (e) => setFiles(Array.from(e.target.files));
+    const handleFileChange = (e) => {
+        const selected = Array.from(e.target.files);
+        setFiles(selected);
+        setUploadedData([]);
+        setIsCompleted(false);
+
+        setProgressData({
+            total: 0,
+            processed: 0,
+            completed: [],
+            errors: [],
+            status: "idle"
+        });
+    };
+
+    const resetAll = () => {
+        setUploadedData([]);
+        setIsCompleted(false);
+        setProgressData({
+            total: 0,
+            processed: 0,
+            completed: [],
+            errors: [],
+            status: "idle"
+        });
+
+        fetch("https://primehire.nirmataneurotech.com/mcp/tools/resume/reset", { method: "POST" });
+    };
 
     const handleUpload = async () => {
         if (!files.length) return;
 
-        window.dispatchEvent(new Event("refresh_trigger"));
+        resetAll();
         setUploading(true);
 
         try {
             const formData = new FormData();
-            files.forEach((f) => formData.append("files", f));
+            files.forEach(f => formData.append("files", f));
 
-            await fetch(
-                "https://primehire.nirmataneurotech.com/mcp/tools/resume/upload",
-                { method: "POST", body: formData }
-            );
+            await fetch("https://primehire.nirmataneurotech.com/mcp/tools/resume/upload", {
+                method: "POST",
+                body: formData
+            });
+
         } finally {
             setUploading(false);
         }
     };
 
     React.useEffect(() => {
-        if (
-            progressData &&
-            progressData.total > 0 &&
-            progressData.processed === progressData.total
-        ) {
-            fetch("https://primehire.nirmataneurotech.com/mcp/tools/resume/recent")
-                .then((r) => r.json())
-                .then((d) => setUploadedData(d.recent_candidates || []));
+        if (progressData.total > 0 && progressData.processed === progressData.total) {
+            fetch(
+                "https://primehire.nirmataneurotech.com/mcp/tools/resume/recent?limit=" +
+                progressData.total
+            )
+                .then(r => r.json())
+                .then(d => setUploadedData(d.recent_candidates || []));
         }
-    }, [progressData]);
+    }, [progressData.processed]);
 
     const progressPercent =
-        progressData && progressData.total
+        progressData.total > 0
             ? Math.round((progressData.processed / progressData.total) * 100)
             : 0;
 
     return (
         <div className="upload-box mt-3">
+
             <input
                 id="resume-upload"
                 type="file"
@@ -59,6 +92,7 @@ export default function UploadUI() {
                 onChange={handleFileChange}
                 className="hidden"
             />
+
             <label htmlFor="resume-upload" className="upload-label">
                 Choose Files
             </label>
@@ -74,7 +108,7 @@ export default function UploadUI() {
                 </div>
             )}
 
-            {progressData && progressData.total > 0 && (
+            {isProcessing && (
                 <div className="upload-progress">
                     <div className="progress-bar">
                         <div
@@ -84,30 +118,61 @@ export default function UploadUI() {
                     </div>
 
                     <p className="progress-status">
-                        {isProcessing ? (
-                            <span className="processing">
-                                Processing {progressData.processed}/{progressData.total}...
-                            </span>
-                        ) : (
-                            <span className="success">✅ All resumes processed</span>
-                        )}
+                        Processing {progressData.processed}/{progressData.total}
                     </p>
+
+                    {progressData.completed.length > 0 && (
+                        <ul className="completed-files-list">
+                            {progressData.completed.map((file, i) => (
+                                <li key={i}>✔ {file}</li>
+                            ))}
+                        </ul>
+                    )}
+
+                    {progressData.errors.length > 0 && (
+                        <ul className="error-files-list">
+                            {progressData.errors.map((file, i) => (
+                                <li key={i}>❌ {file}</li>
+                            ))}
+                        </ul>
+                    )}
                 </div>
             )}
+
+            {isCompleted && <p className="progress-status success">✅ Upload Complete</p>}
 
             <button
-                onClick={handleUpload}
-                disabled={!files.length || uploading}
+                onClick={() => {
+                    if (isCompleted) {
+                        resetAll();
+                        setFiles([]);
+                        setTimeout(() => document.getElementById("resume-upload").click(), 50);
+                        return;
+                    }
+
+                    if (files.length > 0) {
+                        handleUpload();
+                        return;
+                    }
+
+                    document.getElementById("resume-upload").click();
+                }}
+                disabled={uploading}
                 className="upload-btn"
             >
-                {uploading ? "Uploading..." : "Start Upload"}
+                {uploading
+                    ? "Uploading..."
+                    : isProcessing
+                        ? "Processing..."
+                        : isCompleted
+                            ? "Upload Again"
+                            : "Start Upload"}
             </button>
 
-            {uploadedData.length > 0 && (
-                <div className="mt-6">
-                    <ResumeTable data={uploadedData} />
-                </div>
+            {uploadedData.length > 0 && !uploading && !isProcessing && (
+                <ResumeTable data={uploadedData} />
             )}
+
         </div>
     );
 }
