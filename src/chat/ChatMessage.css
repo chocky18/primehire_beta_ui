@@ -21,8 +21,9 @@
   justify-content: center;
   font-weight: 600;
   font-size: 0.875rem;
-  background-color: hsl(var(--primary));
+ 
   color: hsl(var(--primary-foreground));
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
 }
 
 .chat-content {
