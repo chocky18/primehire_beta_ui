@@ -1,56 +1,81 @@
+// src/components/TranscriptPanel.jsx
 import React, { useState, useEffect, useRef } from "react";
-import { Button } from "@/components/ui/button";
 import { API_BASE } from "@/utils/constants";
-import "./TranscriptPanel.css"
+import "./TranscriptPanel.css";
+import { Button } from "@/components/ui/button";
 
-export default function TranscriptPanel({ candidateName = "Anonymous", candidateId = null, jobDescription = "" }) {
+export default function TranscriptPanel({
+  candidateName = "Anonymous",
+  candidateId = null,
+  jobDescription = "",
+  firstQuestion = null
+}) {
   const [transcript, setTranscript] = useState([]);
   const [recording, setRecording] = useState(false);
   const [recorder, setRecorder] = useState(null);
   const [interviewCompleted, setInterviewCompleted] = useState(false);
   const transcriptEndRef = useRef(null);
 
+  // Scroll to bottom when new message
   useEffect(() => {
     transcriptEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [transcript]);
 
+
+  // ============ ANOMALY LISTENER ============
+  useEffect(() => {
+    const listener = (e) => {
+      setTranscript((t) => [
+        ...t,
+        { sender: "system", text: `⚠ Anomaly detected: ${e.detail}` },
+      ]);
+    };
+
+    window.addEventListener("anomalyEvent", listener);
+    return () => window.removeEventListener("anomalyEvent", listener);
+  }, []);
+
+
   const speak = (text) => {
     if (!text) return;
-    setTranscript((t) => [...t, { sender: "ai", text }]);
     const u = new SpeechSynthesisUtterance(text);
     speechSynthesis.cancel();
     speechSynthesis.speak(u);
   };
 
+  // ================= FIRST QUESTION LOAD =================
+  useEffect(() => {
+    if (firstQuestion) {
+      setTranscript((t) => [...t, { sender: "ai", text: firstQuestion }]);
+      speak(firstQuestion);
+    }
+  }, [firstQuestion]);
+
+
   async function generateQuestion() {
     if (!jobDescription.trim()) {
-      alert("Please paste job description in the left panel.");
+      alert("Paste job description first.");
       return;
     }
 
     const fd = new FormData();
     fd.append("init", "true");
-    fd.append("candidate_name", candidateName || "Anonymous");
+    fd.append("candidate_name", candidateName);
     fd.append("job_description", jobDescription);
     if (candidateId) fd.append("candidate_id", candidateId);
 
-    console.log("[TranscriptPanel] generateQuestion payload:", { candidateName, candidateId });
     try {
-      const r = await fetch(`${API_BASE}/mcp/interview_bot_beta/process-answer`, { method: "POST", body: fd });
+      const r = await fetch(`${API_BASE}/mcp/interview_bot_beta/process-answer`, {
+        method: "POST", body: fd
+      });
+
       const d = await r.json();
-      console.log("[TranscriptPanel] generateQuestion response:", d);
       if (d.ok && d.next_question) {
         setTranscript((t) => [...t, { sender: "ai", text: d.next_question }]);
-        if (d.candidate_id) {
-          console.log("[TranscriptPanel] backend returned candidate_id:", d.candidate_id);
-        }
         speak(d.next_question);
-      } else {
-        alert("No question returned.");
       }
     } catch (err) {
-      console.error("generateQuestion error:", err);
-      alert("Failed to get next question.");
+      alert("Failed to fetch question.");
     }
   }
 
@@ -59,74 +84,75 @@ export default function TranscriptPanel({ candidateName = "Anonymous", candidate
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const rec = new MediaRecorder(stream);
       const chunks = [];
+
       rec.ondataavailable = (e) => chunks.push(e.data);
       rec.onstop = async () => {
         const blob = new Blob(chunks, { type: "audio/webm" });
         await sendAnswer(blob);
         stream.getTracks().forEach((t) => t.stop());
       };
+
       rec.start();
       setRecorder(rec);
       setRecording(true);
-    } catch (err) {
-      console.error("Mic error:", err);
-      alert("Please allow mic.");
+    } catch {
+      alert("Microphone permission denied.");
     }
   }
 
   function stopAndSend() {
-    if (recorder) {
-      recorder.stop();
-      setRecording(false);
-    }
+    if (recorder) recorder.stop();
+    setRecording(false);
   }
 
   async function sendAnswer(blob) {
     const fd = new FormData();
     fd.append("audio", blob);
-    fd.append("candidate_name", candidateName || "Anonymous");
+    fd.append("candidate_name", candidateName);
     fd.append("job_description", jobDescription);
     if (candidateId) fd.append("candidate_id", candidateId);
 
-    console.log("[TranscriptPanel] sendAnswer, candidate:", { candidateName, candidateId });
     try {
-      const r = await fetch(`${API_BASE}/mcp/interview_bot_beta/process-answer`, { method: "POST", body: fd });
+      const r = await fetch(`${API_BASE}/mcp/interview_bot_beta/process-answer`, {
+        method: "POST", body: fd
+      });
+
       const d = await r.json();
-      console.log("[TranscriptPanel] sendAnswer response:", d);
 
       if (d.ok && d.transcribed_text) {
         setTranscript((t) => [...t, { sender: "user", text: d.transcribed_text }]);
       }
+
       if (d.next_question && !d.completed) {
-        // setTranscript((t) => [...t, { sender: "ai", text: d.next_question }]);
+        setTranscript((t) => [...t, { sender: "ai", text: d.next_question }]);
         speak(d.next_question);
       }
+
       if (d.completed) {
-        setTranscript((t) => [...t, { sender: "ai", text: d.final_message || "Interview complete." }]);
+        setTranscript((t) => [
+          ...t,
+          { sender: "ai", text: d.final_message || "Interview complete." },
+        ]);
         setInterviewCompleted(true);
       }
-    } catch (err) {
-      console.error("sendAnswer error:", err);
-      alert("Failed to send audio.");
+    } catch {
+      alert("Failed to send answer.");
     }
   }
 
   return (
     <div className="transcript-panel">
       <h3>Transcript</h3>
-      
+
       <div className="transcript-actions">
-        <button onClick={generateQuestion} disabled={recording || interviewCompleted}>
+        <Button onClick={generateQuestion} disabled={recording || interviewCompleted}>
           Start / Next Question
-        </button>
+        </Button>
+
         {!recording ? (
-          <button onClick={startRecording} disabled={interviewCompleted}>
-            Record
-          </button>
+          <Button onClick={startRecording} disabled={interviewCompleted}>Record</Button>
         ) : (
-          <button onClick={stopAndSend} className="recording">
-            Stop & Send
-          </button>
+          <Button onClick={stopAndSend} className="recording">Stop & Send</Button>
         )}
       </div>
 
@@ -135,15 +161,22 @@ export default function TranscriptPanel({ candidateName = "Anonymous", candidate
           <div className="transcript-empty">No conversation yet.</div>
         ) : (
           transcript.map((m, i) => (
-            <div key={i} className={`transcript-message-row ${m.sender === "ai" ? "ai-row" : "user-row"}`}>
+            <div
+              key={i}
+              className={`transcript-message-row ${m.sender === "ai" ? "ai-row" :
+                m.sender === "system" ? "system-row" : "user-row"
+                }`}
+            >
               <div className="transcript-message">
-                <div className="message-header">{m.sender === "ai" ? "AI" : "You"}</div>
+                <div className="message-header">
+                  {m.sender === "ai" ? "AI" : m.sender === "system" ? "System" : "You"}
+                </div>
                 {m.text}
               </div>
             </div>
           ))
         )}
-        <div ref={transcriptEndRef} />
+        <div ref={transcriptEndRef}></div>
       </div>
     </div>
   );
