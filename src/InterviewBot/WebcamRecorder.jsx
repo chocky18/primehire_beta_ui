@@ -19,7 +19,6 @@ export default function WebcamRecorder() {
 
   const [candidateId, setCandidateId] = useState(initialId);
   const [started, setStarted] = useState(false);
-
   const [jobDescription, setJobDescription] = useState(jd_text);
   const [firstQuestion, setFirstQuestion] = useState(null);
 
@@ -29,34 +28,42 @@ export default function WebcamRecorder() {
   const videoRef = useRef();
 
   useEffect(() => {
-    console.log("[WebcamRecorder] Loaded values:", {
+    console.log("[WebcamRecorder] Loaded:", {
       candidateName,
       candidateId,
       jd_id,
-      jd_text,
+      jd_text
     });
-    setJobDescription(jd_text);
   }, []);
 
-  // ================== TAB SWITCH DETECTOR ==================
+  // =======================================================
+  // ⭐ FIX 1 — TAB SWITCH PREVENT BEFORE candidateId EXISTS
+  // =======================================================
   useEffect(() => {
     const handleTabChange = async () => {
+      if (!candidateId) {
+        console.warn("⚠ Tab event ignored — candidateId not ready yet");
+        return;
+      }
+
       if (document.hidden) {
         setTabWarning(true);
         alert("⚠ Don’t switch the tab during the interview!");
 
         const fd = new FormData();
         fd.append("candidate_name", candidateName);
+        fd.append("candidate_id", candidateId);   // ⭐ FIX
         fd.append("event_type", "tab_switch");
         fd.append("event_msg", "User switched tab during interview");
-        fd.append("candidate_id", candidateId);
 
-        await fetch(`${API_BASE}/mcp/interview/face-monitor`, { method: "POST", body: fd });
+        await fetch(`${API_BASE}/mcp/interview/face-monitor`, {
+          method: "POST",
+          body: fd
+        });
 
-        // Dispatch event to TranscriptPanel
         window.dispatchEvent(
           new CustomEvent("anomalyEvent", {
-            detail: "Tab switch detected",
+            detail: "Tab switch detected"
           })
         );
       } else {
@@ -65,22 +72,33 @@ export default function WebcamRecorder() {
     };
 
     document.addEventListener("visibilitychange", handleTabChange);
-    return () => document.removeEventListener("visibilitychange", handleTabChange);
-  }, []);
+    return () =>
+      document.removeEventListener("visibilitychange", handleTabChange);
+  }, [candidateId]); // ⭐ FIX dependency
 
-  // ================== CAMERA STREAM ==================
+
+  // =======================================================
+  // CAMERA STREAM
+  // =======================================================
   async function startCamera() {
     const stream = await navigator.mediaDevices.getUserMedia({
       video: true,
-      audio: false,
+      audio: false
     });
     videoRef.current.srcObject = stream;
     await videoRef.current.play();
   }
 
-  // ================== SEND FRAME EVERY 3 SECONDS ==================
+
+  // =======================================================
+  // ⭐ FIX 2 — START FACE MONITOR ONLY AFTER candidateId is ready
+  // =======================================================
   useEffect(() => {
     if (!started) return;
+    if (!candidateId) {
+      console.warn("⏳ Waiting for candidateId before face monitor begins…");
+      return;
+    }
 
     startCamera();
 
@@ -90,18 +108,20 @@ export default function WebcamRecorder() {
       const canvas = document.createElement("canvas");
       canvas.width = videoRef.current.videoWidth;
       canvas.height = videoRef.current.videoHeight;
+
       const ctx = canvas.getContext("2d");
       ctx.drawImage(videoRef.current, 0, 0);
 
       canvas.toBlob(async (blob) => {
+        if (!candidateId) return; // ⭐ safety check
         const fd = new FormData();
         fd.append("candidate_name", candidateName);
+        fd.append("candidate_id", candidateId); // ⭐ FIX
         fd.append("frame", blob);
-        fd.append("candidate_id", candidateId);
 
         const r = await fetch(`${API_BASE}/mcp/interview/face-monitor`, {
           method: "POST",
-          body: fd,
+          body: fd
         });
 
         const data = await r.json();
@@ -119,10 +139,12 @@ export default function WebcamRecorder() {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [started]);
+  }, [started, candidateId]); // ⭐ FIXED DEPENDENCIES
 
 
-  // ================== INTERVIEW START ==================
+  // =======================================================
+  // INTERVIEW START
+  // =======================================================
   const handleStartInterview = async () => {
     setStarted(true);
 
@@ -140,7 +162,10 @@ export default function WebcamRecorder() {
       const d = await res.json();
 
       if (d.ok) {
-        if (d.candidate_id) setCandidateId(d.candidate_id);
+        if (d.candidate_id) {
+          console.log("⭐ Backend assigned candidateId:", d.candidate_id);
+          setCandidateId(d.candidate_id); // ⭐ NOW candidateId becomes valid
+        }
         if (d.next_question) setFirstQuestion(d.next_question);
       }
     } catch (e) {
@@ -148,6 +173,9 @@ export default function WebcamRecorder() {
     }
   };
 
+  // =======================================================
+  // STOP INTERVIEW
+  // =======================================================
   const handleStopInterview = async () => {
     setStarted(false);
 
@@ -172,8 +200,8 @@ export default function WebcamRecorder() {
             overall: d.overall,
             result: d.result,
             feedback: d.feedback,
-            designation: d.designation,
-          },
+            designation: d.designation
+          }
         });
       } else {
         alert("Evaluation failed: " + d.error);
@@ -183,6 +211,9 @@ export default function WebcamRecorder() {
     }
   };
 
+  // =======================================================
+  // RENDER
+  // =======================================================
   return (
     <div className="webcam-interview-wrapper">
       <div className="webcam-navbar">
@@ -201,7 +232,6 @@ export default function WebcamRecorder() {
 
           <div className="video-container">
             <video ref={videoRef} autoPlay muted />
-
             {tabWarning && <div className="warning-banner">⚠ Tab switching detected</div>}
             {faceWarning && <div className="warning-banner">⚠ Face not clearly visible</div>}
           </div>
