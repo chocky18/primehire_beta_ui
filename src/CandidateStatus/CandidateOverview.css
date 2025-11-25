@@ -445,3 +445,12 @@
         font-size: 14px;
     }
 }
+
+
+.anomaly-list li {
+    margin-bottom: 8px;
+    background: #ffe3e3;
+    padding: 8px;
+    border-radius: 6px;
+    border-left: 4px solid #e00;
+}
