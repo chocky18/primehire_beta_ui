@@ -1,3 +1,4 @@
+// src/components/WebcamRecorder.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import TranscriptPanel from "../InterviewBot/TranscriptPanel";
@@ -26,7 +27,6 @@ export default function WebcamRecorder() {
   const [faceWarning, setFaceWarning] = useState(false);
 
   const videoRef = useRef();
-  const frameCanvas = useRef();
 
   useEffect(() => {
     console.log("[WebcamRecorder] Loaded values:", {
@@ -38,79 +38,89 @@ export default function WebcamRecorder() {
     setJobDescription(jd_text);
   }, []);
 
-  // === Tab Switching Alert === //
+  // ================== TAB SWITCH DETECTOR ==================
   useEffect(() => {
-    const handleTabChange = () => {
+    const handleTabChange = async () => {
       if (document.hidden) {
         setTabWarning(true);
         alert("⚠ Don’t switch the tab during the interview!");
+
+        const fd = new FormData();
+        fd.append("candidate_name", candidateName);
+        fd.append("event_type", "tab_switch");
+        fd.append("event_msg", "User switched tab during interview");
+
+        await fetch(`${API_BASE}/face-monitor`, { method: "POST", body: fd });
+
+        // Dispatch event to TranscriptPanel
+        window.dispatchEvent(
+          new CustomEvent("anomalyEvent", {
+            detail: "Tab switch detected",
+          })
+        );
       } else {
         setTabWarning(false);
       }
     };
 
     document.addEventListener("visibilitychange", handleTabChange);
-    return () =>
-      document.removeEventListener("visibilitychange", handleTabChange);
+    return () => document.removeEventListener("visibilitychange", handleTabChange);
   }, []);
 
-  // === Webcam Start + Face Visibility Check === //
+  // ================== CAMERA STREAM ==================
+  async function startCamera() {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: false,
+    });
+    videoRef.current.srcObject = stream;
+    await videoRef.current.play();
+  }
+
+  // ================== SEND FRAME EVERY 3 SECONDS ==================
   useEffect(() => {
     if (!started) return;
 
-    (async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: false,
+    startCamera();
+
+    const interval = setInterval(() => {
+      if (!videoRef.current) return;
+
+      const canvas = document.createElement("canvas");
+      canvas.width = videoRef.current.videoWidth;
+      canvas.height = videoRef.current.videoHeight;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(videoRef.current, 0, 0);
+
+      canvas.toBlob(async (blob) => {
+        const fd = new FormData();
+        fd.append("candidate_name", candidateName);
+        fd.append("frame", blob);
+
+        const r = await fetch(`${API_BASE}/mcp/interview/face-monitor`, {
+          method: "POST",
+          body: fd,
         });
 
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          await videoRef.current.play();
+        const data = await r.json();
+        if (data?.anomalies?.length > 0) {
+          setFaceWarning(true);
+          data.anomalies.forEach((a) =>
+            window.dispatchEvent(
+              new CustomEvent("anomalyEvent", { detail: a.msg })
+            )
+          );
+        } else {
+          setFaceWarning(false);
         }
+      }, "image/jpeg");
+    }, 3000);
 
-        frameCanvas.current = document.createElement("canvas");
-
-        const ctx = frameCanvas.current.getContext("2d");
-
-        const checkFace = () => {
-          if (!videoRef.current) return;
-
-          const width = videoRef.current.videoWidth;
-          const height = videoRef.current.videoHeight;
-
-          frameCanvas.current.width = width;
-          frameCanvas.current.height = height;
-
-          ctx.drawImage(videoRef.current, 0, 0, width, height);
-
-          const frame = ctx.getImageData(0, 0, 80, 80).data;
-          let visiblePixels = 0;
-
-          for (let i = 0; i < frame.length; i += 4) {
-            const avg = (frame[i] + frame[i + 1] + frame[i + 2]) / 3;
-            if (avg > 60) visiblePixels++;
-          }
-
-          const brightnessRatio = visiblePixels / (frame.length / 4);
-
-          if (brightnessRatio < 0.18) {
-            setFaceWarning(true);
-          } else {
-            setFaceWarning(false);
-          }
-        };
-
-        const interval = setInterval(checkFace, 2000);
-        return () => clearInterval(interval);
-      } catch (e) {
-        console.error("Camera error:", e);
-        alert("Camera unavailable");
-      }
-    })();
+    return () => clearInterval(interval);
   }, [started]);
 
+
+  // ================== INTERVIEW START ==================
   const handleStartInterview = async () => {
     setStarted(true);
 
@@ -118,16 +128,12 @@ export default function WebcamRecorder() {
     fd.append("init", "true");
     fd.append("candidate_name", candidateName);
     fd.append("job_description", jobDescription);
-
     if (candidateId) fd.append("candidate_id", candidateId);
 
     try {
       const res = await fetch(
         `${API_BASE}/mcp/interview_bot_beta/process-answer`,
-        {
-          method: "POST",
-          body: fd,
-        }
+        { method: "POST", body: fd }
       );
       const d = await res.json();
 
@@ -151,12 +157,8 @@ export default function WebcamRecorder() {
     try {
       const res = await fetch(
         `${API_BASE}/mcp/interview_bot_beta/evaluate-transcript`,
-        {
-          method: "POST",
-          body: fd,
-        }
+        { method: "POST", body: fd }
       );
-
       const d = await res.json();
 
       if (d.ok) {
@@ -181,14 +183,8 @@ export default function WebcamRecorder() {
 
   return (
     <div className="webcam-interview-wrapper">
-
-      {/* 🔹 Top Navbar with Logo */}
       <div className="webcam-navbar">
-        <img
-          src={logo}
-          alt="Company Logo"
-          className="navbar-logo"
-        />
+        <img src={logo} alt="Company Logo" className="navbar-logo" />
       </div>
 
       <div className="webcam-interview-container">
@@ -204,18 +200,8 @@ export default function WebcamRecorder() {
           <div className="video-container">
             <video ref={videoRef} autoPlay muted />
 
-            {/* Overlays */}
-            {tabWarning && (
-              <div className="warning-banner">
-                ⚠ Please keep this tab active!
-              </div>
-            )}
-
-            {faceWarning && (
-              <div className="warning-banner">
-                ⚠ Face is not visible clearly. Improve lighting.
-              </div>
-            )}
+            {tabWarning && <div className="warning-banner">⚠ Tab switching detected</div>}
+            {faceWarning && <div className="warning-banner">⚠ Face not clearly visible</div>}
           </div>
 
           {!started ? (
