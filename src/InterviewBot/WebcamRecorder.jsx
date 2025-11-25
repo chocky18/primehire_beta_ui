@@ -49,8 +49,9 @@ export default function WebcamRecorder() {
         fd.append("candidate_name", candidateName);
         fd.append("event_type", "tab_switch");
         fd.append("event_msg", "User switched tab during interview");
+        fd.append("candidate_id", candidateId);
 
-        await fetch(`${API_BASE}/face-monitor`, { method: "POST", body: fd });
+        await fetch(`${API_BASE}/mcp/interview/face-monitor`, { method: "POST", body: fd });
 
         // Dispatch event to TranscriptPanel
         window.dispatchEvent(
@@ -96,6 +97,7 @@ export default function WebcamRecorder() {
         const fd = new FormData();
         fd.append("candidate_name", candidateName);
         fd.append("frame", blob);
+        fd.append("candidate_id", candidateId);
 
         const r = await fetch(`${API_BASE}/mcp/interview/face-monitor`, {
           method: "POST",
