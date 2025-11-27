@@ -1,3 +1,4 @@
+// src/components/ProfileTable.jsx
 import React, { useState, useEffect } from "react";
 import { Mail, MessageSquare, Send } from "lucide-react";
 import { sendMailMessage, sendWhatsAppMessage } from "@/utils/api";
@@ -7,53 +8,68 @@ import { BsGraphUpArrow } from "react-icons/bs";
 import "./ProfileTable.css";
 
 /* ===========================================================
-   MAIN TABLE COMPONENT
+   ProfileTable.jsx
+   - Merged: sorting/filtering/badges + working send-to-client flow
+   - Option B: bar + label (Best/Good/Partial)
    =========================================================== */
-const ProfileTable = ({ data, index, jdId }) => {
+const ProfileTable = ({ data = [], index = 0, jdId = null }) => {
   const [filterQuery, setFilterQuery] = useState("");
   const [minScoreFilter, setMinScoreFilter] = useState(0);
-  const [sortConfig, setSortConfig] = useState({
-    key: "finalScore",
-    direction: "desc",
-  });
+  const [sortConfig, setSortConfig] = useState({ key: "finalScore", direction: "desc" });
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [responses, setResponses] = useState({});
   const [whatsappAvailable, setWhatsappAvailable] = useState(true);
+
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+  const [showSendMenu, setShowSendMenu] = useState(false);
 
   const navigate = useNavigate();
 
   /* ------------------- FETCH WHATSAPP RESPONSES ------------------- */
   useEffect(() => {
+    let mounted = true;
     const fetchResponses = async () => {
       try {
         const res = await fetch(`${API_BASE}/mcp/tools/match/whatsapp/responses`);
-        if (res.ok) {
-          const data = await res.json();
-          setResponses(data);
-        }
-      } catch {
-        setWhatsappAvailable(false);
+        if (!res.ok) throw new Error("failed to fetch responses");
+        const data = await res.json();
+        if (mounted) setResponses(data);
+      } catch (err) {
+        if (mounted) setWhatsappAvailable(false);
       }
     };
 
     fetchResponses();
     const interval = setInterval(fetchResponses, 20000);
-    return () => clearInterval(interval);
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+    };
   }, []);
 
   /* ------------------- PREPROCESS MATCHES ------------------- */
-  data.forEach((item) => {
-    item.finalScore = item?.scores?.final_score ?? 0;
+  // shallow copy to avoid mutating props unexpectedly
+  const prepared = (Array.isArray(data) ? data.slice() : []).map((item) => {
+    const finalScore = item?.scores?.final_score ?? item?.finalScore ?? 0;
+    return { ...item, finalScore };
   });
 
+  /* ------------------- SORT & FILTER ------------------- */
   const sortAndFilterMatches = (matches) => {
-    if (!Array.isArray(matches)) return [];
-
-    const filtered = matches.filter((m) => {
+    let filtered = matches.filter((m) => {
       if (m.finalScore < minScoreFilter) return false;
 
-      if (!filterQuery) return true;
+      if (!filterQuery && !selectedCategory) return true;
 
+      // category filter (best/good/partial)
+      if (selectedCategory) {
+        if (selectedCategory === "best" && m.finalScore < 85) return false;
+        if (selectedCategory === "good" && (m.finalScore < 60 || m.finalScore >= 85)) return false;
+        if (selectedCategory === "partial" && m.finalScore >= 60) return false;
+      }
+
+      if (!filterQuery) return true;
       const q = filterQuery.toLowerCase();
       const nameOk = (m.name || "").toLowerCase().includes(q);
       const skillsOk = (Array.isArray(m.skills) ? m.skills.join(", ") : m.skills || "").toLowerCase().includes(q);
@@ -61,16 +77,44 @@ const ProfileTable = ({ data, index, jdId }) => {
       return nameOk || skillsOk;
     });
 
-    return filtered.sort((a, b) =>
-      sortConfig.direction === "asc" ? a.finalScore - b.finalScore : b.finalScore - a.finalScore
-    );
+    filtered.sort((a, b) => {
+      if (sortConfig.direction === "asc") return a.finalScore - b.finalScore;
+      return b.finalScore - a.finalScore;
+    });
+
+    return filtered;
   };
 
-  const displayedMatches = sortAndFilterMatches(data);
+  const displayedMatches = sortAndFilterMatches(prepared);
+
+  /* ------------------- Summary counts ------------------- */
+  const summary = { best: 0, good: 0, partial: 0 };
+  prepared.forEach((item) => {
+    if (item.finalScore >= 85) summary.best++;
+    else if (item.finalScore >= 60) summary.good++;
+    else summary.partial++;
+  });
+
+  /* ------------------- Select All handler ------------------- */
+  useEffect(() => {
+    if (selectAll) setSelectedRows(displayedMatches.map((d) => _deriveCandidateId(d)));
+    else setSelectedRows([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectAll, jdId, filterQuery, minScoreFilter, selectedCategory]);
+
+  /* ------------------- Helper: robust candidate id ------------------- */
+  const _deriveCandidateId = (item) => {
+    // Candidate source key -> keep consistent with server search keys
+    return item.candidate_id || item.email || item.phone || item._pine_id || item.name || "";
+  };
+
+  /* ------------------- Bulk actions placeholder ------------------- */
+  const handleBulkEmail = () => alert("Bulk email coming soon!");
+  const handleBulkWhatsApp = () => alert("Bulk WhatsApp coming soon!");
 
   return (
     <div key={index} className="profile-box">
-      {/* ------------------- FILTERS ------------------- */}
+      {/* FILTER BAR */}
       <div className="filters-row">
         <h2 className="title">🎯 Profile Matches</h2>
 
@@ -102,10 +146,7 @@ const ProfileTable = ({ data, index, jdId }) => {
           <button
             className="sort-btn"
             onClick={() =>
-              setSortConfig((prev) => ({
-                key: prev.key,
-                direction: prev.direction === "asc" ? "desc" : "asc",
-              }))
+              setSortConfig((prev) => ({ key: prev.key, direction: prev.direction === "asc" ? "desc" : "asc" }))
             }
           >
             Sort: {sortConfig.direction === "asc" ? "▲" : "▼"}
@@ -113,13 +154,55 @@ const ProfileTable = ({ data, index, jdId }) => {
         </div>
       </div>
 
-      {/* ------------------- TABLE ------------------- */}
+      {/* SEND + BADGES ROW */}
+      <div className="send-review-container">
+        <div className="bulk-send-wrapper">
+          <button className="bulk-send-btn" onClick={() => setShowSendMenu((p) => !p)}>
+            Send ({selectedRows.length})
+          </button>
+
+          {showSendMenu && (
+            <div className="send-dropdown">
+              <button className="send-option action-style" onClick={handleBulkEmail}>
+                <Mail size={16} /> Email
+              </button>
+
+              <button className="send-option action-style" onClick={handleBulkWhatsApp}>
+                <MessageSquare size={16} /> WhatsApp
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div className="review-badges">
+          <span className={`badge best ${selectedCategory === "best" ? "active" : ""}`} onClick={() => setSelectedCategory("best")}>
+            🏆 Best ({summary.best})
+          </span>
+
+          <span className={`badge good ${selectedCategory === "good" ? "active" : ""}`} onClick={() => setSelectedCategory("good")}>
+            👍 Good ({summary.good})
+          </span>
+
+          <span className={`badge partial ${selectedCategory === "partial" ? "active" : ""}`} onClick={() => setSelectedCategory("partial")}>
+            ⚙ Partial ({summary.partial})
+          </span>
+        </div>
+      </div>
+
+      {/* TABLE */}
       {displayedMatches.length === 0 ? (
         <p>No matching profiles.</p>
       ) : (
         <table className="profiles-table">
           <thead>
             <tr>
+              <th>
+                <input
+                  type="checkbox"
+                  checked={selectAll}
+                  onChange={() => setSelectAll((p) => !p)}
+                />
+              </th>
               <th>Name</th>
               <th>Designation</th>
               <th>Location</th>
@@ -140,9 +223,37 @@ const ProfileTable = ({ data, index, jdId }) => {
                 item={item}
                 responses={responses}
                 jdId={jdId}
-                onSendMail={(item) => sendMailMessage(item, jdId)}
-                onSendWhatsApp={(item) => sendWhatsAppMessage(item, jdId)}
+                onSendMail={(it) => sendMailMessage(it, jdId)}
+                onSendWhatsApp={(it) => sendWhatsAppMessage(it, jdId)}
                 whatsappAvailable={whatsappAvailable}
+                onRowSelect={(candidateId, checked) => {
+                  setSelectedRows((prev) => {
+                    if (checked) return Array.from(new Set([...prev, candidateId]));
+                    return prev.filter((c) => c !== candidateId);
+                  });
+                }}
+                isSelected={selectedRows.includes(_deriveCandidateId(item))}
+                onStartInterview={(it) => {
+                  if (!jdId) return alert("No JD ID found for this match!");
+                  // fetch jd text then navigate
+                  fetch(`${API_BASE}/mcp/tools/jd_history/jd/history/${jdId}`)
+                    .then((r) => r.json())
+                    .then((jdData) => {
+                      if (!jdData?.jd_text) return alert("JD not found!");
+                      navigate("/validation", {
+                        state: {
+                          candidateName: it.name,
+                          candidateId: it.phone,
+                          jd_id: jdId,
+                          jd_text: jdData.jd_text,
+                        },
+                      });
+                    })
+                    .catch((e) => {
+                      console.error("JD fetch error", e);
+                      alert("Failed to fetch JD text");
+                    });
+                }}
               />
             ))}
           </tbody>
@@ -153,67 +264,82 @@ const ProfileTable = ({ data, index, jdId }) => {
 };
 
 /* ===========================================================
-   ROW COMPONENT
+   Row Component (Option B style)
+   - handles Send to Client: minimal payload -> { client_email, candidate_id, jd_id }
    =========================================================== */
 const ProfileTableRow = ({
   item,
-  responses,
+  responses = {},
   onSendMail,
   onSendWhatsApp,
   whatsappAvailable,
+  onRowSelect,
+  isSelected = false,
+  onStartInterview,
   jdId,
 }) => {
-  /* ------------------- CLIENT SEND BOX ------------------- */
   const [showClientBox, setShowClientBox] = useState(false);
   const [clientEmail, setClientEmail] = useState("");
-
-  /* ------------------- STATUS ------------------- */
   const [status, setStatus] = useState("Not Started");
   const [round, setRound] = useState(null);
   const [showStatus, setShowStatus] = useState(false);
 
+  const score = item.finalScore ?? 0;
+
+  const matchLevel = score >= 85 ? "Best match" : score >= 60 ? "Good match" : "Partial match";
+  const barWidth = Math.min(Math.max(score, 5), 100) + "%";
+
+  const normalizedPhone = (item.phone || "").replace(/\D/g, "");
+  const whatsappResp = responses[normalizedPhone] || {};
+
+  /* Robust candidate id derivation (same as sendMail) */
+  const candidateId = item.candidate_id || item.email || item.phone || item._pine_id || item.name || "";
+
   /* ------------------- SEND TO CLIENT ------------------- */
   const sendToClient = async () => {
-  if (!clientEmail) return alert("Enter client email!");
+    if (!clientEmail || !clientEmail.includes("@")) return alert("Enter valid client email!");
 
-  const payload = {
-    client_email: String(clientEmail).trim(),
-    candidate_id: String(item.candidate_id || item.phone || item.email || ""),
-    jd_id: jdId
+    const payload = {
+      client_email: String(clientEmail).trim(),
+      candidate_id: String(candidateId),
+      jd_id: jdId,
+    };
+
+    try {
+      const res = await fetch(`${API_BASE}/mcp/tools/match/send_to_client`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        console.error("send_to_client failed:", data);
+        alert(data.detail || data.message || "Failed to send client mail");
+        return;
+      }
+
+      alert(data.message || "Client mail sent!");
+      setShowClientBox(false);
+    } catch (err) {
+      console.error("send_to_client error:", err);
+      alert("Failed to send client mail. Check console.");
+    }
   };
-
-  console.log("📤 Sending Payload:", payload);
-
-  const res = await fetch(`${API_BASE}/mcp/tools/match/send_to_client`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(payload),
-  });
-
-  const data = await res.json();
-  console.log("📥 DEBUG DATA:", data);
-
-  alert("Sent to debug endpoint!");
-};
-
-
-
 
   /* ------------------- STATUS FETCH ------------------- */
   const fetchStatus = async () => {
     try {
-      const res = await fetch(
-        `${API_BASE}/mcp/tools/jd_history/scheduler/latest_attempt/${item.phone}/${jdId}`
-      );
+      const res = await fetch(`${API_BASE}/mcp/tools/jd_history/scheduler/latest_attempt/${item.phone}/${jdId}`);
+      if (!res.ok) {
+        setStatus("Not Started");
+        return;
+      }
       const data = await res.json();
-
       if (!data.ok) {
         setStatus("Not Started");
         return;
       }
-
       setStatus(data.progress || "Not Started");
       setRound(data.interview_round || 1);
     } catch (e) {
@@ -227,22 +353,33 @@ const ProfileTableRow = ({
     setTimeout(() => setShowStatus(false), 2500);
   };
 
-  /* ------------------- MATCH UI ------------------- */
-  const score = item.finalScore ?? 0;
-  const normalizedPhone = (item.phone || "").replace(/\D/g, "");
-  const whatsappResp = responses[normalizedPhone] || {};
-
   return (
     <tr>
+      <td>
+        <input
+          type="checkbox"
+          checked={isSelected}
+          onChange={(e) => onRowSelect && onRowSelect(candidateId, e.target.checked)}
+        />
+      </td>
+
       <td>
         <div className="name-cell">
           <span className="name">{item.name}</span>
 
+          <span
+            className={`match-label ${
+              matchLevel === "Best match" ? "match-best" : matchLevel === "Good match" ? "match-good" : "match-partial"
+            }`}
+          >
+            {matchLevel}
+          </span>
+
           <div className="match-bar">
             <div
               className={`bar-fill ${score >= 85 ? "best" : score >= 60 ? "good" : "partial"}`}
-              style={{ width: `${score}%` }}
-            ></div>
+              style={{ width: barWidth }}
+            />
           </div>
         </div>
       </td>
@@ -251,59 +388,64 @@ const ProfileTableRow = ({
       <td>{item.location}</td>
       <td>{item.phone || "—"}</td>
       <td>{item.email || "—"}</td>
-      <td>{item.experience_years} yrs</td>
+      <td>{item.experience_years ?? "—"} yrs</td>
       <td>{(item.skills || []).join(", ")}</td>
 
-      {/* ACTIONS */}
       <td className="actions-cell">
-        <button className="action-btn mail" onClick={() => onSendMail(item)}>
-          <Mail size={16} /> Mail
-        </button>
-
-        <button
-          className={`action-btn whatsapp ${!whatsappAvailable ? "disabled" : ""}`}
-          onClick={() => onSendWhatsApp(item)}
-          disabled={!whatsappAvailable}
-        >
-          <MessageSquare size={16} /> WhatsApp
-        </button>
-
-        <button className="action-btn status" onClick={handleStatusClick}>
-          <BsGraphUpArrow /> Status
-        </button>
-
-        {/* STATUS POPUP */}
-        {showStatus && (
-          <div className="status-popup">
-            <div style={{ fontWeight: "bold" }}>{status}</div>
-            <div style={{ fontSize: "12px" }}>Round: {round || 1}</div>
-          </div>
-        )}
-
-        {/* CLIENT SEND */}
-        <div style={{ position: "relative" }}>
-          <button className="action-btn bot" onClick={() => setShowClientBox(!showClientBox)}>
-            <Send size={16} /> Client
+        <div className="action-group">
+          <button className="action-btn mail" onClick={() => onSendMail && onSendMail(item)}>
+            <Mail size={16} /> Mail
           </button>
 
-          {showClientBox && (
-            <div className="client-mail-box">
-              <input
-                type="email"
-                placeholder="Enter client email"
-                className="client-mail-input"
-                value={clientEmail}
-                onChange={(e) => setClientEmail(e.target.value)}
-              />
-              <button className="client-mail-send-btn" onClick={sendToClient}>
-                Send
-              </button>
+          <button
+            className={`action-btn whatsapp ${!whatsappAvailable ? "disabled" : ""}`}
+            onClick={() => onSendWhatsApp && onSendWhatsApp(item)}
+            disabled={!whatsappAvailable}
+          >
+            <MessageSquare size={16} /> WhatsApp
+          </button>
+
+          <button className="action-btn status" onClick={handleStatusClick}>
+            <BsGraphUpArrow /> Status
+          </button>
+
+          {showStatus && (
+            <div className="status-popup">
+              <div style={{ fontWeight: "bold" }}>{status}</div>
+              <div style={{ marginTop: "4px", fontSize: "13px" }}>
+                Round: <b>{round || 1}</b>
+              </div>
+              <div style={{ fontSize: "12px", opacity: 0.7 }}>Status: {status}</div>
             </div>
           )}
+
+          {/* CLIENT SEND */}
+          <div style={{ position: "relative", width: "100%" }}>
+            <button className="action-btn bot" onClick={() => setShowClientBox((p) => !p)}>
+              <Send size={16} /> Send to Client
+            </button>
+
+            {showClientBox && (
+              <div className="client-mail-box">
+                <input
+                  type="email"
+                  placeholder="Enter client email"
+                  className="client-mail-input"
+                  value={clientEmail}
+                  onChange={(e) => setClientEmail(e.target.value)}
+                />
+
+                <button className="client-mail-send-btn" onClick={sendToClient}>
+                  Send
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </td>
 
       <td className="score">{score}/100</td>
+
       <td>{whatsappResp?.type === "button" ? whatsappResp.payload : "—"}</td>
     </tr>
   );
