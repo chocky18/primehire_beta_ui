@@ -309,10 +309,10 @@ const JDHistory = () => {
                                         <PlusSquare size={14} /> Add Questions
                                     </button>
 
-                                    <button className="jd-button jd-send-client" onClick={() => sendToClient(row)}>
+                                    {/* <button className="jd-button jd-send-client" onClick={() => sendToClient(row)}>
                                         <Send size={18} style={{ marginRight: "6px" }} />
                                         Send to Client
-                                    </button>
+                                    </button> */}
                                 </td>
                             </tr>
                         ))}
