@@ -76,7 +76,10 @@ const MailMindButton = () => {
   return (
     <div className="mailmind-container">
       <h3 className="mailmind-title">📬 MailMind</h3>
-
+      <p className="mailmind-info">
+  MailMind will securely scan your mailbox and extract only the resumes received in the <b>last 7 days</b>. 
+  Please ensure you use your <b>App Password</b> for Outlook.
+</p>
       {!connected && (
         <>
           <Input
