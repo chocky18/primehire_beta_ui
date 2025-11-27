@@ -639,3 +639,70 @@ td.score {
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
   z-index: 1000;
 }
+/* =================================================
+   SEND TO CLIENT — INPUT POPUP
+================================================= */
+
+.client-mail-box {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  width: 220px;
+  background: #ffffff;
+  border: 2px solid #38bdf8;
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  animation: fadeDown 0.22s ease-out;
+  z-index: 999;
+}
+
+.client-mail-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 2px solid #1a1a1a;
+  background: linear-gradient(to bottom, #ffffff, #f9fafb);
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.25s ease;
+}
+
+.client-mail-input:focus {
+  outline: none;
+  border-color: #38bdf8;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(56, 189, 248, 0.25);
+  transform: translateY(-2px);
+}
+
+.client-mail-send-btn {
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #38bdf8, #0284c7);
+  color: #ffffff;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: 0.25s ease;
+  font-size: 14px;
+}
+
+.client-mail-send-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(56, 189, 248, 0.25);
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
