@@ -1119,10 +1119,10 @@ const MessageRenderer = React.memo(({ message }) => {
 
     return (
       <div className="message-block feature-block fade-highlight">
-        <ChatMessage
+        {/* <ChatMessage
           role="assistant"
           content="🎯 Profile Matcher — enter JD to find best candidates."
-        />
+        /> */}
         <div className="message-feature-ui mt-2">
           {/* <ChatInput
             onSend={onSend}
