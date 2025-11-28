@@ -415,7 +415,7 @@ const features = [
     { id: "PrimeHireBrain", label: "PrimeHire Brain", icon: <CpuIcon /> },
     { id: "InterviewBot", label: "Interview Bot", icon: <BotIcon /> },
     { id: "LinkedInPoster", label: "LinkedIn Poster", icon: <ShareIcon /> },
-    // { id: "ProfileMatchHistory", label: "Match History", icon: <HistoryIcon /> },
+    { id: "ProfileMatchHistory", label: "Match History", icon: <HistoryIcon /> },
     {
         id: "JDHistory",
         label: "JD History",
