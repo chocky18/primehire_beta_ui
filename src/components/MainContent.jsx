@@ -1,8 +1,7 @@
-
 import React, { useEffect } from "react";
 import Header from "../common/Header";
 import ChatContainer from "../chat/ChatContainer";
-import InfoCards from "../InfoCards/InfoCards";
+// import InfoCards from "../InfoCards/InfoCards";
 import ProfileMatchHistory from "@/components/ProfileMatcher/ProfileMatchHistory";
 import JDTaskUI from "@/pages/JDTaskUI";
 import ChatInput from "../chat/ChatInput";
@@ -120,7 +119,7 @@ const MainContent = ({
           </div>
         )}
 
-        {showWelcome && <InfoCards />}
+        {/* {showWelcome && <InfoCards />} */}
 
         {/* 📊 Profile Match History */}
         {selectedFeature === "ProfileMatchHistory" ? (

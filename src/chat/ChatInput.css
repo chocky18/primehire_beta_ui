@@ -1,33 +1,235 @@
-.chat-input-wrapper {
-  width: 100%;
+.chat-input-center {
+  position: fixed;
+  top: 50%;
+  left: 60%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 700px;
+  z-index: 100;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  padding-left: 10px;
 }
+
+.chat-input-bottom {
+  position: fixed;
+  bottom: 20px;
+  left: 60%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 700px;
+  z-index: 100;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 
 .chat-input-container {
   display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.2s ease;
+
+}
+
+.chat-input-container:focus-within {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border-color: #3b82f6;
+}
+
+.attach-btn,
+.send-btn {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.attach-btn:hover:not(:disabled) {
+  background-color: #f3f4f6;
+}
+
+.send-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.send-btn:not(:disabled) {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.send-btn:not(:disabled):hover {
+  background-color: #2563eb;
+}
+
+
+.input-with-panel {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+
+.dropdown-buttons-row {
+  display: flex;
+  gap: 8px;
+  padding: 0 4px;
+}
+
+.dropdown-wrapper {
+  position: relative;
+}
+
+.dropdown-trigger {
+  display: flex;
   align-items: center;
-  gap: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 1.5rem;
-  padding: 0.5rem 1rem;
-  background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  gap: 6px;
+  padding: 6px 12px;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dropdown-trigger:hover:not(:disabled) {
+  background: #e5e7eb;
+  border-color: #d1d5db;
+}
+
+.dropdown-trigger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 180px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  padding: 4px;
+  z-index: 1000;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #374151;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #f3f4f6;
+}
+
+.dropdown-item:active {
+  background-color: #e5e7eb;
 }
 
 .chat-textarea {
-  flex: 1;
-  resize: none;
-  border: none;
-  outline: none;
+  width: 100%;
   min-height: 40px;
+  max-height: 200px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  resize: none;
+  font-size: 14px;
+  line-height: 1.5;
   background: transparent;
+  transition: background-color 0.2s ease;
 }
 
-.send-btn {
-  background-color: #007bff;
-  color: white;
-  border-radius: 50%;
+.chat-textarea:focus {
+  outline: none;
+  background-color: #f9fafb;
 }
 
-.attach-btn {
-  color: #666;
+.chat-textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #f3f4f6;
+}
+
+.chat-textarea::placeholder {
+  color: #9ca3af;
+}
+
+
+@media (max-width: 768px) {
+
+  .chat-input-center,
+  .chat-input-bottom {
+    width: 95%;
+    max-width: none;
+  }
+
+  .chat-input-bottom {
+    bottom: 10px;
+  }
+
+  .dropdown-buttons-row {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .chat-input-container {
+    padding: 6px;
+    gap: 6px;
+  }
+
+  .attach-btn,
+  .send-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .chat-textarea {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+
+  .dropdown-trigger {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
 }

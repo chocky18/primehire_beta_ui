@@ -1,4 +1,3 @@
-
 // 📁 src/hooks/useWebSocket.js
 import { useEffect, useRef, useCallback } from "react";
 import { WS_URL } from "@/utils/constants";
@@ -238,22 +237,21 @@ export const useWebSocket = (
       if (intent === "Upload Resumes") {
         console.log("📄 [WebSocket] Upload Resumes activated");
 
-        // ✅ Open the ResumeUpload feature in UI
         setSelectedFeature("Upload Resumes");
         setSelectedTask("");
 
-        // ✅ Append message (not overwrite)
+        // ⭐ SEND STRUCTURED MESSAGE TO SHOW UPLOAD UI
         setMessages((prev) => [
           ...prev,
           {
             role: "assistant",
-            content: "📎 Upload resumes to begin extraction.",
-          },
+            type: "upload_ui",       // <-- REQUIRED
+            content: "📎 Please upload resumes to begin.",
+            data: {}
+          }
         ]);
 
-        // 🧠 Optional: store intent name to prevent double trigger
         lastIntentRef.current.name = intent;
-
         return;
       }
 

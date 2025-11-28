@@ -1124,11 +1124,11 @@ const MessageRenderer = React.memo(({ message }) => {
           content="🎯 Profile Matcher — enter JD to find best candidates."
         />
         <div className="message-feature-ui mt-2">
-          <ChatInput
+          {/* <ChatInput
             onSend={onSend}
             disabled={isLoading}
             placeholder="Type JD text or paste JSON to match..."
-          />
+          /> */}
         </div>
       </div>
     );
