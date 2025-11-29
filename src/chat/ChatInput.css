@@ -1,3 +1,6 @@
+/* === ChatInput.css (UPDATED) === */
+
+/* positioning */
 .chat-input-center {
   position: fixed;
   top: 50%;
@@ -21,7 +24,7 @@
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-
+/* container */
 .chat-input-container {
   display: flex;
   align-items: flex-end;
@@ -33,7 +36,6 @@
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
   transition: box-shadow 0.2s ease;
-
 }
 
 .chat-input-container:focus-within {
@@ -42,6 +44,7 @@
   border-color: #3b82f6;
 }
 
+/* buttons */
 .attach-btn,
 .send-btn {
   flex-shrink: 0;
@@ -49,6 +52,9 @@
   height: 40px;
   border-radius: 8px;
   transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .attach-btn:hover:not(:disabled) {
@@ -69,7 +75,30 @@
   background-color: #2563eb;
 }
 
+/* mic button */
+.mic-btn {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+  background: transparent;
+  border: none;
+}
 
+.mic-btn:hover:not(:disabled) {
+  background: #f3f4f6;
+}
+
+.mic-btn.active {
+  background: rgba(59, 130, 246, 0.12);
+  box-shadow: 0 6px 18px rgba(59, 130, 246, 0.08);
+  color: #0366d6;
+}
+
+/* input panel */
 .input-with-panel {
   position: relative;
   flex: 1;
@@ -78,7 +107,7 @@
   gap: 8px;
 }
 
-
+/* dropdown row */
 .dropdown-buttons-row {
   display: flex;
   gap: 8px;
@@ -87,6 +116,7 @@
 
 .dropdown-wrapper {
   position: relative;
+  z-index: 1001;
 }
 
 .dropdown-trigger {
@@ -114,32 +144,20 @@
   cursor: not-allowed;
 }
 
-
+/* dropdown menu */
 .dropdown-menu {
   position: absolute;
-  top: calc(100% + 4px);
+  top: calc(100% + 6px);
   left: 0;
-  min-width: 180px;
+  min-width: 220px;
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  padding: 4px;
-  z-index: 1000;
-  animation: slideDown 0.2s ease-out;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08),
+    0 6px 10px -4px rgba(0, 0, 0, 0.04);
+  padding: 6px;
+  z-index: 1600;
+  animation: slideDown 0.18s ease-out;
 }
 
 .dropdown-item {
@@ -153,21 +171,18 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  transition: background-color 0.12s ease;
 }
 
 .dropdown-item:hover {
   background-color: #f3f4f6;
 }
 
-.dropdown-item:active {
-  background-color: #e5e7eb;
-}
-
+/* textarea */
 .chat-textarea {
   width: 100%;
   min-height: 40px;
-  max-height: 200px;
+  max-height: 220px;
   padding: 8px 12px;
   border: none;
   border-radius: 8px;
@@ -176,6 +191,7 @@
   line-height: 1.5;
   background: transparent;
   transition: background-color 0.2s ease;
+  box-sizing: border-box;
 }
 
 .chat-textarea:focus {
@@ -193,7 +209,72 @@
   color: #9ca3af;
 }
 
+/* suggested prompts / chips */
+.suggested-prompts,
+.chips-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+  align-items: center;
+}
 
+.prompt-chip {
+  padding: 6px 12px;
+  background: #f4f4f5;
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.16s ease;
+  border: 1px solid transparent;
+  user-select: none;
+}
+
+.prompt-chip:hover {
+  background: #e9e9ea;
+  border-color: #e1e1e2;
+}
+
+.prompt-chip:active {
+  transform: translateY(1px);
+}
+
+/* suggestions dropdown (autocomplete) */
+.suggestions-dropdown {
+  position: absolute;
+  z-index: 1500;
+  top: calc(100% + 6px);
+  left: 8px;
+  right: 8px;
+  max-width: calc(100% - 16px);
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 14px 30px rgba(14, 30, 37, 0.06);
+  overflow: hidden;
+  padding: 6px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.suggestion-item {
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #111827;
+  cursor: pointer;
+  transition: background 0.12s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.suggestion-item:hover {
+  background: #f3f4f6;
+}
+
+/* small helper styles for responsive */
 @media (max-width: 768px) {
 
   .chat-input-center,
@@ -209,6 +290,10 @@
   .dropdown-buttons-row {
     flex-wrap: wrap;
   }
+
+  .dropdown-menu {
+    min-width: 160px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -218,7 +303,8 @@
   }
 
   .attach-btn,
-  .send-btn {
+  .send-btn,
+  .mic-btn {
     width: 36px;
     height: 36px;
   }
@@ -234,22 +320,21 @@
   }
 }
 
-.suggested-prompts {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 8px;
-  flex-wrap: wrap;
+/* subtle animation */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.prompt-chip {
-  padding: 6px 12px;
-  background: #f4f4f5;
-  border-radius: 20px;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.prompt-chip:hover {
-  background: #e4e4e7;
+.active-task-pill {
+  position: absolute;
+  right: 10px;
+  /* top: 50px; */
 }
