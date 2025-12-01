@@ -21,50 +21,52 @@ const ChatInput = ({
 
   const textareaRef = useRef(null);
   const fileInputRef = useRef(null);
-  const tasksRef = useRef(null);
-  const featuresRef = useRef(null);
-  useEffect(() => {
-    const update = () => {
-      const el = document.querySelector(".ci-shell");
-      if (el) {
-        const safe = el.offsetHeight + 40;
-        document.documentElement.style.setProperty("--ci-safe-height", `${safe}px`);
-      }
-    };
-    update();
-    const obs = new ResizeObserver(update);
-    const shell = document.querySelector(".ci-shell");
-    if (shell) obs.observe(shell);
-    return () => obs.disconnect();
-  }, []);
 
   /* ============================================================
-     ⭐ INTERNAL TOKEN MAPPING (CRITICAL FOR WS ROUTING)
+     ⭐ INTERNAL TOKEN MAPPING (FRIENDLY → INTERNAL)
   ============================================================ */
   const internalKeyFor = {
+    // Main tasks
     "JD Creator": "JD Creator",
     "Profile Matcher": "Profile Matcher",
     "Upload Resumes": "Upload Resumes",
+
+    // Interview Bot (friendly + compact)
+    "Interview Bot": "InterviewBot",
     "InterviewBot": "InterviewBot",
 
-    // NEW FIX: history & status modules
+    // History modules
     "JD History": "JDHistory",
     "Match History": "ProfileMatchHistory",
     "Candidate Status": "CandidateStatus",
+
+    // Feature tools
+    ZohoBridge: "ZohoBridge",
+    MailMind: "MailMind",
+    LinkedInPoster: "LinkedInPoster",
+    PrimeHireBrain: "PrimeHireBrain",
   };
 
   const tasks = [
     "JD Creator",
     "Profile Matcher",
     "Upload Resumes",
-    "Interview Bot",
+    "Interview Bot", // UI friendly name
     "JD History",
     "Match History",
     "Candidate Status",
   ];
 
+  const features = [
+    "ZohoBridge",
+    "MailMind",
+    "LinkedInPoster",
+    "PrimeHireBrain",
+    "Interview Bot",
+  ];
+
   /* ============================================================
-     ⭐ Prompt Chips for Quick Actions
+     ⭐ PROMPT CHIPS (QUICK ACTIONS)
   ============================================================ */
   const promptChips = {
     "JD Creator": [
@@ -79,6 +81,7 @@ const ChatInput = ({
           "Start JD Creator: Create a JD for an AI Engineer at Nirmata Neurotech — 3+ years experience, Hyderabad, Python, LLMs, Vector DBs.",
       },
     ],
+
     "Profile Matcher": [
       {
         label: "🔍 React Developer",
@@ -86,11 +89,30 @@ const ChatInput = ({
           "Start Profile Matcher: React Developer — 2–4 years experience, strong in React, JavaScript, APIs.",
       },
       {
-        label: "⚡ Node.js Backend",
+        label: "🤖 Generative AI Engineer",
         text:
-          "Start Profile Matcher: Node.js Backend Developer — REST APIs, MongoDB, Postgres, AWS.",
+          "Start Profile Matcher: Generative AI Engineer — 4–6 years experience, strong in LLMs, RAG pipelines, multi-agent systems, vector databases (Pinecone/Chroma), FastAPI, AWS, and end-to-end AI deployment.",
       },
+      {
+        label: "🧩 Full-Stack Engineer",
+        text:
+          "Start Profile Matcher: Full-Stack Engineer — React, Node.js, PostgreSQL, Docker, 3–5 years experience.",
+      },
+
+      {
+        label: "📊 Data Engineer",
+        text:
+          "Start Profile Matcher: Data Engineer — Python, SQL, Airflow, Spark, ETL pipelines, 4+ years experience.",
+      },
+
+      {
+        label: "📱 Mobile App Developer",
+        text:
+          "Start Profile Matcher: Mobile App Developer — React Native or Flutter, REST APIs, CI/CD, 2–5 years experience.",
+      }
+
     ],
+
     "Upload Resumes": [
       {
         label: "📤 Upload All Resumes",
@@ -102,7 +124,8 @@ const ChatInput = ({
           "Start Upload Resumes: Bulk extract skills and experience from multiple resumes.",
       },
     ],
-    "Interview Bot": [
+
+    InterviewBot: [
       {
         label: "🎤 Quick Candidate Screen",
         text:
@@ -114,31 +137,87 @@ const ChatInput = ({
           "Start InterviewBot: Run a full video interview simulation — include technical and behavioral questions.",
       },
     ],
+
     "JD History": [
       { label: "🕘 Recent JDs", text: "Show JDHistory: Fetch last 10 job descriptions." },
     ],
+
     "Match History": [
       { label: "📈 Last Matches", text: "Show ProfileMatchHistory: recent match runs." },
     ],
+
     "Candidate Status": [
       {
         label: "📌 Candidate Overview",
         text: "Show CandidateStatus: Overview of candidate pipeline.",
       },
     ],
+
+    /* ⭐ FEATURE CHIP SETS ⭐ */
+    ZohoBridge: [
+      {
+        label: "🔗 Push Candidates to Zoho",
+        text: "Start ZohoBridge: Sync and push selected candidates into the Zoho Recruit pipeline.",
+      },
+      {
+        label: "📥 Import from Zoho",
+        text: "Start ZohoBridge: Import all open job requirements from Zoho.",
+      },
+    ],
+
+    MailMind: [
+      {
+        label: "✉️ Cold Email Sequence",
+        text: "Start MailMind: Generate a 3-step cold email outreach sequence for hiring React developers.",
+      },
+      {
+        label: "📧 Email Personalization",
+        text: "Start MailMind: Personalize email content for candidate engagement.",
+      },
+    ],
+
+    LinkedInPoster: [
+      {
+        label: "📢 Post Job Update",
+        text: "Start LinkedInPoster: Create a LinkedIn post announcing hiring for a Backend Developer.",
+      },
+      {
+        label: "🚀 Brand Update",
+        text: "Start LinkedInPoster: Draft a LinkedIn post updating followers about PrimeHire's latest AI features.",
+      },
+    ],
+
+    PrimeHireBrain: [
+      {
+        label: "🧠 Smart Research",
+        text: "Start PrimeHireBrain: Analyze hiring trends for Software Engineers in India.",
+      },
+      {
+        label: "📊 Insights",
+        text: "Start PrimeHireBrain: Provide insights on why our JD isn't getting enough applicants.",
+      },
+    ],
   };
 
   /* ============================================================
-     ⭐ Prefix builder
+     ⭐ PREFIX BUILDER
   ============================================================ */
   const getPrefix = (task = activeTask) => {
     if (!task) return "";
-    if (task === "JD Creator") return "Start JD Creator: ";
-    if (task === "Profile Matcher") return "Start Profile Matcher: ";
-    if (task === "Upload Resumes") return "Start Upload Resumes: ";
-    if (task === "InterviewBot" || task === "Interview Bot")
-      return "Start InterviewBot: ";
-    return "";
+
+    const map = {
+      "JD Creator": "Start JD Creator: ",
+      "Profile Matcher": "Start Profile Matcher: ",
+      "Upload Resumes": "Start Upload Resumes: ",
+      InterviewBot: "Start InterviewBot: ",
+
+      ZohoBridge: "Start ZohoBridge: ",
+      MailMind: "Start MailMind: ",
+      LinkedInPoster: "Start LinkedInPoster: ",
+      PrimeHireBrain: "Start PrimeHireBrain: ",
+    };
+
+    return map[task] || "";
   };
 
   const enforcePrefix = (value) => {
@@ -149,7 +228,7 @@ const ChatInput = ({
   };
 
   /* ============================================================
-     ⭐ Auto-complete logic
+     ⭐ SUGGESTIONS
   ============================================================ */
   const suggestionPool = [
     "React",
@@ -170,10 +249,12 @@ const ChatInput = ({
   const updateSuggestions = (value) => {
     const prefix = getPrefix(activeTask);
     const actual = prefix ? value.slice(prefix.length) : value;
+
     if (actual.length < 2) {
       setSuggestionsVisible(false);
       return;
     }
+
     const filtered = suggestionPool.filter((w) =>
       w.toLowerCase().includes(actual.toLowerCase())
     );
@@ -191,24 +272,16 @@ const ChatInput = ({
   };
 
   /* ============================================================
-     ⭐ Handle chip click — with INTERNAL TOKEN FIX
+     ⭐ HANDLE CHIP CLICK
   ============================================================ */
   const handleChipClick = (taskFriendly, text) => {
     const internal = internalKeyFor[taskFriendly] || taskFriendly;
-
-    // Set task + prefix
     setActiveTask(internal);
-
-    // Pre-fill the textarea with chip text (NOT sending)
-    const enforced = enforcePrefix(text);
-    setInput(enforced);
-
-    // ❌ No auto send here
+    setInput(enforcePrefix(text));
   };
 
-
   /* ============================================================
-     ⭐ Respect parent activeTask
+     ⭐ SYNC WITH PARENT TASK
   ============================================================ */
   useEffect(() => {
     if (propActiveTask) {
@@ -219,7 +292,7 @@ const ChatInput = ({
   }, [propActiveTask]);
 
   /* ============================================================
-     ⭐ Sending message
+     ⭐ SEND MESSAGE
   ============================================================ */
   const send = () => {
     const trimmed = input.trim();
@@ -228,29 +301,19 @@ const ChatInput = ({
     setInput("");
     setActiveTask(null);
   };
-  useEffect(() => {
-    const updateHeight = () => {
-      const el = document.querySelector(".ci-shell");
-      if (el) {
-        document.documentElement.style.setProperty(
-          "--ci-height",
-          `${el.offsetHeight + 40}px`
-        );
-      }
-    };
 
-    updateHeight();
-    const observer = new ResizeObserver(updateHeight);
-    observer.observe(document.querySelector(".ci-shell"));
-
-    return () => observer.disconnect();
-  }, []);
+  /* ============================================================
+     ⭐ RENDER
+  ============================================================ */
+  const chipFriendlyKey =
+    Object.keys(internalKeyFor).find((k) => internalKeyFor[k] === activeTask) ||
+    activeTask;
 
   return (
     <div className="chat-input-wrapper">
       <div className="ci-shell">
 
-        {/* LEFT ACTION: FILE UPLOAD */}
+        {/* LEFT: FILE UPLOAD */}
         <button
           className="ci-icon-btn ci-file-btn"
           onClick={() => fileInputRef.current?.click()}
@@ -266,13 +329,13 @@ const ChatInput = ({
           onChange={(e) => onFileUpload?.(Array.from(e.target.files))}
         />
 
-        {/* CENTER AREA */}
+        {/* CENTER */}
         <div className="ci-center">
 
-          {/* TOP ROW : FEATURES + TASKS */}
+          {/* TOP ROW: FEATURES + TASKS */}
           <div className="ci-top-row">
 
-            {/* FEATURES DROPDOWN */}
+            {/* FEATURE DROPDOWN */}
             <div className="ci-dropdown-wrapper">
               <button
                 className="ci-dropdown-trigger"
@@ -288,30 +351,31 @@ const ChatInput = ({
 
               {showFeaturesDropdown && (
                 <div className="ci-dropdown-menu">
-                  {["ZohoBridge", "MailMind", "LinkedInPoster", "PrimeHireBrain", "Interview Bot"].map(
-                    (f, i) => (
-                      <button
-                        key={i}
-                        className="ci-dropdown-item"
-                        onClick={() => {
-                          const internal = internalKeyFor[f] || f;
-                          setActiveTask(internal);
-                          setInput(getPrefix(internal));
-                        }}
-                      >
-                        {f}
-                      </button>
-                    )
-                  )}
+                  {features.map((f, i) => (
+                    <button
+                      key={i}
+                      className="ci-dropdown-item"
+                      onClick={() => {
+                        const internal = internalKeyFor[f] || f;
+                        setActiveTask(internal);
+                        setInput(getPrefix(internal));
+                        setShowFeaturesDropdown(false);
+                      }}
+                    >
+                      {f}
+                    </button>
+                  ))}
                 </div>
               )}
             </div>
 
-            {/* TASKS DROPDOWN (ALWAYS OPEN) */}
+            {/* TASK DROPDOWN */}
             <div className="ci-dropdown-wrapper">
               <button
                 className="ci-dropdown-trigger always-open-trigger"
-                onClick={() => setShowTasksDropdown(!showTasksDropdown)}
+                onClick={() => {
+                  setShowTasksDropdown((s) => !s);
+                }}
               >
                 <ListTodo className="w-4 h-4" />
                 <span>Tasks</span>
@@ -340,31 +404,19 @@ const ChatInput = ({
           </div>
 
           {/* PROMPT CHIPS */}
-          {activeTask &&
-            promptChips[
-            Object.keys(internalKeyFor).find((k) => internalKeyFor[k] === activeTask)
-            ] && (
-              <div className="ci-chip-row">
-                {promptChips[
-                  Object.keys(internalKeyFor).find((k) => internalKeyFor[k] === activeTask)
-                ].map((chip, idx) => (
-                  <div
-                    key={idx}
-                    className="ci-chip"
-                    onClick={() =>
-                      handleChipClick(
-                        Object.keys(internalKeyFor).find(
-                          (k) => internalKeyFor[k] === activeTask
-                        ),
-                        chip.text
-                      )
-                    }
-                  >
-                    {chip.label}
-                  </div>
-                ))}
-              </div>
-            )}
+          {activeTask && promptChips[chipFriendlyKey] && (
+            <div className="ci-chip-row">
+              {promptChips[chipFriendlyKey].map((chip, idx) => (
+                <div
+                  key={idx}
+                  className="ci-chip"
+                  onClick={() => handleChipClick(chipFriendlyKey, chip.text)}
+                >
+                  {chip.label}
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* TEXTAREA */}
           <div className="ci-textarea-wrapper">
@@ -380,7 +432,6 @@ const ChatInput = ({
               }}
             />
 
-            {/* AUTOCOMPLETE SUGGESTIONS */}
             {suggestionsVisible && (
               <div className="ci-suggestions">
                 {suggestions.map((s, idx) => (
@@ -395,10 +446,9 @@ const ChatInput = ({
               </div>
             )}
           </div>
-
         </div>
 
-        {/* RIGHT PANEL: MIC + SEND */}
+        {/* RIGHT: MIC + SEND */}
         <div className="ci-right">
           <button className="ci-icon-btn ci-mic-btn">
             <Mic className="w-5 h-5" />
@@ -413,4 +463,5 @@ const ChatInput = ({
     </div>
   );
 };
+
 export default ChatInput;

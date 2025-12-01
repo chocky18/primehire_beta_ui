@@ -1,124 +1,140 @@
 /* ===========================================================
-    MAIN WRAPPER
+   MAIN WRAPPER — Floating Glass Bar V2
 =========================================================== */
 .chat-input-wrapper {
   position: sticky;
   bottom: 0;
+  left: 0;
   width: 100%;
-  padding: 18px 28px;
-  backdrop-filter: blur(14px);
-  background: rgba(245, 247, 255, 0.4);
+
+  padding: 22px 28px 24px;
+  padding-bottom: max(24px, env(safe-area-inset-bottom));
+
+  background: rgba(245, 247, 255, 0.45);
+  backdrop-filter: blur(18px) saturate(130%);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+
   z-index: 50;
+  display: flex;
+  justify-content: center;
+
+  transition:
+    padding 0.25s ease,
+    background 0.35s ease,
+    backdrop-filter 0.35s ease,
+    transform 0.25s ease;
+}
+
+.chat-input-wrapper:hover {
+  background: rgba(245, 247, 255, 0.55);
+  transform: translateY(-2px);
 }
 
 /* ===========================================================
-    SHELL (Glass Container)
+   CI-SHELL — Always Focused + Always Glowing
 =========================================================== */
 .ci-shell {
-  width: 100%;
-  max-width: 920px;
-  margin: 0 auto;
-
+  position: relative;
   display: flex;
-  align-items: flex-end;
+  flex-direction: row;
+  align-items: flex-start;
   gap: 14px;
+
+  width: clamp(350px, 82vw, 1280px);
+  max-width: 1280px;
 
   padding: 18px 22px;
   border-radius: 22px;
 
-  background: rgba(255, 255, 255, 0.70);
-  border: 1px solid rgba(255, 255, 255, 0.45);
+  /* Always bright focused glass */
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+
+  /* Always strong shadow */
   box-shadow:
-    0 10px 26px rgba(0, 0, 0, 0.08),
-    0 0 50px rgba(99, 102, 241, 0.15);
+    0 18px 46px rgba(0, 0, 0, 0.18),
+    0 0 130px rgba(124, 138, 255, 0.40),
+    inset 0 2px 0 rgba(255, 255, 255, 0.75),
+    inset 0 -12px 22px rgba(255, 255, 255, 0.24);
 
-  backdrop-filter: blur(20px);
-  transition: 0.25s ease;
+  overflow: visible !important;
+  min-height: 70px;
+
+  transition:
+    height 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
 }
 
-.ci-shell:hover {
-  box-shadow:
-    0 16px 36px rgba(0, 0, 0, 0.12),
-    0 0 80px rgba(99, 102, 241, 0.25);
+/* ⚡ Slight motion when typing (optional) */
+.ci-shell:has(textarea:focus) {
+  transform: translateY(-1px);
 }
 
 /* ===========================================================
-    ICON BUTTONS
+   NEON GLOW — Always ON (no focus needed)
 =========================================================== */
-.ci-icon-btn {
-  width: 46px;
-  height: 46px;
+.ci-shell::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: linear-gradient(135deg,
+      rgba(99, 102, 241, 0.35),
+      rgba(124, 138, 255, 0.25),
+      rgba(255, 255, 255, 0.3));
 
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(10px);
+  filter: blur(12px);
+  opacity: 1 !important;
+  /* ALWAYS visible */
+  transition: opacity 0.4s ease;
 
-  cursor: pointer;
-  transition: 0.2s ease;
+  z-index: -1;
 }
 
-.ci-icon-btn:hover {
-  transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.9);
-}
+/* Frost cavity (unchanged) */
+.ci-shell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
 
-/* Mic special tint */
-.ci-mic-btn {
-  background: rgba(231, 238, 255, 0.8);
-}
+  background: radial-gradient(circle at 50% 100%,
+      rgba(255, 255, 255, 0.25),
+      transparent 70%);
 
-/* File upload tint */
-.ci-file-btn {
-  background: rgba(255, 255, 255, 0.75);
-}
-
-/* ===========================================================
-    SEND BUTTON (Primary CTA)
-=========================================================== */
-.ci-send-btn {
-  width: 48px;
-  height: 48px;
-
-  border-radius: 16px;
-  background: linear-gradient(135deg, #4f46e5, #6366f1);
-  color: white;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  cursor: pointer;
-  transition: 0.25s ease;
-
-  box-shadow: 0 8px 18px rgba(99, 102, 241, 0.3);
-}
-
-.ci-send-btn:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 14px 30px rgba(99, 102, 241, 0.4);
+  mix-blend-mode: soft-light;
+  opacity: 0.6;
 }
 
 /* ===========================================================
-    CENTER PANEL
+   CENTER PANEL (Dynamic Height)
 =========================================================== */
 .ci-center {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+  height: auto !important;
+  min-height: fit-content !important;
+
+  transition: height 0.25s ease !important;
 }
 
 /* ===========================================================
-    TOP ROW (Dropdowns)
+   TOP ROW
 =========================================================== */
 .ci-top-row {
   display: flex;
   gap: 14px;
+  transition: 0.2s ease;
 }
 
 .ci-dropdown-wrapper {
@@ -132,27 +148,18 @@
   padding: 8px 12px;
 
   background: rgba(255, 255, 255, 0.75);
+  border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.45);
 
-  border-radius: 10px;
+  backdrop-filter: blur(10px);
   cursor: pointer;
   transition: 0.2s ease;
-
-  backdrop-filter: blur(10px);
 }
 
 .ci-dropdown-trigger:hover {
   background: rgba(255, 255, 255, 0.95);
 }
 
-/* Always-open tasks hover fix */
-.always-open-trigger {
-  border-color: rgba(90, 200, 250, 0.45);
-}
-
-/* ===========================================================
-    DROPDOWN MENU
-=========================================================== */
 .ci-dropdown-menu {
   margin-top: 6px;
   padding: 8px;
@@ -160,10 +167,9 @@
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.4);
-
   backdrop-filter: blur(14px);
-  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.12);
 
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.12);
   animation: fadeDown 0.18s ease-out;
 }
 
@@ -172,31 +178,29 @@
   border-radius: 8px;
   font-size: 14px;
 
-  cursor: pointer;
   transition: 0.15s ease;
+  cursor: pointer;
 }
 
 .ci-dropdown-item:hover {
   background: rgba(99, 102, 241, 0.12);
 }
 
-/* Active Task */
 .task-active {
   background: #00ffaa !important;
   color: #0a0a0a !important;
-  font-weight: 600;
   border-left: 4px solid #34ffd3;
+  font-weight: 600;
 }
 
 /* ===========================================================
-    PROMPT CHIPS
+   PROMPT CHIPS
 =========================================================== */
 .ci-chip-row {
   display: flex;
   gap: 10px;
   padding: 6px 2px;
   overflow-x: auto;
-
   scrollbar-width: none;
 }
 
@@ -210,11 +214,10 @@
 
   background: rgba(240, 240, 255, 0.8);
   border: 1px solid rgba(0, 0, 0, 0.08);
-
   backdrop-filter: blur(10px);
-  cursor: pointer;
-  white-space: nowrap;
 
+  white-space: nowrap;
+  cursor: pointer;
   transition: 0.2s ease;
 }
 
@@ -224,39 +227,43 @@
 }
 
 /* ===========================================================
-    TEXTAREA
+   TEXTAREA
 =========================================================== */
-.ci-textarea-wrapper {
-  position: relative;
-}
-
-.ci-textarea {
+textarea.ci-textarea {
   width: 100%;
-  min-height: 56px !important;
-  max-height: 260px;
+  height: auto !important;
 
-  border-radius: 16px;
+  min-height: 38px !important;
+  max-height: 180px !important;
+
   padding: 14px 16px;
+  border-radius: 16px;
 
   background: rgba(255, 255, 255, 0.65) !important;
   border: 1px solid rgba(255, 255, 255, 0.5);
-
   backdrop-filter: blur(12px);
-  font-size: 15px;
 
-  transition: 0.25s ease;
   resize: none;
+  overflow-y: auto !important;
+
+  font-size: 15px;
+  transition:
+    height 0.22s cubic-bezier(0.25, 0.1, 0.25, 1),
+    background 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
-.ci-textarea:focus {
-  outline: none;
+textarea.ci-textarea:focus {
   background: rgba(255, 255, 255, 0.95) !important;
   border-color: #6366f1;
-  box-shadow: 0 0 10px rgba(99, 102, 241, 0.2);
+
+  box-shadow:
+    0 0 12px rgba(124, 138, 255, 0.35),
+    inset 0 0 8px rgba(255, 255, 255, 0.4);
 }
 
 /* ===========================================================
-    AUTOCOMPLETE
+   AUTOCOMPLETE
 =========================================================== */
 .ci-suggestions {
   margin-top: 8px;
@@ -265,8 +272,8 @@
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.4);
-
   backdrop-filter: blur(10px);
+
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
@@ -274,6 +281,7 @@
   padding: 10px 12px;
   border-radius: 8px;
   cursor: pointer;
+  transition: 0.2s ease;
 }
 
 .ci-suggestion-item:hover {
@@ -281,7 +289,69 @@
 }
 
 /* ===========================================================
-    ANIMATIONS
+   ICON BUTTONS
+=========================================================== */
+.ci-icon-btn {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+
+  cursor: pointer;
+  transition: 0.2s ease;
+
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.7),
+    inset 0 -1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.ci-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 1),
+    inset 0 -1px 6px rgba(0, 0, 0, 0.07);
+}
+
+.ci-mic-btn {
+  background: rgba(231, 238, 255, 0.8);
+}
+
+.ci-send-btn {
+  width: 40px;
+  height: 40px;
+
+  border-radius: 12px;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition: 0.25s ease, box-shadow 0.25s ease;
+
+  box-shadow:
+    0 8px 18px rgba(99, 102, 241, 0.3);
+}
+
+.ci-send-btn:hover {
+  transform: translateY(-3px) scale(1.08);
+  box-shadow:
+    0 6px 18px rgba(124, 138, 255, 0.35),
+    0 0 12px rgba(124, 138, 255, 0.7);
+}
+
+/* ===========================================================
+   ANIMATIONS
 =========================================================== */
 @keyframes fadeDown {
   from {
@@ -293,82 +363,4 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-/* --------------------------------------------------------
-   🟦 COMPACT CHAT INPUT MODE — THE FIX
----------------------------------------------------------*/
-
-.ci-shell {
-  padding: 12px 16px !important;
-  border-radius: 16px !important;
-  gap: 10px !important;
-}
-
-/* ICON BUTTONS SMALLER */
-.ci-icon-btn,
-.ci-mic-btn,
-.ci-send-btn {
-  width: 40px !important;
-  height: 40px !important;
-  border-radius: 12px !important;
-}
-
-/* SEND BUTTON trim */
-.ci-send-btn {
-  box-shadow: 0 4px 10px rgba(99, 102, 241, 0.25) !important;
-}
-
-.ci-send-btn:hover {
-  transform: translateY(-2px) scale(1.03);
-}
-
-/* TEXTAREA COMPACT */
-.ci-textarea {
-  min-height: 38px !important;
-  max-height: 140px !important;
-  padding: 10px 12px !important;
-  font-size: 14px !important;
-}
-
-/* CHIPS — now one-line scroll */
-.ci-chip-row {
-  padding: 4px 0 !important;
-  gap: 8px !important;
-  max-height: 40px !important;
-}
-
-/* SUGGESTIONS compact */
-.ci-suggestions {
-  padding: 6px !important;
-}
-
-.ci-suggestion-item {
-  padding: 6px 10px !important;
-}
-
-/* DROPDOWN ROW COMPACT */
-.ci-top-row {
-  gap: 8px !important;
-}
-
-.ci-dropdown-trigger {
-  padding: 6px 8px !important;
-  border-radius: 8px !important;
-  font-size: 13px !important;
-}
-
-/* DROPDOWN MENU compact */
-.ci-dropdown-menu {
-  padding: 6px !important;
-}
-
-.ci-dropdown-item {
-  padding: 7px 10px !important;
-  font-size: 13px !important;
-}
-
-/* LIMIT TEXTAREA EXPANSION */
-textarea.ci-textarea {
-  overflow-y: auto !important;
 }

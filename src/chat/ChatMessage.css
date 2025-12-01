@@ -226,63 +226,74 @@
 /* ------------------------------------------
    ACTIONS (copy / thumbs) — reveal on hover
 --------------------------------------------*/
+/* ------------------------------------------
+   ACTIONS (Copy / Thumbs) — Modern ChatGPT Style
+--------------------------------------------*/
+
 .chat-actions {
   display: flex;
   gap: 10px;
-  margin-top: 6px;
+  margin-top: 4px;
   opacity: 0;
-  transform: translateY(-4px);
   pointer-events: none;
+  transform: translateY(2px);
   transition: 0.18s ease;
-  justify-content: flex-end;
 }
 
-/* show actions when hovering the whole message row (assistant only) */
-.chat-message-assistant:hover .chat-actions,
-.chat-message-user:hover .chat-actions {
+/* reveal on hover */
+.chat-message-assistant:hover .chat-actions {
   opacity: 1;
-  transform: translateY(0);
   pointer-events: auto;
+  transform: translateY(0);
 }
 
-/* base button */
+/* button base */
 .chat-btn {
-  border: none;
-  cursor: pointer;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(6px);
+
   padding: 6px 8px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(6px);
-  font-size: 13px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  transition: 0.2s ease;
+
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.7),
+    0 2px 8px rgba(0, 0, 0, 0.04);
+
   color: #0f172a;
-  transition: 0.15s ease;
 }
 
+/* hover elevation */
 .chat-btn:hover {
   transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.96);
+  background: #ffffff;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 1),
+    0 4px 14px rgba(99, 102, 241, 0.15);
 }
 
-/* thumbs */
-.thumb-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 14px;
+/* icons style */
+.chat-btn svg {
+  stroke-width: 1.6;
 }
 
+/* active thumbs */
 .thumb-btn.active {
-  background: #4f46e5;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
   color: #fff;
-  transform: scale(1.02);
-  box-shadow: 0 10px 26px rgba(79, 70, 229, 0.18);
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.25);
+  transform: scale(1.03);
 }
 
-/* copy button compact */
 .copy-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  min-width: 38px;
 }
 
 /* ------------------------------------------

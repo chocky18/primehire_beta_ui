@@ -134,103 +134,177 @@ export default function InfoCards() {
         );
     }
 
-    const cards = [
-        {
-            icon: <LinkIcon size={36} />,
-            title: "ZohoBridge",
-            description:
-                "Connects seamlessly with Zoho Recruit to fetch, update, and sync candidate or job data using Zoho’s API.",
-            triggers: [
-                "Fetch Zoho candidates",
-                "Update job status",
-                "Sync Zoho records",
-            ],
-        },
-        {
-            icon: <MailIcon size={36} />,
-            title: "MailMind",
-            description:
-                "Extracts candidate resumes and emails from Outlook or HR inboxes for easy data collection and parsing.",
-            triggers: [
-                "Extract candidate emails",
-                "Parse resumes from inbox",
-                "Analyze mail portal data",
-            ],
-        },
-        {
-            icon: <VideoIcon size={36} />,
-            title: "InterviewBot",
-            description:
-                "Conducts AI-driven interviews with ID validation and generates evaluation reports automatically.",
-            triggers: [
-                "Run AI interview",
-                "Simulate interview questions",
-                "Evaluate candidate performance",
-            ],
-        },
-        {
-            icon: <CpuIcon size={36} />,
-            title: "PrimeHireBrain",
-            description:
-                "The central AI-powered candidate database storing all resumes and insights from multiple sources.",
-            triggers: [
-                "Search candidates in database",
-                "Analyze skill gaps",
-                "View all uploaded resumes",
-            ],
-        },
-        {
-            icon: <UploadIcon size={36} />,
-            title: "Upload Resumes",
-            description:
-                "Upload PDF or DOC resumes directly into PostgreSQL + Pinecone vector database for quick access.",
-            triggers: ["Upload candidate resumes", "Bulk upload resumes from folder"],
-        },
-        {
-            icon: <FileTextIcon size={36} />,
-            title: "JD Creator",
-            description:
-                "AI-powered job description generator that asks clarifying questions and creates shareable JDs.",
-            triggers: [
-                "Create JD for Data Scientist",
-                "Generate perfect job post",
-                "Refine job description",
-            ],
-        },
-        {
-            icon: <SearchIcon size={36} />,
-            title: "Profile Matcher",
-            description:
-                "Matches JDs to best-fit candidate profiles using semantic search and vector embeddings.",
-            triggers: [
-                "Find best candidates",
-                "Match profiles to JD",
-                "Compare resumes and job role",
-            ],
-        },
-        {
-            icon: <BrainIcon size={36} />,
-            title: "LinkedInPoster",
-            description:
-                "Connect your company’s LinkedIn Page to share openings and posts using the LinkedIn Pages API.",
-            triggers: [
-                "Post job on LinkedIn",
-                "Share on LinkedIn Page",
-                "Manage LinkedIn job posts",
-            ],
-        },
-        {
-            icon: <LinkIcon size={36} />,
-            title: "CandidateStatus",
-            description:
-                "Connects seamlessly with Zoho Recruit to fetch, update, and sync candidate or job data using Zoho’s API.",
-            triggers: [
-                "Fetch Zoho candidates",
-                "Update job status",
-                "Sync Zoho records",
-            ],
-        },
-    ];
+    const promptChips = {
+        /* ======================================================
+           ⭐ FEATURE: ZOHO BRIDGE
+        ====================================================== */
+        ZohoBridge: [
+            {
+                label: "🔗 Fetch Zoho Candidates",
+                text: "Start ZohoBridge: Fetch all candidates from Zoho Recruit and sync them with PrimeHire."
+            },
+            {
+                label: "📌 Update Job Status",
+                text: "Start ZohoBridge: Update job openings in Zoho Recruit with the latest status from PrimeHire."
+            },
+            {
+                label: "🔄 Sync Zoho Records",
+                text: "Start ZohoBridge: Perform a full sync of candidate and job records between Zoho Recruit and PrimeHire."
+            }
+        ],
+
+        /* ======================================================
+           ⭐ FEATURE: MAILMIND
+        ====================================================== */
+        MailMind: [
+            {
+                label: "📥 Extract Emails",
+                text: "Start MailMind: Extract candidate emails from Outlook inbox and parse resume attachments."
+            },
+            {
+                label: "📂 Parse Resumes",
+                text: "Start MailMind: Parse resumes from inbox for skills, experience, and structured profile data."
+            },
+            {
+                label: "📊 Analyze Inbox Activity",
+                text: "Start MailMind: Analyze HR inbox patterns for candidate responses, follow-ups, and unread profiles."
+            }
+        ],
+
+        /* ======================================================
+           ⭐ FEATURE: INTERVIEW BOT
+        ====================================================== */
+        InterviewBot: [
+            {
+                label: "🎤 Run AI Interview",
+                text: "Start InterviewBot: Conduct a complete AI-driven interview with ID validation and evaluation scoring."
+            },
+            {
+                label: "❓ Simulate Questions",
+                text: "Start InterviewBot: Generate a dynamic interview simulation with technical and behavioral questions."
+            },
+            {
+                label: "📈 Evaluate Candidate",
+                text: "Start InterviewBot: Evaluate the candidate's performance and generate a structured interview report."
+            }
+        ],
+
+        /* ======================================================
+           ⭐ FEATURE: PRIMEHIRE BRAIN
+        ====================================================== */
+        PrimeHireBrain: [
+            {
+                label: "🔍 Search Candidates",
+                text: "Start PrimeHireBrain: Search the entire AI-powered resume database for best-fit candidates."
+            },
+            {
+                label: "📉 Analyze Skill Gaps",
+                text: "Start PrimeHireBrain: Analyze candidate skill gaps relative to selected job descriptions."
+            },
+            {
+                label: "🗂 View All Resumes",
+                text: "Start PrimeHireBrain: Retrieve all resumes stored in PrimeHireBrain for batch inspection."
+            }
+        ],
+
+        /* ======================================================
+           ⭐ FEATURE: LINKEDIN POSTER
+        ====================================================== */
+        LinkedInPoster: [
+            {
+                label: "📢 Post Job on LinkedIn",
+                text: "Start LinkedInPoster: Publish a job post on the company's LinkedIn Page using the LinkedIn API."
+            },
+            {
+                label: "📝 Share Page Update",
+                text: "Start LinkedInPoster: Create and publish a LinkedIn Page update about hiring or company news."
+            },
+            {
+                label: "📋 Manage Job Posts",
+                text: "Start LinkedInPoster: Retrieve and manage previously published LinkedIn job posts."
+            }
+        ],
+
+        /* ======================================================
+           ⭐ FEATURE: CANDIDATE STATUS
+        ====================================================== */
+        CandidateStatus: [
+            {
+                label: "📅 Interview Schedule",
+                text: "Show CandidateStatus: Fetch candidate interview schedules, dates, and time slots."
+            },
+            {
+                label: "📈 Progress Tracking",
+                text: "Show CandidateStatus: Show candidate progress across interview rounds."
+            },
+            {
+                label: "⚠️ Identify Anomalies",
+                text: "Show CandidateStatus: Detect anomalies such as low performance, missing rounds, or inconsistent answers."
+            }
+        ],
+
+        /* ======================================================
+           ⭐ TASK: UPLOAD RESUMES
+        ====================================================== */
+        "Upload Resumes": [
+            {
+                label: "📤 Upload Resumes",
+                text: "Start Upload Resumes: Upload and parse candidate resumes into PostgreSQL + Pinecone."
+            },
+            {
+                label: "📁 Bulk Upload",
+                text: "Start Upload Resumes: Bulk upload a folder of resumes and index them for semantic search."
+            }
+        ],
+
+        /* ======================================================
+           ⭐ TASK: JD CREATOR
+        ====================================================== */
+        "JD Creator": [
+            {
+                label: "🧑‍💻 Create JD (Data Scientist)",
+                text: "Start JD Creator: Create a job description for a Data Scientist — Python, ML, deep learning, 3+ years."
+            },
+            {
+                label: "📝 Generate Job Post",
+                text: "Start JD Creator: Generate a polished job post with responsibilities, skills, and salary bands."
+            },
+            {
+                label: "✨ Refine Description",
+                text: "Start JD Creator: Refine the existing job description for clarity and impact."
+            }
+        ],
+
+        /* ======================================================
+           ⭐ TASK: PROFILE MATCHER
+        ====================================================== */
+        "Profile Matcher": [
+            {
+                label: "🎯 Find Best Candidates",
+                text: "Start Profile Matcher: Find top candidates for the selected job description using semantic matching."
+            },
+            {
+                label: "🔎 Match Profiles to JD",
+                text: "Start Profile Matcher: Match all available resumes to the given job role."
+            },
+            {
+                label: "⚖️ Compare Candidates",
+                text: "Start Profile Matcher: Compare candidate resumes and identify closest fit for the JD."
+            }
+        ],
+
+        /* ======================================================
+           ⭐ HISTORY MODULES
+        ====================================================== */
+        "JD History": [
+            { label: "🕘 Recent JDs", text: "Show JDHistory: Fetch last 10 job descriptions." }
+        ],
+
+        "Match History": [
+            { label: "📈 Last Matches", text: "Show ProfileMatchHistory: Fetch recent match runs." }
+        ]
+    };
+
 
     return (
         <div className="info-section">
