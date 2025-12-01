@@ -45,7 +45,7 @@ const ChatInput = ({
     "JD Creator": "JD Creator",
     "Profile Matcher": "Profile Matcher",
     "Upload Resumes": "Upload Resumes",
-    "Interview Bot": "InterviewBot",
+    "InterviewBot": "InterviewBot",
 
     // NEW FIX: history & status modules
     "JD History": "JDHistory",

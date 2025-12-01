@@ -48,17 +48,23 @@ export const useProfileMatcher = (setMessages, setIsLoading, setSelectedTask) =>
 
         const candidates = data.candidates || [];
         if (candidates.length > 0) {
-          console.log(`🎯 [ProfileMatcher] ${candidates.length} candidate(s) matched.`);
-          setMessages((prev) => [
+          console.log(`🎯 [ProfileMatcher] ${candidates.length} candidates matched.`);
+          setMessages(prev => [
             ...prev,
             { role: "assistant", type: "profile_table", data: candidates },
           ]);
-        } else {
-          console.warn("⚠️ [ProfileMatcher] No candidates returned from backend.");
-          setMessages((prev) => [
+        }
+        else {
+          console.warn("⚠️ [ProfileMatcher] No candidates returned.");
+
+          setMessages(prev => [
             ...prev,
             { role: "assistant", content: "⚠️ No matching candidates found." },
+            { role: "assistant", content: "📎 Please upload more resumes for better matching." }
           ]);
+
+          // Trigger UploadUI (only ONCE — WebSocket handles with lock)
+          window.dispatchEvent(new CustomEvent("trigger_upload_resumes"));
         }
 
         // ✅ Unlock routing + notify UI

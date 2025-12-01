@@ -13,15 +13,19 @@ export const useWebSocket = (
   const wsRef = useRef(null);
   const reconnectRef = useRef(null);
 
-  const intentLockRef = useRef({
-    intent: null,
-    ts: 0,
-  });
+  /* =======================================================
+       GLOBAL LOCKS
+  ======================================================= */
+  const intentLockRef = useRef({ intent: null, ts: 0 });
 
+  // Prevent Upload Resumes from firing twice
+  const uploadTriggeredRef = useRef(false);
+
+  // Store last user message for JD & Profile Matcher
   const lastUserMessageRef = useRef("");
 
   /* =======================================================
-     INTENT LOCK (prevents double-trigger)
+     INTENT LOCK — Prevents double WebSocket triggers
   ======================================================= */
   const allowIntent = (intent) => {
     const now = Date.now();
@@ -38,18 +42,14 @@ export const useWebSocket = (
   };
 
   /* =======================================================
-     CLEAN INTENT HANDLER (no duplicates)
+     HANDLE INTENTS
   ======================================================= */
   const handleIntent = async (intent) => {
     if (!intent) return;
-
     if (!allowIntent(intent)) return;
 
     console.log("🎯 Executing Intent:", intent);
 
-    /* ---------------------------
-       UI FEATURES (NO DUPLICATES)
-    ---------------------------- */
     const featureUIs = {
       JDHistory: "📘 Showing JD History…",
       ProfileMatchHistory: "📊 Showing Profile Match History…",
@@ -61,11 +61,13 @@ export const useWebSocket = (
       PrimeHireBrain: "🧠 Activating PrimeHire Brain…",
     };
 
+    // ✔ GENERIC FEATURE UI ROUTES
     if (featureUIs[intent]) {
+      uploadTriggeredRef.current = false;
       setSelectedFeature(intent);
       setSelectedTask("");
 
-      setMessages((prev) => [
+      setMessages(prev => [
         ...prev,
         { role: "assistant", content: featureUIs[intent] },
         { role: "assistant", type: "feature_ui", feature: intent },
@@ -74,40 +76,33 @@ export const useWebSocket = (
       return;
     }
 
-    /* ---------------------------
-       JD CREATOR
-    ---------------------------- */
+    // ✔ JD CREATOR
     if (intent === "JD Creator") {
+      uploadTriggeredRef.current = false;
       const prompt = lastUserMessageRef.current.trim();
       if (!prompt) return;
 
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: "📝 Creating JD…" },
-      ]);
+      setMessages(prev => [...prev, { role: "assistant", content: "📝 Creating JD…" }]);
 
       try {
         setIsLoading(true);
         const result = await generateSingleJD(prompt);
         const jdText = result?.result?.markdown_jd || "⚠️ No JD generated.";
-        setMessages((prev) => [...prev, { role: "assistant", content: jdText }]);
+        setMessages(prev => [...prev, { role: "assistant", content: jdText }]);
       } finally {
         setIsLoading(false);
       }
+
       return;
     }
 
-    /* ---------------------------
-       PROFILE MATCHER
-    ---------------------------- */
+    // ✔ PROFILE MATCHER
     if (intent === "Profile Matcher") {
+      uploadTriggeredRef.current = false;
       const jd = lastUserMessageRef.current.trim();
       if (!jd) return;
 
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: "🎯 Matching candidates…" },
-      ]);
+      setMessages(prev => [...prev, { role: "assistant", content: "🎯 Matching candidates…" }]);
 
       try {
         setIsLoading(true);
@@ -119,19 +114,21 @@ export const useWebSocket = (
       return;
     }
 
-    /* ---------------------------
-       Upload Resumes
-    ---------------------------- */
+    // ✔ UPLOAD RESUMES (WS triggered)
     if (intent === "Upload Resumes") {
-      setSelectedFeature("Upload Resumes");
+      if (uploadTriggeredRef.current) return;
+      uploadTriggeredRef.current = true;
 
-      setMessages((prev) => [
+      setSelectedFeature("Upload Resumes");
+      setMessages(prev => [
         ...prev,
-        { role: "assistant", type: "upload_ui", content: "📎 Upload your resumes…" },
+        { role: "assistant", type: "upload_ui", content: "📎 Upload your resumes…" }
       ]);
+
       return;
     }
   };
+
 
   /* =======================================================
      MASTER WS MESSAGE HANDLER
@@ -140,18 +137,14 @@ export const useWebSocket = (
     async (msg) => {
       console.log("📩 WS Received:", msg);
 
-      /* -------------------------------------------
-         1) INTENT from backend → ONLY trigger here
-      ------------------------------------------- */
+      // 1) Backend detects intent
       if (msg.type === "feature_detected" && msg.data) {
         lastUserMessageRef.current = msg.user_message || "";
         await handleIntent(msg.data);
         return;
       }
 
-      /* -------------------------------------------
-         2) IGNORE backend "✨ Detected request" text
-      ------------------------------------------- */
+      // 2) Ignore AI detection logs
       if (
         msg.type === "text" &&
         typeof msg.data === "string" &&
@@ -160,17 +153,13 @@ export const useWebSocket = (
         return;
       }
 
-      /* -------------------------------------------
-         3) NORMAL assistant text
-      ------------------------------------------- */
+      // 3) Standard assistant messages
       if (msg.type === "text") {
         setMessages((prev) => [...prev, { role: "assistant", content: msg.data }]);
         return;
       }
 
-      /* -------------------------------------------
-         4) PROFILE MATCH TABLE
-      ------------------------------------------- */
+      // 4) Profile Matcher table
       if (msg.type === "profile" && msg.data?.candidates) {
         setMessages((prev) => [
           ...prev,
@@ -179,9 +168,7 @@ export const useWebSocket = (
         return;
       }
 
-      /* -------------------------------------------
-         5) RESUME TABLE
-      ------------------------------------------- */
+      // 5) Resume table
       if (msg.type === "resume" && msg.data) {
         setMessages((prev) => [
           ...prev,
@@ -194,7 +181,7 @@ export const useWebSocket = (
   );
 
   /* =======================================================
-     WS CONNECTION BOOT
+     CONNECT WEBSOCKET
   ======================================================= */
   const connectWebSocket = useCallback(() => {
     const ws = new WebSocket(WS_URL);
@@ -215,6 +202,33 @@ export const useWebSocket = (
     };
   }, [handleWebSocketMessage]);
 
+  /* =======================================================
+     LISTEN FOR ProfileMatcher → No Candidates → trigger_upload_resumes
+  ======================================================= */
+  useEffect(() => {
+    const openUpload = () => {
+      if (uploadTriggeredRef.current) return;
+      uploadTriggeredRef.current = true;
+
+      setSelectedFeature("Upload Resumes");
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          type: "upload_ui",
+          content: "📎 Upload more resumes to improve matching.",
+        },
+      ]);
+    };
+
+    window.addEventListener("trigger_upload_resumes", openUpload);
+    return () =>
+      window.removeEventListener("trigger_upload_resumes", openUpload);
+  }, [setMessages, setSelectedFeature]);
+
+  /* =======================================================
+     INITIATE WS CONNECTION
+  ======================================================= */
   useEffect(() => {
     connectWebSocket();
     return () => {
@@ -224,7 +238,7 @@ export const useWebSocket = (
   }, [connectWebSocket]);
 
   /* =======================================================
-     SEND
+     SEND MESSAGE
   ======================================================= */
   const sendMessage = useCallback(
     (msg) => {

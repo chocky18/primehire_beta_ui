@@ -18,7 +18,7 @@ const Header = ({ onRefresh }) => {
         {/* RIGHT — ACTION BUTTONS */}
         <div className="ph-header-actions">
 
-          <button className="ph-btn-outline" onClick={onRefresh}>
+          <button className="ph-refresh-btn" onClick={onRefresh}>
             <RefreshCcw className="ph-btn-icon" />
             Refresh
           </button>

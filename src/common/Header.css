@@ -96,6 +96,18 @@
   box-shadow: 0 10px 26px rgba(99, 102, 241, 0.35);
 }
 
+.ph-btn-icon {
+  width: 16px;
+  height: 16px;
+  opacity: 0.8;
+  transition: 0.25s ease;
+}
+
+.ph-refresh-btn:hover .ph-btn-icon {
+  transform: rotate(90deg);
+  opacity: 1;
+}
+
 /* Primary Button */
 .ph-btn-primary {
   padding: 9px 20px;
