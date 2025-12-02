@@ -48,24 +48,23 @@ export default function WebcamRecorder() {
 
       if (document.hidden) {
         setTabWarning(true);
-        alert("⚠ Don’t switch the tab during the interview!");
+
+        // show non-blocking warning instead of alert()
+        window.dispatchEvent(
+          new CustomEvent("anomalyEvent", {
+            detail: "⚠ Tab switch detected — please do not leave the interview."
+          })
+        );
 
         const fd = new FormData();
         fd.append("candidate_name", candidateName);
-        fd.append("candidate_id", candidateId);   // ⭐ FIX
+        fd.append("candidate_id", candidateId);
         fd.append("event_type", "tab_switch");
-        fd.append("event_msg", "User switched tab during interview");
 
         await fetch(`${API_BASE}/mcp/interview/face-monitor`, {
           method: "POST",
           body: fd
         });
-
-        window.dispatchEvent(
-          new CustomEvent("anomalyEvent", {
-            detail: "Tab switch detected"
-          })
-        );
       } else {
         setTabWarning(false);
       }
@@ -74,7 +73,8 @@ export default function WebcamRecorder() {
     document.addEventListener("visibilitychange", handleTabChange);
     return () =>
       document.removeEventListener("visibilitychange", handleTabChange);
-  }, [candidateId]); // ⭐ FIX dependency
+  }, [candidateId]);
+
 
 
   // =======================================================

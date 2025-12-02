@@ -1,241 +1,115 @@
-/* =====================================
-   VALIDATION PANEL (Premium Blue Accent)
-   ===================================== */
-
+/* ValidationPanel.css */
 .validation-container {
   width: 100%;
-  max-width: 720px;
+  max-width: 860px;
   margin: 40px auto;
   padding: 32px;
-  background: #ffffff;
-  border-radius: 20px;
-  border: 3px solid #38bdf8;
-  box-shadow: 
-    0 12px 28px rgba(56, 189, 248, 0.18),
-    0 6px 14px rgba(0, 0, 0, 0.08);
-  animation: fadeUp 0.4s ease;
+  background: var(--bg-surface, #ffffff);
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: fadeSlide 0.4s ease;
 }
 
-@keyframes fadeUp {
+@keyframes fadeSlide {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(12px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-/* ========== HEADING ========== */
 .validation-container h2 {
-  margin: 0 0 24px 0;
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 700;
-  color: #0f172a;
-  padding-bottom: 12px;
-  border-bottom: 3px solid #38bdf8;
-  background: linear-gradient(135deg, #0f172a 0%, #1e40af 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--text-strong, #111);
+  margin-bottom: 8px;
 }
 
-/* ========== INPUT FIELD ========== */
-.validation-container input,
-.validation-container input[type="text"] {
+/* Input style */
+.validation-container input {
   width: 100%;
-  padding: 14px 16px;
-  margin-bottom: 20px;
-  border: 2px solid #cbd5e1;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: 500;
-  color: #0f172a;
+  padding: 12px 14px;
+  font-size: 15px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color, #ccc);
+  background: var(--input-bg, #f6f6f6);
   outline: none;
-  transition: all 0.25s ease;
-  background: #f8fafc;
-  box-sizing: border-box;
+  transition: 0.2s;
 }
 
-.validation-container input:focus,
-.validation-container input[type="text"]:focus {
-  border-color: #38bdf8;
-  background: #ffffff;
-  box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.18);
-  transform: translateY(-1px);
+.validation-container input:focus {
+  border-color: #4a8dff;
+  box-shadow: 0 0 0 3px rgba(74, 141, 255, 0.15);
 }
 
-.validation-container input::placeholder,
-.validation-container input[type="text"]::placeholder {
-  color: #94a3b8;
+/* Camera layout */
+.validation-camera-section {
+  display: flex;
+  gap: 20px;
+  margin-top: 12px;
 }
 
-/* ========== BUTTONS ========== */
-.validation-container button {
-  margin: 8px 6px;
-  padding: 12px 20px;
-  font-size: 15px;
-  font-weight: 600;
+.validation-video-box {
+  position: relative;
+  width: 320px;
+  height: 240px;
+  background: #000;
   border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  background: linear-gradient(135deg, #0ea5e9, #0284c7);
-  color: #ffffff;
+  overflow: hidden;
+  border: 1px solid #222;
 }
 
-.validation-container button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-  background: linear-gradient(135deg, #0284c7, #0369a1);
-}
-
-.validation-container button:active {
-  transform: translateY(0);
-}
-
-.validation-container button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* ========== VIDEO CAMERA ========== */
-.validation-container video {
+.validation-video-box video {
   width: 100%;
-  max-width: 100%;
-  height: auto;
-  border-radius: 16px;
-  border: 4px solid #38bdf8;
-  box-shadow: 
-    0 8px 20px rgba(56, 189, 248, 0.25),
-    0 4px 10px rgba(0, 0, 0, 0.1);
-  background: #000000;
-  margin: 16px 0;
-}
-
-/* ========== CANVAS (HIDDEN) ========== */
-.validation-container canvas {
-  display: none;
-}
-
-/* ========== CAPTURED IMAGE ========== */
-.validation-container img {
-  width: 100%;
-  max-width: 320px;
-  border-radius: 14px;
-  border: 3px solid #10b981;
-  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.2);
-  margin: 16px 0;
-}
-
-/* ========== STATUS MESSAGES ========== */
-.success-status {
-  display: inline-block;
-  padding: 12px 20px;
-  margin: 12px 0;
+  height: 100%;
+  object-fit: cover;
   border-radius: 12px;
-  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-  color: #065f46;
-  font-weight: 600;
-  font-size: 15px;
-  border: 2px solid #10b981;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
 }
 
-.waiting-status {
-  display: inline-block;
-  padding: 12px 20px;
-  margin: 12px 0;
-  border-radius: 12px;
-  background: #fff4e6;
-  color: #92400e;
-  font-weight: 600;
-  font-size: 15px;
-  border: 2px solid #fbbf24;
-  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.15);
+.validation-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-/* ========== JD TEXT SECTION ========== */
-.validation-container h3 {
-  margin: 24px 0 12px 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: #1e293b;
+.validation-status-text {
+  margin-top: 4px;
+  font-size: 14px;
+  font-weight: 500;
 }
 
-.validation-container pre {
-  max-height: 120px;
-  overflow: auto;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 14px;
-  font-size: 13px;
-  font-family: 'Monaco', 'Courier New', monospace;
-  color: #475569;
-  line-height: 1.6;
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
+.validation-status-text.ok {
+  color: green;
+}
+
+.validation-status-text.wait {
+  color: #888;
+}
+
+/* JD preview */
+.jd-preview-box {
+  margin-top: 12px;
+  background: var(--surface-low, #f3f3f3);
+  padding: 10px;
+  border-radius: 10px;
+  max-height: 180px;
+  overflow-y: auto;
   white-space: pre-wrap;
-  word-wrap: break-word;
-}
-
-.validation-container pre::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-.validation-container pre::-webkit-scrollbar-track {
-  background: #f1f5f9;
-  border-radius: 4px;
-}
-
-.validation-container pre::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
-}
-
-.validation-container pre::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-/* ========== DEBUG SECTION ========== */
-.debug-info {
-  margin-top: 24px;
-  padding: 14px;
-  background: #fef3c7;
-  border: 2px solid #fbbf24;
-  border-radius: 12px;
   font-size: 13px;
-  color: #78350f;
-  font-family: monospace;
+  border: 1px solid #ddd;
 }
 
-/* ========== SPACING UTILITIES ========== */
-.validation-container > div {
-  margin-bottom: 20px;
-}
-
-.validation-container > div:last-child {
-  margin-bottom: 0;
-}
-
-/* ========== RESPONSIVE ========== */
-@media (max-width: 768px) {
-  .validation-container {
-    margin: 20px auto;
-    padding: 24px;
-    max-width: 95%;
-  }
-
-  .validation-container h2 {
-    font-size: 24px;
-  }
-
-  .validation-container button {
-    width: 100%;
-    margin: 8px 0;
-  }
+.validation-debug {
+  opacity: 0.6;
+  font-size: 13px;
+  margin-top: 10px;
+  line-height: 1.4;
 }

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import WebcamRecorder from "./WebcamRecorder";
 import "./InterviewBot.css";
 
-import ValidationPanel from "./ValidationPanel";
+import ValidationPanel from "./ValidationPanelInterview";
 
 
 const InterviewBot = () => {

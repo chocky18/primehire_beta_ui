@@ -1,171 +1,59 @@
-// // MainContent.jsx
-// import React, { useState } from "react";
-// import ChatContainer from "@/chat/ChatContainer";
-// import ChatInput from "@/chat/ChatInput";
-// import "./MainContent.css";
-
-// export default function MainContent({
-//   messages = [],
-//   selectedFeature,
-//   selectedTask,
-//   isLoading,
-//   handleSend,
-//   handleTaskSelect,
-// }) {
-//   const showHero = messages.length === 0 && !selectedFeature && !selectedTask;
-//   const [pendingTask, setPendingTask] = useState(null);
-
-//   const handleQuickStart = (task) => {
-//     setPendingTask(task);
-//     handleTaskSelect?.(task);
-//     setTimeout(() => handleSend(""), 60);
-//   };
-
-//   return (
-//     <div className="mc-root">
-//       {showHero ? (
-//         <section className="mc-hero glass-surface">
-//           <div className="mc-hero-inner">
-
-//             <h1 className="mc-title">
-//               Welcome to <span className="mc-accent">PrimeHire AI</span>
-//             </h1>
-
-//             <p className="mc-subtitle">
-//               Your all-in-one AI Recruiting Workspace — Generate JDs, match candidates,
-//               automate interviews, manage hiring history, and monitor candidate status.
-//             </p>
-
-//             {/* ------------------------------------
-//                 🔥 7 Quick Action Cards
-//             ------------------------------------ */}
-//             <div className="mc-actions-grid">
-
-//               {/* JD Creator */}
-//               <div className="mc-action-card"
-//                 onClick={() => handleQuickStart("JD Creator")}>
-//                 <span>📝</span>
-//                 <h3>Create JD</h3>
-//                 <p>Generate job descriptions instantly.</p>
-//               </div>
-
-//               {/* Profile Matcher */}
-//               <div className="mc-action-card"
-//                 onClick={() => handleQuickStart("Profile Matcher")}>
-//                 <span>🎯</span>
-//                 <h3>Match Profiles</h3>
-//                 <p>Upload resumes & get AI-ranked candidates.</p>
-//               </div>
-
-//               {/* Upload Resumes */}
-//               <div className="mc-action-card"
-//                 onClick={() => handleQuickStart("Upload Resumes")}>
-//                 <span>📤</span>
-//                 <h3>Upload Resumes</h3>
-//                 <p>Parse and classify resumes automatically.</p>
-//               </div>
-
-//               {/* Interview Bot */}
-//               <div className="mc-action-card"
-//                 onClick={() => handleQuickStart("Interview Bot")}>
-//                 <span>🎤</span>
-//                 <h3>Interview Bot</h3>
-//                 <p>Automated voice/video screening.</p>
-//               </div>
-
-//               {/* Candidate Status */}
-//               <div className="mc-action-card"
-//                 onClick={() => handleQuickStart("Candidate Status")}>
-//                 <span>📌</span>
-//                 <h3>Candidate Status</h3>
-//                 <p>Track candidate stages & decisions.</p>
-//               </div>
-
-//               {/* JD History */}
-//               <div className="mc-action-card"
-//                 onClick={() => handleQuickStart("JD History")}>
-//                 <span>📝</span>
-//                 <h3>JD History</h3>
-//                 <p>View & export previously created JDs.</p>
-//               </div>
-
-//               {/* Match History */}
-//               <div className="mc-action-card"
-//                 onClick={() => handleQuickStart("Match History")}>
-//                 <span>📈</span>
-//                 <h3>Match History</h3>
-//                 <p>Check past candidate–JD match results.</p>
-//               </div>
-
-//             </div>
-
-//             {/* Inline console */}
-//             <div className="mc-console">
-//               <ChatInput
-//                 onSend={handleSend}
-//                 placeholder="Try: Create a JD for a React developer"
-//                 activeTask={pendingTask}
-//                 forceShowChips={true}
-//               />
-//             </div>
-
-
-
-//           </div>
-//         </section>
-//       ) : (
-
-//         /* ---------------------------
-//            CHAT MODE
-//         ---------------------------- */
-//         <div className="mc-chat-mode">
-
-//           <div className="mc-chat-scroll">
-//             <ChatContainer
-//               messages={messages}
-//               selectedFeature={selectedFeature}
-//               selectedTask={selectedTask}
-//               isLoading={isLoading}
-//             />
-//             <div className="mc-bottom-spacer"></div>
-//           </div>
-
-//           <div className="mc-chat-input-fixed">
-//             <ChatInput
-//               onSend={handleSend}
-//               activeTask={pendingTask || selectedTask}
-//               forceShowChips={true}
-//             />
-//           </div>
-
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
-// MainContent.jsx
+// 📁 src/components/MainContent.jsx
 import React, { useState, useEffect } from "react";
 import ChatContainer from "@/chat/ChatContainer";
 import ChatInput from "@/chat/ChatInput";
+
+import ValidationPanel from "@/interview/ValidationPanel";
+import InstructionsPanel from "@/interview/InstructionsPanel";
+import InterviewMode from "@/interview/InterviewMode";
+
 import "./MainContent.css";
 
 export default function MainContent({
   messages = [],
   selectedFeature,
   selectedTask,
+  setSelectedTask,
   isLoading,
   handleSend,
   handleTaskSelect,
 }) {
-  const showHero = messages.length === 0 && !selectedFeature && !selectedTask;
+  /* ------------------------------------------------------------
+     LOGS (DEV MODE)
+  ------------------------------------------------------------ */
+  console.log("📌 [MC] RENDER ----");
+  console.log("🟦 selectedFeature:", selectedFeature);
+  console.log("🟩 selectedTask:", selectedTask);
+  console.log("🟧 messagesCount:", messages.length);
+  console.log("🟪 isLoading:", isLoading);
+
+  /* ------------------------------------------------------------
+     INTERVIEW BOT STATE
+  ------------------------------------------------------------ */
+  const [candidateState, setCandidateState] = useState({
+    candidateName: "",
+    candidateId: "",
+    jdId: "",
+    jdText: "",
+  });
+
+  /* ------------------------------------------------------------
+     📌 HERO QUICK START SUPPORT
+  ------------------------------------------------------------ */
   const [pendingTask, setPendingTask] = useState(null);
 
   const handleQuickStart = (task) => {
+    console.log("🚀 [MC] QuickStart:", task);
     setPendingTask(task);
     handleTaskSelect?.(task);
+
+    // send empty message to trigger feature state
     setTimeout(() => handleSend(""), 50);
   };
 
+  /* ------------------------------------------------------------
+     Resize observer for ChatInput safe area
+  ------------------------------------------------------------ */
   useEffect(() => {
     const updateHeight = () => {
       const el = document.querySelector(".ci-shell");
@@ -183,10 +71,79 @@ export default function MainContent({
     return () => obs.disconnect();
   }, []);
 
+  /* ------------------------------------------------------------
+     🎥 INTERVIEW BOT OVERRIDE MODE
+  ------------------------------------------------------------ */
+  if (selectedFeature === "InterviewBot") {
+    console.log("🎥 [MC] ENTERING INTERVIEW MODE OVERRIDE");
+
+    if (selectedTask === "validation") {
+      console.log("🟡 [MC] Rendering <ValidationPanel />");
+      return (
+        <div className="vp-page">
+          <ValidationPanel
+            onNext={(data) => {
+              console.log("➡️ [MC] ValidationPanel → onNext:", data);
+              setCandidateState(data);
+              setSelectedTask("instructions");
+            }}
+          />
+        </div>
+      );
+    }
+
+    if (selectedTask === "instructions") {
+      console.log("🟢 [MC] Rendering <InstructionsPanel />");
+      return (
+        <div className="mc-interview-wrapper">
+          <InstructionsPanel
+            candidateName={candidateState.candidateName}
+            jd_text={candidateState.jdText}
+            onNext={() => {
+              console.log("➡️ [MC] Moving to INTERVIEW MODE");
+              setSelectedTask("interview");
+            }}
+          />
+        </div>
+      );
+    }
+
+    if (selectedTask === "interview") {
+      console.log("🔴 [MC] Rendering <InterviewMode />");
+      return (
+        <div className="mc-interview-wrapper">
+          <InterviewMode
+            candidateName={candidateState.candidateName}
+            candidateId={candidateState.candidateId}
+            jd_text={candidateState.jdText}
+            jd_id={candidateState.jdId}
+          />
+        </div>
+      );
+    }
+
+    console.log("⚠️ [MC] InterviewBot selected but NO VALID TASK FOUND!");
+    return <div className="mc-interview-wrapper">⚠️ No task active</div>;
+  }
+
+  /* ------------------------------------------------------------
+     DEFAULT CHAT MODE + HERO
+  ------------------------------------------------------------ */
+
+  const showHero =
+    messages.length === 0 &&
+    !selectedFeature &&
+    !selectedTask;
+
+  console.log("💬 [MC] showHero:", showHero);
+
   return (
     <div className="mc-root">
 
       {showHero ? (
+        /* ------------------------------------------------------------
+           HERO SECTION WITH ACTION CARDS (PrimeHire Style)
+        ------------------------------------------------------------ */
         <section className="mc-hero">
           <div className="mc-hero-inner">
 
@@ -205,7 +162,7 @@ export default function MainContent({
                 ["📝", "JD Creator", "Generate job descriptions instantly."],
                 ["🎯", "Profile Matcher", "AI-ranked resumes in seconds."],
                 ["📤", "Upload Resumes", "Parse & extract candidate insights."],
-                ["🎤", "Interview Bot", "Automated screening interviews."],
+                ["🎤", "InterviewBot", "Automated AI-powered interviews."],
                 ["📌", "Candidate Status", "Track your entire pipeline."],
                 ["📝", "JD History", "View your previously generated JDs."],
                 ["📈", "Match History", "Review past match results."],
@@ -215,7 +172,7 @@ export default function MainContent({
                   className="mc-action-card"
                   onClick={() => handleQuickStart(label)}
                 >
-                  <span>{icon}</span>
+                  <span className="mc-icon">{icon}</span>
                   <h3>{label}</h3>
                   <p>{desc}</p>
                 </div>
@@ -231,7 +188,11 @@ export default function MainContent({
             </div>
           </div>
         </section>
+
       ) : (
+        /* ------------------------------------------------------------
+           CHAT MODE
+        ------------------------------------------------------------ */
         <div className="mc-chat-mode">
           <div className="mc-chat-scroll">
             <ChatContainer
@@ -249,6 +210,7 @@ export default function MainContent({
           />
         </div>
       )}
+
     </div>
   );
 }

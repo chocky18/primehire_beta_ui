@@ -29,6 +29,28 @@ export const useMainContent = () => {
   } = useJDCreator(setMessages, setIsLoading, setSelectedTask);
 
 
+  // -------------------------------------------------------------
+  // 🔍 DEBUG WATCHERS
+  // -------------------------------------------------------------
+  useEffect(() => {
+    console.log("🟦 selectedFeature =", selectedFeature);
+    window.__LATEST_FEATURE__ = selectedFeature;
+  }, [selectedFeature]);
+
+  useEffect(() => {
+    console.log("🟩 selectedTask =", selectedTask);
+    window.__LATEST_TASK__ = selectedTask;
+  }, [selectedTask]);
+
+  useEffect(() => {
+    console.log("🟧 [DEBUG] messages updated:", messages);
+  }, [messages]);
+
+  useEffect(() => {
+    console.log("🟪 [DEBUG] isLoading:", isLoading);
+  }, [isLoading]);
+
+
   // ✅ make JD handler globally available (for JDTaskUI)
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -54,23 +76,6 @@ export const useMainContent = () => {
     window.__JD_MODE_ACTIVE__ = false; // 🧹 Always unlock on reset
   };
 
-  // 💡 Manual feature click
-  // 💡 Manual feature click
-  // const handleFeatureClick = (feature) => {
-  //   console.log("🧭 Manual feature click:", feature);
-
-  //   // ✅ Don’t reset first; clear conflicting state after selection
-  //   setSelectedTask("");
-  //   setSelectedFeature(feature);
-
-  //   // ✅ Display message to trigger UI (e.g., Zoho, MailMind)
-  //   setMessages([
-  //     {
-  //       role: "assistant",
-  //       content: `✨ Detected feature: **${feature}** — Opening ${feature} module...`,
-  //     },
-  //   ]);
-  // };
   // 💡 Manual feature click
   const handleFeatureClick = (feature) => {
     console.log("🧭 Manual feature click:", feature);
@@ -288,33 +293,6 @@ export const useMainContent = () => {
     [selectedTask, jdInProgress, handleJdProcess, fetchProfileMatches, sendMessage]
   );
 
-  // 📎 Resume Upload Handler
-  // const uploadResumesHandler = useCallback(
-  //   async (files) => {
-  //     if (!files?.length) return;
-  //     setIsLoading(true);
-
-  //     try {
-  //       const result = await uploadResumes(files);
-  //       setMessages((prev) => [
-  //         ...prev,
-  //         { role: "assistant", type: "resume_table", data: result.uploaded_files },
-  //       ]);
-  //     } catch (err) {
-  //       console.error("❌ Upload error:", err);
-  //       setMessages((prev) => [
-  //         ...prev,
-  //         {
-  //           role: "assistant",
-  //           content: "❌ Failed to upload resumes. Please try again.",
-  //         },
-  //       ]);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   },
-  //   []
-  // );
 
   // 📎 Resume Upload Handler
   const uploadResumesHandler = useCallback(
@@ -373,6 +351,7 @@ export const useMainContent = () => {
     messages,
     selectedFeature,
     selectedTask,
+    setSelectedTask,   // ⭐ REQUIRED
     isLoading,
     currentJdInput,
     setCurrentJdInput,

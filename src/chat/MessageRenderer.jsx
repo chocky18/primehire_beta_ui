@@ -12,6 +12,8 @@ import ZohoLoginButton from "../ZohoBridge/ZohoLoginButton";
 import MailMindButton from "../MailMind/MailMindButton";
 import JDHistory from "@/pages/JDHistory";
 import Designation from "../CandidateStatus/Designation";
+import InterviewMode from "@/interview/InterviewMode";
+import ValidationPanel from "@/interview/ValidationPanel";
 
 import "./UploadUI.css";
 
@@ -122,7 +124,8 @@ const MessageRenderer = React.memo(({ message, onTriggerFeature }) => {
           {message.feature === "ProfileMatchHistory" && <ProfileMatchHistory />}
           {message.feature === "CandidateStatus" && <Designation />}
 
-          {message.feature === "InterviewBot" && <InterviewBot />}
+          {/* {message.feature === "InterviewBot" && <InterviewMode />} */}
+
           {message.feature === "ZohoBridge" && <ZohoLoginButton />}
           {message.feature === "MailMind" && <MailMindButton />}
           {message.feature === "PrimeHireBrain" && <PrimeHireBrain />}
@@ -144,7 +147,7 @@ const MessageRenderer = React.memo(({ message, onTriggerFeature }) => {
       : "";
 
   const featureMatch = cleanText.match(
-    /\b(ZohoBridge|MailMind|JDHistory|PrimeHireBrain|InterviewBot|LinkedInPoster|ProfileMatchHistory|CandidateStatus)\b/i
+    /\b(ZohoBridge|MailMind|JDHistory|PrimeHireBrain|ProfileMatchHistory|CandidateStatus)\b/i
   );
 
   const detectedFeature = featureMatch ? featureMatch[1] : null;
@@ -169,7 +172,7 @@ const MessageRenderer = React.memo(({ message, onTriggerFeature }) => {
           {detectedFeature === "ProfileMatchHistory" && <ProfileMatchHistory />}
           {detectedFeature === "CandidateStatus" && <Designation />}
 
-          {detectedFeature === "InterviewBot" && <InterviewBot />}
+          {/* {detectedFeature === "InterviewBot" && <InterviewBot />} */}
           {detectedFeature === "ZohoBridge" && <ZohoLoginButton />}
           {detectedFeature === "MailMind" && <MailMindButton />}
           {detectedFeature === "PrimeHireBrain" && <PrimeHireBrain />}

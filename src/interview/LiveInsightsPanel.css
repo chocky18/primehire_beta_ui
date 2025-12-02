@@ -1,0 +1,129 @@
+/* ===========================================
+   LIVE INSIGHTS PANEL — GLASS PANEL
+=========================================== */
+.insights-panel {
+    width: 280px;
+    padding: 18px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    height: calc(100vh - 110px);
+    overflow-y: auto;
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    color: white;
+}
+
+/* Scrollbar styling */
+.insights-panel::-webkit-scrollbar {
+    width: 6px;
+}
+
+.insights-panel::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: 4px;
+}
+
+.insights-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Title */
+.panel-title {
+    font-size: 22px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+
+/* ===========================================
+   CARD STYLING
+=========================================== */
+.insight-card {
+    background: rgba(0, 0, 0, 0.25);
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+}
+
+.insight-card h3 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    font-weight: 600;
+    opacity: 0.95;
+}
+
+/* JD preview text block */
+.jd-preview {
+    font-size: 13px;
+    opacity: 0.85;
+    margin-top: 8px;
+    line-height: 1.45;
+    word-break: break-word;
+}
+
+/* Small glass boxes */
+.mini-box {
+    margin-top: 6px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    font-size: 13px;
+    line-height: 1.4;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+/* Clean status tag */
+.clean-tag {
+    padding: 8px 10px;
+    background: rgba(0, 255, 0, 0.18);
+    border-radius: 8px;
+    font-size: 13px;
+    color: #c8ffc8;
+    border: 1px solid rgba(0, 255, 0, 0.25);
+    text-align: center;
+}
+
+/* ===========================================
+   ANOMALY FEED
+=========================================== */
+.anomaly-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.anomaly-item {
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: rgba(255, 0, 0, 0.22);
+    color: #ffdede;
+    font-size: 13px;
+    border: 1px solid rgba(255, 0, 0, 0.3);
+    line-height: 1.35;
+}
+
+/* ===========================================
+   RESPONSIVE TUNING
+=========================================== */
+@media (max-width: 1350px) {
+    .insights-panel {
+        width: 240px;
+    }
+}
+
+@media (max-width: 1100px) {
+    .insights-panel {
+        width: 220px;
+    }
+}

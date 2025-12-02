@@ -8,8 +8,10 @@ export const useWebSocket = (
   setSelectedTask,
   fetchProfileMatches,
   setMessages,
-  setIsLoading
+  setIsLoading,
+  handleJdProcess   // ⭐ NOW CORRECT
 ) => {
+
   const wsRef = useRef(null);
   const reconnectRef = useRef(null);
 
@@ -44,7 +46,6 @@ export const useWebSocket = (
       JDHistory: "📘 Showing JD History…",
       ProfileMatchHistory: "📊 Showing Profile Match History…",
       CandidateStatus: "📌 Showing Candidate Status…",
-      InterviewBot: "🤖 InterviewBot activated!",
       ZohoBridge: "🔗 Opening Zoho Recruit Bridge…",
       MailMind: "📬 MailMind activated!",
       LinkedInPoster: "🔗 Posting on LinkedIn…",
@@ -217,6 +218,43 @@ export const useWebSocket = (
 
       return;
     }
+    // =======================================================
+    // INTERVIEW BOT
+    // =======================================================    
+    // =======================================================
+    // INTERVIEW BOT (FULL FLOW)
+    // =======================================================
+    if (intent === "InterviewBot") {
+      console.log("🚀 [INTENT] InterviewBot triggered!");
+      console.log("➡️ Setting selectedFeature = InterviewBot");
+      console.log("➡️ Setting selectedTask = validation");
+
+      setSelectedFeature("InterviewBot");
+      setSelectedTask("validation");
+
+      setMessages(prev => [
+        ...prev,
+        {
+          role: "assistant",
+          type: "feature_ui",
+          feature: "InterviewBot",
+          content: "🤖 Starting AI Interview — launching validation...",
+        },
+      ]);
+
+      // VERIFY AFTER REACT UPDATE
+      setTimeout(() => {
+        console.log("🔎 [POST] selectedFeature =", window.__LATEST_FEATURE__);
+        console.log("🔎 [POST] selectedTask =", window.__LATEST_TASK__);
+      }, 200);
+
+      return;
+    }
+
+
+
+
+
   };
 
   /* =======================================================

@@ -40,7 +40,11 @@
   align-items: flex-start;
   gap: 14px;
 
-  width: clamp(350px, 82vw, 1280px);
+  width: 100%;
+  max-width: 1200px;
+  /* or 1200px if you want wider */
+  min-width: 1200px;
+  /* width: clamp(350px, 82vw, 1280px); */
   max-width: 1280px;
 
   padding: 18px 22px;

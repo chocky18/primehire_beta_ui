@@ -1,16 +1,50 @@
-/* HEADER BASE */
 .ph-header {
   width: 100%;
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 120;
 
-  padding: 10px 0;
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: 0 2px 18px rgba(0, 0, 0, 0.04);
+  padding: 12px 0;
+
+  /* 🔄 Gradient reversed: light → blue instead of blue → light */
+  background: linear-gradient(315deg,
+      /* flipped */
+      rgba(99, 102, 241, 0.38),
+      rgba(255, 255, 255, 0.45),
+      rgba(255, 255, 255, 0.45),
+      rgba(124, 138, 255, 0.32),
+      rgba(99, 102, 241, 0.38));
+
+  backdrop-filter: blur(22px) saturate(180%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.55);
+
+  box-shadow:
+    0 8px 25px rgba(124, 138, 255, 0.25),
+    inset 0 -2px 8px rgba(255, 255, 255, 0.25);
 }
+
+/* Reverse glow to match */
+.ph-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(300deg,
+      /* reversed */
+
+      rgba(124, 138, 255, 0.28),
+      rgba(255, 255, 255, 0.4),
+      rgba(99, 102, 241, 0.35));
+
+  filter: blur(18px);
+  opacity: 0.85;
+  pointer-events: none;
+  z-index: -1;
+}
+
+
 
 /* INNER FLEX */
 .ph-header-inner {

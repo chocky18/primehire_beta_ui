@@ -10,7 +10,7 @@ import WebcamRecorder from "./InterviewBot/WebcamRecorder";
 import InstructionsPrompt from "./InterviewBot/InstructionsPrompt"
 import CandidateOverview from "./CandidateStatus/CandidateOverview";
 import CandidateStatus from "./CandidateStatus/CandidateStatus"
-import ValidationPanel from "./InterviewBot/ValidationPanel"
+import ValidationPanel from "./InterviewBot/ValidationPanelInterview"
 import Scheduler from "@/components/Scheduler";
 
 const queryClient = new QueryClient();
