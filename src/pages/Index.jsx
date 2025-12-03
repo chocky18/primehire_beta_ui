@@ -1,38 +1,53 @@
-// import React from "react";
-// import Header from "@/common/Header";
-// import MainContent from "@/components/MainContent";
-// import ChatInput from "@/chat/ChatInput";
-// import { useMainContent } from "@/hooks/useMainContent";
-
-// export default function Index() {
-//   const main = useMainContent();
-
-//   return (
-//     <div className="ph-root">
-
-//       <Header onRefresh={main.handleRefresh} />
-
-//       <div className="ph-chat-area">
-//         <MainContent {...main} />
-//       </div>
-
-//       <ChatInput onSend={main.handleSend} {...main} />
-
-//     </div>
-//   );
-// }
 import React from "react";
 import Header from "@/common/Header";
 import MainContent from "@/components/MainContent";
+import AppSidebar from "@/components/AppSidebar/AppSidebar";
+import ChatInput from "@/chat/ChatInput";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { useMainContent } from "@/hooks/useMainContent";
+
+import "@/components/AppSidebar/AppSidebar.css";
+import "@/styles/layout.css";
 
 export default function Index() {
   const main = useMainContent();
 
   return (
-    <div className="page-main">
+    <SidebarProvider>
+
+      {/* HEADER */}
       <Header onRefresh={main.handleRefresh} />
-      <MainContent {...main} />
-    </div>
+
+      {/* LAYOUT */}
+      <div className="ph-layout">
+
+        {/* SIDEBAR */}
+        <aside className="ph-sidebar">
+          <AppSidebar
+            selectedFeature={main.selectedFeature}
+            onFeatureSelect={main.handleFeatureClick}
+          />
+        </aside>
+
+        {/* MAIN AREA */}
+        <main className="ph-main">
+
+          {/* SCROLLABLE CONTENT */}
+          <div className="ph-main-scroll">
+            <MainContent {...main} />
+          </div>
+
+          {/* FIXED CHAT INPUT */}
+          {/* <div className="ph-main-chatinput">
+            <ChatInput
+              onSend={main.handleSend}
+              activeTask={main.selectedTask}
+              forceShowChips={true}
+            />
+          </div> */}
+
+        </main>
+      </div>
+    </SidebarProvider>
   );
 }

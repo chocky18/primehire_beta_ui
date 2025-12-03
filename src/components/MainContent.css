@@ -1,27 +1,26 @@
 /* ============================================================
-   PRIMEHIRE MAIN CONTENT — PREMIUM SAAS UI v3
-   Hero = full immersive pane
-   Cards = glowing premium apps grid
-   Pills = clean structured features
+   PRIMEHIRE MAIN CONTENT — FIXED & SCROLLABLE VERSION
 ============================================================ */
 
-/* ROOT */
+/* ⚠️ Important Fix:
+   Remove height restrictions so scroll wrapper works
+------------------------------------------------------------ */
 .mc-root {
   width: 100%;
-  height: 100%;
-  overflow: hidden;
+  height: auto !important;
+  min-height: 100%;
+  overflow: visible !important;
   padding: 0;
   margin: 0;
   background: #f8fafc;
 }
 
 /* ============================================================
-   HERO SECTION — immersive SaaS hero
+   HERO SECTION
 ============================================================ */
 .mc-hero {
   width: 100%;
   min-height: 84vh;
-
   padding: 100px 40px 70px;
   box-sizing: border-box;
 
@@ -32,17 +31,14 @@
   flex-direction: column;
 
   position: relative;
-  overflow: hidden;
+  overflow: visible !important;
 
   background: linear-gradient(135deg,
       rgba(240, 244, 255, 1),
       rgba(235, 240, 255, 0.9),
       rgba(249, 249, 255, 1));
-
-  border-radius: 0;
 }
 
-/* HER0 INNER WIDTH CONTROL */
 .mc-hero-inner {
   width: 100%;
   max-width: 1300px;
@@ -51,7 +47,7 @@
   z-index: 3;
 }
 
-/* FLOATING GLOWS */
+/* GLOWS */
 .mc-hero::before,
 .mc-hero::after {
   content: "";
@@ -99,8 +95,6 @@
   background: linear-gradient(90deg, #1e3a8a, #2563eb, #3b82f6);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-
-  letter-spacing: -0.5px;
 }
 
 .mc-accent {
@@ -119,7 +113,7 @@
 }
 
 /* ============================================================
-   ACTION CARDS — immersive product grid
+   ACTION CARDS
 ============================================================ */
 .mc-actions-grid {
   width: 100%;
@@ -133,7 +127,6 @@
   padding: 0 20px;
 }
 
-/* GLASS PREMIUM CARD */
 .mc-action-card {
   position: relative;
   padding: 28px 26px;
@@ -148,10 +141,7 @@
     0 0 20px rgba(99, 102, 241, 0.06),
     inset 0 0 0 1px rgba(255, 255, 255, 0.45);
 
-  transition:
-    transform .28s cubic-bezier(.25, .46, .45, .94),
-    box-shadow .28s ease,
-    background .28s ease;
+  transition: transform .28s, box-shadow .28s, background .28s;
 }
 
 .mc-action-card:hover {
@@ -163,142 +153,62 @@
     0 0 60px rgba(99, 102, 241, 0.2);
 }
 
-.mc-action-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 18px;
-
-  background: linear-gradient(120deg,
-      rgba(99, 102, 241, 0.12),
-      rgba(79, 70, 229, 0.12),
-      rgba(59, 130, 246, 0.12));
-  opacity: 0;
-  transition: opacity .28s ease;
-}
-
-.mc-action-card:hover::after {
-  opacity: 1;
-}
-
-/* ICON */
 .mc-action-card span {
   font-size: 1.9rem;
   margin-bottom: 12px;
   display: inline-block;
 }
 
-/* TEXT */
-.mc-action-card h3 {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #111827;
-  margin-bottom: 6px;
-}
-
-.mc-action-card p {
-  font-size: 0.96rem;
-  color: #4b5563;
-  line-height: 1.45;
-  margin: 0;
-}
-
 /* ============================================================
-   AI CONSOLE
-============================================================ */
-.mc-console {
-  max-width: 780px;
-  margin: 55px auto;
-  padding: 22px;
-
-  background: rgba(255, 255, 255, 0.98);
-  border-radius: 20px;
-  border: 1px solid #e5e7eb;
-
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.08);
-}
-
-/* ============================================================
-   MODULE PILLS
-============================================================ */
-.mc-pills-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 22px;
-
-  padding: 0 12px;
-  margin: 20px 0 35px;
-}
-
-.mc-pill {
-  position: relative;
-  padding: 20px 22px;
-
-  background: rgba(255, 255, 255, 0.88);
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(12px);
-
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-
-  cursor: pointer;
-  transition:
-    transform .25s ease,
-    background .25s ease,
-    box-shadow .25s ease;
-}
-
-.mc-pill:hover {
-  transform: translateY(-5px) scale(1.02);
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow:
-    0 14px 30px rgba(0, 0, 0, 0.10),
-    0 0 40px rgba(59, 130, 246, 0.15);
-}
-
-.mc-pill::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 16px;
-  background: linear-gradient(120deg,
-      rgba(99, 102, 241, 0.12),
-      rgba(59, 130, 246, 0.12),
-      rgba(37, 99, 235, 0.10));
-  opacity: 0;
-  transition: opacity .25s ease;
-}
-
-.mc-pill:hover::after {
-  opacity: 1;
-}
-
-.mc-pill span {
-  font-size: 1.45rem;
-}
-
-.mc-pill small {
-  font-size: 0.88rem;
-  color: #4b5563;
-}
-
-/* ============================================================
-   CHAT MODE
+   CHAT MODE (CRITICAL FIX HERE)
 ============================================================ */
 .mc-chat-mode {
   width: 100%;
-  height: 100%;
+  height: auto !important;
+  /* FIX */
   display: flex;
   flex-direction: column;
 }
 
 .mc-chat-scroll {
   flex: 1;
-
   padding: 30px 0;
+  overflow: visible !important;
+  /* FIX so parent wrapper scrolls */
   scroll-behavior: smooth;
+}
 
+/* FIX SCROLL + INPUT VISIBILITY */
+/* FIX SCROLL + INPUT VISIBILITY */
+.mc-root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
 
+.mc-chat-mode {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* scrollable message list */
+.mc-chat-scroll {
+  flex: 1;
+  overflow-y: auto !important;
+  padding: 20px;
+  padding-bottom: 160px;
+  /* space for ChatInput */
+}
+
+/* make ChatInput visible ALWAYS */
+.mc-chatinput-wrapper {
+  position: sticky;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20px);
+  padding: 12px 0 18px;
+  z-index: 100;
 }
