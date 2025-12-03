@@ -1,12 +1,12 @@
 import React from "react";
+import { SidebarProvider } from "@/components/ui/sidebar";
+
+import AppSidebar from "@/components/AppSidebar/AppSidebar";
 import Header from "@/common/Header";
 import MainContent from "@/components/MainContent";
-import AppSidebar from "@/components/AppSidebar/AppSidebar";
 import ChatInput from "@/chat/ChatInput";
-import { SidebarProvider } from "@/components/ui/sidebar";
 import { useMainContent } from "@/hooks/useMainContent";
 
-import "@/components/AppSidebar/AppSidebar.css";
 import "@/styles/layout.css";
 
 export default function Index() {
@@ -14,23 +14,26 @@ export default function Index() {
 
   return (
     <SidebarProvider>
-
-      {/* HEADER */}
-      <Header onRefresh={main.handleRefresh} />
-
-      {/* LAYOUT */}
+      {/* Entire page shifted under header */}
       <div className="ph-layout">
 
-        {/* SIDEBAR */}
+        {/* LEFT SIDEBAR */}
         <aside className="ph-sidebar">
           <AppSidebar
             selectedFeature={main.selectedFeature}
+            selectedTask={main.selectedTask}
             onFeatureSelect={main.handleFeatureClick}
+            onTaskSelect={main.handleTaskSelect}
           />
         </aside>
 
-        {/* MAIN AREA */}
-        <main className="ph-main">
+        {/* RIGHT SIDE PANEL */}
+        <div className="ph-main">
+
+          {/* FIXED HEADER */}
+          <div className="ph-header">
+            <Header onRefresh={main.handleRefresh} />
+          </div>
 
           {/* SCROLLABLE CONTENT */}
           <div className="ph-main-scroll">
@@ -38,15 +41,15 @@ export default function Index() {
           </div>
 
           {/* FIXED CHAT INPUT */}
-          {/* <div className="ph-main-chatinput">
+          <div className="ph-chatinput-fixed">
             <ChatInput
               onSend={main.handleSend}
               activeTask={main.selectedTask}
               forceShowChips={true}
             />
-          </div> */}
+          </div>
 
-        </main>
+        </div>
       </div>
     </SidebarProvider>
   );

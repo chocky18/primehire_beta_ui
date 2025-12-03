@@ -1,33 +1,22 @@
 /* ===========================================================
    MAIN WRAPPER — Floating Glass Bar V2
 =========================================================== */
+/* ============================================================
+   CHAT INPUT WRAPPER — ALWAYS CENTERED
+=========================================================== */
 .chat-input-wrapper {
   position: sticky;
   bottom: 0;
-  left: 0;
+  z-index: 99;
+
   width: 100%;
-
-  padding: 22px 28px 24px;
-  padding-bottom: max(24px, env(safe-area-inset-bottom));
-
-  background: rgba(245, 247, 255, 0.45);
-  backdrop-filter: blur(18px) saturate(130%);
-  -webkit-backdrop-filter: blur(18px) saturate(130%);
-
-  z-index: 50;
   display: flex;
   justify-content: center;
+  /* ⭐ center horizontally */
 
-  transition:
-    padding 0.25s ease,
-    background 0.35s ease,
-    backdrop-filter 0.35s ease,
-    transform 0.25s ease;
-}
-
-.chat-input-wrapper:hover {
-  background: rgba(245, 247, 255, 0.55);
-  transform: translateY(-2px);
+  padding: 12px 0;
+  background: transparent;
+  backdrop-filter: none;
 }
 
 /* ===========================================================
@@ -35,44 +24,28 @@
 =========================================================== */
 .ci-shell {
   position: relative;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 14px;
 
-  /* CENTER & RESPONSIVE WIDTH */
-  width: clamp(350px, 82vw, 1200px);
+  width: clamp(380px, 70vw, 1100px);
+  /* ⭐ CENTER WIDTH */
+  max-width: 1100px;
+
   margin: 0 auto;
+  /* ⭐ CENTER */
 
-  padding: 18px 22px;
-  border-radius: 22px;
+  padding: 14px 20px;
+  border-radius: 20px;
 
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.90);
   border: 1px solid rgba(255, 255, 255, 0.55);
-
-  backdrop-filter: blur(22px) saturate(150%);
-  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  backdrop-filter: blur(20px);
 
   box-shadow:
-    0 18px 46px rgba(0, 0, 0, 0.18),
-    0 0 130px rgba(124, 138, 255, 0.40),
-    inset 0 2px 0 rgba(255, 255, 255, 0.75),
-    inset 0 -12px 22px rgba(255, 255, 255, 0.24);
+    0 18px 38px rgba(0, 0, 0, 0.12),
+    0 0 120px rgba(124, 138, 255, 0.35);
 
-  overflow: visible !important;
-  min-height: 70px;
-
-  transition:
-    height 0.25s ease,
-    background 0.25s ease,
-    box-shadow 0.25s ease,
-    transform 0.25s ease;
-}
-
-/* Optional vertical adjustment */
-.ci-shell {
-  margin-top: 12px;
-  margin-bottom: 12px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
 }
 
 /* ⚡ Slight motion when typing (optional) */
@@ -140,6 +113,11 @@
   display: flex;
   gap: 14px;
   transition: 0.2s ease;
+}
+
+.ci-top-buttons {
+  display: flex;
+  gap: 10px;
 }
 
 .ci-dropdown-wrapper {
@@ -368,4 +346,44 @@ textarea.ci-textarea:focus {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* ============================================================
+   TOP BUTTON BAR — TASK BUTTONS (Glass Style)
+============================================================ */
+.ci-task-buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.ci-task-btn {
+  padding: 8px 14px;
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(10px);
+
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+/* Hover effect */
+.ci-task-btn:hover {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+}
+
+/* ACTIVE BUTTON — glowing selected */
+.ci-task-btn.active {
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  color: white;
+  border: none;
+  box-shadow:
+    0 0 12px rgba(124, 138, 255, 0.55),
+    0 6px 18px rgba(124, 138, 255, 0.35);
 }
