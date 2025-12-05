@@ -199,7 +199,7 @@ export const sendMailMessage = async (item, jdId, jdTextFromMatcher = null) => {
     let jdToken = null;
 
     /* ==========================================================
-       CASE 1 — JD MODE (jdId available)
+       CASE 1 — JD MODE (jdId available → fetch from DB)
     ========================================================== */
     if (jdId) {
       const jdRes = await fetch(
@@ -210,40 +210,40 @@ export const sendMailMessage = async (item, jdId, jdTextFromMatcher = null) => {
     }
 
     /* ==========================================================
-       CASE 2 — JD-LESS MODE (generate token + store JD)
+       CASE 2 — JD-LESS MODE (Profile Matcher)
     ========================================================== */
     else {
       jdText = jdTextFromMatcher || "Job description unavailable";
       finalJdId = "null";
-
-      // ⭐ CREATE JDTOKEN
-      const saveRes = await fetch(`${API_BASE}/mcp/tools/jd_cache/save`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ jd_text: jdText }),
-      });
-
-      const saveData = await saveRes.json();
-      jdToken = saveData.jd_token; // ⭐ IMPORTANT
     }
 
     /* ==========================================================
-       Build validation URL (JD or JD-less)
+       ALWAYS CREATE JD TOKEN (NEW FLOW)
     ========================================================== */
-    const url = new URL("https://primehire-beta-ui.vercel.app/validation_panel");
+    const saveRes = await fetch(`${API_BASE}/mcp/tools/jd_cache/save`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ jd_text: jdText }),
+    });
 
-    url.searchParams.set("candidateId", candidateId);
-    url.searchParams.set("candidateName", candidateName);
-    url.searchParams.set("jd_id", finalJdId);
+    const saveData = await saveRes.json();
+    jdToken = saveData.jd_token;
 
-    if (jdToken) {
-      url.searchParams.set("jd_token", jdToken);
+    if (!jdToken) {
+      alert("❌ Failed to generate JD token");
+      return;
     }
 
-    const validationLink = url.toString();
+    /* ==========================================================
+       BUILD CORRECT SCHEDULER LINK (NOT validation_panel)
+    ========================================================== */
+    const schedulerLink =
+      `https://primehire-beta-ui.vercel.app/scheduler?candidateId=` +
+      `${encodeURIComponent(candidateId)}&candidateName=` +
+      `${encodeURIComponent(candidateName)}&jd_token=${jdToken}&jd_id=${finalJdId}`;
 
     /* ==========================================================
-       Email Body
+       EMAIL BODY
     ========================================================== */
     const messageText = `
 Hi ${candidateName},
@@ -254,12 +254,13 @@ ${jdText}
 -----------------------------------------
 
 Please click the link below to schedule your interview:
-${validationLink}
+${schedulerLink}
 
 Thanks,
 PrimeHire Team
 `;
 
+    /* SEND EMAIL */
     await fetch(`${API_BASE}/mcp/tools/match/send_mail`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -271,7 +272,6 @@ PrimeHire Team
     });
 
     alert(`📧 Email sent to ${candidateName}`);
-
   } catch (err) {
     console.error("Email send error:", err);
     alert("Failed to send email.");
