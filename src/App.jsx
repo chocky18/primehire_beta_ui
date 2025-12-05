@@ -14,7 +14,8 @@ import CandidateOverview from "./CandidateStatus/CandidateOverview";
 import CandidateStatus from "./CandidateStatus/CandidateStatus";
 import ValidationPanel from "@/interview/ValidationPanel";
 import Scheduler from "@/components/Scheduler";
-import InterviewMode from "@/Interview/InterviewMode";
+import InterviewMode from "@/interview/InterviewMode";
+
 const queryClient = new QueryClient();
 
 export default function App() {
