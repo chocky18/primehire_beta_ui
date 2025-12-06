@@ -1,228 +1,239 @@
-/* ===========================
-   PAGE + NAVBAR
-=========================== */
+/* ================== CERTIFICATE LAYOUT ================== */
+
 .certificate-page {
   padding: 20px;
-  background: #f5faff;
+  background: #f0f2f5;
   min-height: 100vh;
 }
 
 .navbar {
+  padding: 10px 20px;
   display: flex;
-  align-items: center;
-  padding: 10px 0;
+  justify-content: flex-start;
 }
 
 .nav-logo {
-  height: 48px;
+  height: 45px;
 }
 
-
-/* ===========================
-   CERTIFICATE BOX (Premium Blue Accent)
-=========================== */
 .certificate-container {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 32px;
-
-  background: linear-gradient(to bottom right, #ffffff, #f0faff);
-  border: 2px solid #38bdf8;
+  background: white;
+  padding: 30px;
   border-radius: 16px;
-
-  /* Premium Blue Glow (static) */
-  box-shadow:
-    0 12px 24px -12px rgba(56, 189, 248, 0.35),
-    0 8px 18px -8px rgba(14, 165, 233, 0.25),
-    inset 0 0 12px rgba(56, 189, 248, 0.15);
-
-  position: relative;
-  overflow: hidden;
+  max-width: 820px;
+  margin: 0 auto;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
 }
 
-/* No animation, no shine */
-.certificate-container::after {
-  display: none;
-}
-
-
-/* ===========================
-   HEADER
-=========================== */
-.certificate-header h1 {
+.certificate-header {
   text-align: center;
-  font-size: 36px;
-  letter-spacing: 2px;
-  margin-bottom: 24px;
-  font-weight: 700;
-  color: #0ea5e9;
+  margin-bottom: 30px;
 }
 
 .user-info {
   display: flex;
   gap: 20px;
+  justify-content: center;
+  align-items: center;
 }
 
 .user-photo img {
-  width: 80px;
-  height: 80px;
-  border-radius: 8px;
-  object-fit: cover;
-  border: 2px solid #38bdf8;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
 }
 
 .user-details h2 {
-  font-size: 22px;
-  font-weight: 700;
   margin: 0;
-  color: #0c4a6e;
 }
 
-.user-details .designation {
-  font-size: 15px;
-  color: #0369a1;
-}
-
-.user-details .date {
-  font-size: 13px;
-  margin-top: 4px;
-  color: #0f172a;
-  opacity: 0.7;
+.designation {
+  font-size: 14px;
+  opacity: 0.6;
 }
 
 .certificate-link {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  font-size: 13px;
   margin-top: 4px;
-  color: #0284c7;
-  font-weight: 500;
+  font-size: 14px;
+  opacity: 0.7;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
+/* RESULT */
 
-/* ===========================
-   RESULT SECTION
-=========================== */
 .result-container {
-  margin-top: 32px;
   text-align: center;
+  margin: 25px 0;
 }
 
 .pass {
-  color: #16a34a;
-  font-size: 30px;
-  font-weight: 800;
+  color: #28a745;
+  font-size: 32px;
 }
 
 .fail {
-  color: #dc2626;
-  font-size: 30px;
-  font-weight: 800;
+  color: #dc3545;
+  font-size: 32px;
 }
 
+/* SCORES */
 
-/* ===========================
-   SCORES
-=========================== */
 .scores-container {
-  margin-top: 24px;
+  margin-top: 20px;
 }
 
 .score-item {
-  margin-bottom: 16px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(0, 133, 255, 0.2);
+  margin-bottom: 22px;
+  background: #fafafa;
+  padding: 15px;
+  border-radius: 10px;
 }
 
 .score-header {
   display: flex;
   justify-content: space-between;
-  font-size: 16px;
-  font-weight: 600;
-  color: #0369a1;
-}
-
-.score-description {
-  margin-top: 4px;
-  font-size: 14px;
-  color: #0f172a;
-  opacity: 0.8;
 }
 
 .range-bar-container {
-  margin: 20px 0;
-  width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 10px;
 }
 
-.range-min,
-.range-max {
-  font-size: 16px;
-  font-weight: 600;
-  color: #111;
-}
-
 .range-bar {
-  position: relative;
-  width: 80%;
-  height: 6px;
-  background: #e5e5e5;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: 10px;
+  background: #ddd;
+  flex: 1;
+  border-radius: 6px;
+  overflow: hidden;
 }
 
 .range-highlight {
-  width: 22px;
-  height: 12px;
-  background: #52afe8;
-  margin: 0 2px;
-  border-radius: 3px;
+  height: 100%;
+  background: #3b82f6;
 }
 
+/* DOWNLOAD */
 
-/* ===========================
-   DOWNLOAD BUTTON (Premium Blue)
-=========================== */
 .download-wrapper {
-  margin-top: 20px;
   text-align: center;
+  margin-top: 20px;
 }
 
 .download-btn {
-  background: #38bdf8;
-  color: #fff;
-  border: none;
-  padding: 12px 22px;
-  font-size: 15px;
-  border-radius: 10px;
-  cursor: pointer;
+  background: #0062ff;
+  color: white;
+  padding: 10px 22px;
+  border-radius: 8px;
   display: inline-flex;
-  align-items: center;
   gap: 8px;
-
-  transition: all 0.25s ease;
-
-  /* Glow */
-  box-shadow:
-    0 4px 12px rgba(56, 189, 248, 0.4),
-    0 0 10px rgba(14, 165, 233, 0.3);
+  align-items: center;
 }
 
-.download-btn:hover {
-  background: #0ea5e9;
-  transform: translateY(-2px);
-  box-shadow:
-    0 6px 16px rgba(14, 165, 233, 0.5),
-    0 0 14px rgba(14, 165, 233, 0.4);
+/* ==================== ANALYTICS DASHBOARD ==================== */
+
+.analytics-container {
+  margin-top: 40px;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  max-width: 820px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
 }
 
-.download-btn svg {
-  height: 18px;
-  width: 18px;
+.analytics-title {
+  font-size: 26px;
+  margin-bottom: 20px;
+}
+
+.analytics-section {
+  margin-bottom: 35px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #eee;
+}
+
+.anomaly-list li {
+  margin-bottom: 6px;
+}
+
+.question-block {
+  background: #f7f8fc;
+  padding: 18px;
+  border-radius: 12px;
+  margin-bottom: 22px;
+}
+
+.qa {
+  margin-bottom: 8px;
+}
+
+.qa.answer {
+  margin-bottom: 12px;
+}
+
+.sub-analytics-row {
+  display: flex;
+  gap: 18px;
+}
+
+.sub-card {
+  flex: 1;
+  background: #fff;
+  padding: 14px;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.sub-card h4 {
+  margin-bottom: 8px;
+}
+
+.bar {
+  width: 100%;
+  height: 10px;
+  background: #ececec;
+  margin-top: 10px;
+  border-radius: 6px;
+}
+
+.bar-fill {
+  height: 10px;
+  background: #3b82f6;
+  border-radius: 6px;
+}
+
+.bar-fill.depth {
+  background: #ff9800;
+}
+
+.bar-fill.authenticity {
+  background: #4caf50;
+}
+
+.transcript-preview {
+  background: #f7f7f7;
+  padding: 15px;
+  max-height: 280px;
+  overflow-y: auto;
+  border-radius: 10px;
+}
+
+.transcript-line {
+  padding: 4px 0;
+}
+
+.transcript-line.ai {
+  color: #0062ff;
+}
+
+.transcript-line.user {
+  color: #0b8a00;
+}
+
+.transcript-line.system {
+  color: #c62828;
 }
