@@ -143,3 +143,11 @@
 div[data-sidebar][class*="group peer"] {
   display: none !important;
 }
+
+.ft_clas {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: #000 !important;
+    opacity: 1;
+    margin-bottom: 10px !important;
+}

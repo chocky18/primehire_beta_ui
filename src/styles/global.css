@@ -270,6 +270,7 @@ li.group\/menu-item.relative button {
     height: auto !important;
     margin-bottom: 7px !important;
     border-radius: 10px !important;
+    font-size: 15.5px;
 }
 
 .ph-icon {
@@ -291,4 +292,8 @@ li.group\/menu-item.relative button {
     font-weight: 600;
     box-shadow: none !important;
     /* color: #fff !important; */
+}
+
+.ph-header{
+    z-index: 0 !important;
 }

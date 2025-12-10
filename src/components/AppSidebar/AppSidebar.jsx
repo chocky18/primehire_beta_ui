@@ -40,8 +40,8 @@ export default function AppSidebar({ selectedFeature, onFeatureSelect }) {
         <div className="ph-sidebar">
             <SidebarContent>
 
-                <SidebarGroup>
-                    <SidebarGroupLabel className="ph-group-label">FEATURES</SidebarGroupLabel>
+                <SidebarGroup className="mt-4">
+                    <SidebarGroupLabel className="ph-group-label ft_clas">FEATURES</SidebarGroupLabel>
 
                     <SidebarMenu>
                         {features.map((f) => (
