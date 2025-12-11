@@ -1197,23 +1197,58 @@ export const useWebSocket = (
       return;
     }
 
+    // /* ===========================
+    //      UPLOAD RESUMES
+    // ============================ */
+    // if (intent === "Upload Resumes") {
+    //   if (uploadTriggeredRef.current) return;
+
+    //   uploadTriggeredRef.current = true;
+    //   setSelectedFeature("Upload Resumes");
+
+    //   setMessages((prev) => [
+    //     ...prev,
+    //     {
+    //       role: "assistant",
+    //       type: "upload_ui",
+    //       content: "📎 Upload your resumes…",
+    //     },
+    //   ]);
+
+    //   return;
+    // }
     /* ===========================
-         UPLOAD RESUMES
-    ============================ */
-    if (intent === "Upload Resumes") {
-      if (uploadTriggeredRef.current) return;
+      UPLOAD RESUMES — PATCHED
+   ============================ */
+    if (/upload\s+resume/i.test(intent)) {
+      console.log("📤 [INTENT] Normalized Upload Resumes");
 
-      uploadTriggeredRef.current = true;
-      setSelectedFeature("Upload Resumes");
+      // Always normalize the name (handles: Upload Resume, Upload Resumes, Upload all resumes…)
+      intent = "Upload Resumes";
 
-      setMessages((prev) => [
+      // 🔥 ALWAYS allow triggering — remove old lock failures
+      uploadTriggeredRef.current = false;
+
+      // 🔥 Make sure "Upload UI" ALWAYS displays by pushing BOTH:
+      // 1) A visible assistant message
+      // 2) The actual UploadUI component
+      setMessages(prev => [
         ...prev,
+        {
+          role: "assistant",
+          content: "📎 Please upload your resumes below.",
+        },
         {
           role: "assistant",
           type: "upload_ui",
           content: "📎 Upload your resumes…",
-        },
+          feature: "Upload Resumes",
+        }
       ]);
+
+      // Set global feature state
+      setSelectedFeature("Upload Resumes");
+      setSelectedTask("");
 
       return;
     }

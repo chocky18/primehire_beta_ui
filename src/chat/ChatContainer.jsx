@@ -2,7 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import MessageRenderer from "./MessageRenderer";
 import "./ChatContainer.css";
 
-const ChatContainer = ({ messages = [], isLoading = false, fetchJDHistory }) => {
+// const ChatContainer = ({ messages = [], isLoading = false, fetchJDHistory }) => {
+const ChatContainer = ({
+  messages = [],
+  isLoading = false,
+  fetchJDHistory,
+  onTriggerFeature,   // ⭐ ADD THIS
+}) => {
+
   const scrollRef = useRef(null);
   const [isUserScrolling, setIsUserScrolling] = useState(false);
 
@@ -21,11 +28,22 @@ const ChatContainer = ({ messages = [], isLoading = false, fetchJDHistory }) => 
     setIsUserScrolling(!atBottom);
   };
 
+  // const handleTriggerFeature = (feature) => {
+  //   if (feature === "JDHistory") {
+  //     fetchJDHistory && fetchJDHistory();
+  //   }
+  // };
+
   const handleTriggerFeature = (feature) => {
+    // first call internal feature actions
     if (feature === "JDHistory") {
       fetchJDHistory && fetchJDHistory();
     }
+
+    // then propagate to MainContent
+    onTriggerFeature && onTriggerFeature(feature);  // ⭐ NOW Upload Resumes will work
   };
+
 
   return (
     <div className="chat-container-wrapper">

@@ -813,10 +813,6 @@ function ProfileTableRow({
 
     setClientLoading(false);
   };
-
-
-
-
   return (
     <tr className="row">
       <td>

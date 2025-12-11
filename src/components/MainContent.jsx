@@ -140,6 +140,7 @@ export default function MainContent({
               selectedFeature={selectedFeature}
               selectedTask={selectedTask}
               isLoading={isLoading}
+              onTriggerFeature={handleTaskSelect}
             />
           </div>
         </div>
