@@ -1,6 +1,90 @@
-// // // FILE: src/interview/InterviewMode.jsx
+// // // // FILE: src/interview/InterviewMode.jsx
+// // // import React, { useState, useEffect } from "react";
+// // // import { useLocation } from "react-router-dom";
+
+// // // import WebcamRecorder from "./WebcamRecorder";
+// // // import TranscriptPanel from "./TranscriptPanel";
+// // // import LiveInsightsPanel from "./LiveInsightsPanel";
+// // // import AIChartPanel from "./AIChartPanel";
+// // // import InterviewToolbar from "./InterviewToolbar";
+
+// // // import "./InterviewMode.css";
+
+// // // export default function InterviewMode() {
+// // //     const location = useLocation();
+
+// // //     const candidateName = location.state?.candidateName || "Anonymous";
+// // //     const initialCandidateId = location.state?.candidateId || null;
+// // //     const jdText = location.state?.jd_text || "";
+
+// // //     const [candidateId, setCandidateId] = useState(initialCandidateId);
+// // //     const [transcript, setTranscript] = useState([]);
+
+// // //     // Global event → add transcript entry
+// // //     useEffect(() => {
+// // //         const handler = (e) => {
+// // //             const msg = e.detail;
+// // //             setTranscript((prev) => [...prev, msg]);
+// // //         };
+// // //         window.addEventListener("transcriptAdd", handler);
+// // //         return () => window.removeEventListener("transcriptAdd", handler);
+// // //     }, []);
+
+// // //     return (
+// // //         <div className="interview-root">
+
+// // //             <div className="interview-toolbar-container">
+// // //                 <InterviewToolbar
+// // //                     candidateId={candidateId}
+// // //                     candidateName={candidateName}
+// // //                     jdText={jdText}
+// // //                 />
+
+// // //             </div>
+
+// // //             <div className="interview-layout">
+
+// // //                 {/* LEFT SIDE */}
+// // //                 <div className="left-panel">
+
+// // //                     <div className="video-wrapper">
+// // //                         <WebcamRecorder
+// // //                             candidateName={candidateName}
+// // //                             candidateId={candidateId}
+// // //                             jdText={jdText}
+// // //                             onCandidateId={setCandidateId}
+// // //                         />
+// // //                     </div>
+
+// // //                     <div className="insight-score-row">
+// // //                         <div className="insights-box">
+// // //                             <LiveInsightsPanel candidateId={candidateId} />
+// // //                         </div>
+
+// // //                         <div className="aichart-box">
+// // //                             <AIChartPanel />
+// // //                         </div>
+// // //                     </div>
+
+// // //                 </div>
+
+// // //                 {/* RIGHT SIDE */}
+// // //                 <div className="right-panel">
+// // //                     <TranscriptPanel
+// // //                         transcript={transcript}
+// // //                         jdId={location.state?.jd_id || null}
+// // //                         jdText={jdText}
+// // //                     />
+
+// // //                 </div>
+
+// // //             </div>
+// // //         </div>
+// // //     );
+// // // }
 // // import React, { useState, useEffect } from "react";
-// // import { useLocation } from "react-router-dom";
+// // import { useLocation, useNavigate } from "react-router-dom";
+// // import { API_BASE } from "@/utils/constants";
 
 // // import WebcamRecorder from "./WebcamRecorder";
 // // import TranscriptPanel from "./TranscriptPanel";
@@ -12,6 +96,7 @@
 
 // // export default function InterviewMode() {
 // //     const location = useLocation();
+// //     const navigate = useNavigate();
 
 // //     const candidateName = location.state?.candidateName || "Anonymous";
 // //     const initialCandidateId = location.state?.candidateId || null;
@@ -20,33 +105,83 @@
 // //     const [candidateId, setCandidateId] = useState(initialCandidateId);
 // //     const [transcript, setTranscript] = useState([]);
 
-// //     // Global event → add transcript entry
+// //     const [insights, setInsights] = useState({});
+// //     const [anomalyCounts, setAnomalyCounts] = useState({});
+
+// //     // Transcript listener
 // //     useEffect(() => {
 // //         const handler = (e) => {
-// //             const msg = e.detail;
-// //             setTranscript((prev) => [...prev, msg]);
+// //             setTranscript((prev) => [...prev, e.detail]);
 // //         };
 // //         window.addEventListener("transcriptAdd", handler);
 // //         return () => window.removeEventListener("transcriptAdd", handler);
 // //     }, []);
 
+// //     // Insights listener
+// //     useEffect(() => {
+// //         const handler = (e) => {
+// //             setInsights(e.detail);
+// //             setAnomalyCounts(e.detail.counts || {});
+// //         };
+// //         window.addEventListener("liveInsightsUpdate", handler);
+// //         return () => window.removeEventListener("liveInsightsUpdate", handler);
+// //     }, []);
+
+// //     // STOP interview → Evaluate
+// //     useEffect(() => {
+// //         const stopHandler = async () => {
+// //             if (!candidateId) return;
+
+// //             const fd = new FormData();
+// //             fd.append("candidate_name", candidateName);
+// //             fd.append("candidate_id", candidateId);
+// //             fd.append("job_description", jdText);
+
+// //             const r = await fetch(`${API_BASE}/mcp/interview_bot_beta/evaluate-transcript`, {
+// //                 method: "POST",
+// //                 body: fd,
+// //             });
+
+// //             const d = await r.json();
+
+// //             if (d.ok) {
+// //                 navigate("/certificatedata", {
+// //                     state: {
+// //                         scores: d.scores,
+// //                         candidateName,
+// //                         candidateId,
+// //                         overall: d.overall,
+// //                         result: d.result,
+// //                         feedback: d.feedback,
+// //                         designation: d.designation,
+
+// //                         // NEW: Full dataset
+// //                         transcript,
+// //                         insights,
+// //                         anomalyCounts,
+// //                     }
+// //                 });
+// //             } else {
+// //                 alert("Evaluation failed: " + d.error);
+// //             }
+// //         };
+
+// //         window.addEventListener("stopInterview", stopHandler);
+// //         return () => window.removeEventListener("stopInterview", stopHandler);
+// //     }, [candidateId, transcript, insights, anomalyCounts]);
+
 // //     return (
 // //         <div className="interview-root">
-
 // //             <div className="interview-toolbar-container">
 // //                 <InterviewToolbar
 // //                     candidateId={candidateId}
 // //                     candidateName={candidateName}
 // //                     jdText={jdText}
 // //                 />
-
 // //             </div>
 
 // //             <div className="interview-layout">
-
-// //                 {/* LEFT SIDE */}
 // //                 <div className="left-panel">
-
 // //                     <div className="video-wrapper">
 // //                         <WebcamRecorder
 // //                             candidateName={candidateName}
@@ -65,23 +200,20 @@
 // //                             <AIChartPanel />
 // //                         </div>
 // //                     </div>
-
 // //                 </div>
 
-// //                 {/* RIGHT SIDE */}
 // //                 <div className="right-panel">
 // //                     <TranscriptPanel
 // //                         transcript={transcript}
 // //                         jdId={location.state?.jd_id || null}
 // //                         jdText={jdText}
 // //                     />
-
 // //                 </div>
-
 // //             </div>
 // //         </div>
 // //     );
 // // }
+// // FILE: src/interview/InterviewMode.jsx
 // import React, { useState, useEffect } from "react";
 // import { useLocation, useNavigate } from "react-router-dom";
 // import { API_BASE } from "@/utils/constants";
@@ -93,6 +225,8 @@
 // import InterviewToolbar from "./InterviewToolbar";
 
 // import "./InterviewMode.css";
+// import MCQ from "./MCQ";
+// import CodingTestPanel from "./CodingTestPanel";
 
 // export default function InterviewMode() {
 //     const location = useLocation();
@@ -101,14 +235,98 @@
 //     const candidateName = location.state?.candidateName || "Anonymous";
 //     const initialCandidateId = location.state?.candidateId || null;
 //     const jdText = location.state?.jd_text || "";
+//     const jdId = location.state?.jd_id || null;
 
 //     const [candidateId, setCandidateId] = useState(initialCandidateId);
 //     const [transcript, setTranscript] = useState([]);
 
 //     const [insights, setInsights] = useState({});
 //     const [anomalyCounts, setAnomalyCounts] = useState({});
+//     const [perQuestion, setPerQuestion] = useState([]);
 
-//     // Transcript listener
+//     const [interviewTime, setInterviewTime] = useState(0);
+
+//     const [stage, setStage] = useState(1); // 1 = MCQ, 2 = Coding, 3 = AI Interview
+//     useEffect(() => {
+//         async function loadMCQ() {
+//             if (stage !== 1) return;
+//             if (!candidateId) return;
+
+//             const fd = new FormData();
+//             fd.append("job_description", jdText);
+//             fd.append("candidate_id", candidateId);
+//             if (jdId) fd.append("jd_id", jdId);
+
+//             const r = await fetch(`${API_BASE}/mcp/interview_bot_beta/generate-mcq`, {
+//                 method: "POST",
+//                 body: fd
+//             });
+
+//             const d = await r.json();
+//             if (d.ok) {
+//                 window.generatedMCQ = d.mcq;   // store globally or state
+//             } else {
+//                 alert("Failed to load MCQ");
+//             }
+//         }
+
+//         loadMCQ();
+//     }, [stage, candidateId]);
+
+//     // =======================================================
+//     // ⭐ STAGE MANAGEMENT
+//     // =======================================================
+
+//     function renderRightContent() {
+//         if (stage === 1) {
+//             return (
+//                 <MCQ onComplete={() => setStage(2)} />
+//             );
+//         }
+
+//         if (stage === 2) {
+//             return (
+//                 <CodingTestPanel onComplete={() => setStage(3)} />
+//             );
+//         }
+
+//         // Stage 3 → Transcript Panel
+//         return (
+//             <TranscriptPanel
+//                 transcript={transcript}
+//                 jdId={jdId}
+//                 jdText={jdText}
+//             />
+//         );
+//     }
+//     // =======================================================
+//     // Interview timer
+//     useEffect(() => {
+//         let timer = null;
+
+//         const startTimer = () => {
+//             if (timer) return;
+//             timer = setInterval(() => {
+//                 setInterviewTime((t) => t + 1);
+//             }, 1000);
+//         };
+
+//         const stopTimer = () => {
+//             clearInterval(timer);
+//             timer = null;
+//         };
+
+//         window.addEventListener("startInterviewTimer", startTimer);
+//         window.addEventListener("stopInterviewTimer", stopTimer);
+
+//         return () => {
+//             window.removeEventListener("startInterviewTimer", startTimer);
+//             window.removeEventListener("stopInterviewTimer", stopTimer);
+//             clearInterval(timer);
+//         };
+//     }, []);
+
+//     // Transcript collector
 //     useEffect(() => {
 //         const handler = (e) => {
 //             setTranscript((prev) => [...prev, e.detail]);
@@ -117,7 +335,7 @@
 //         return () => window.removeEventListener("transcriptAdd", handler);
 //     }, []);
 
-//     // Insights listener
+//     // Insights collector
 //     useEffect(() => {
 //         const handler = (e) => {
 //             setInsights(e.detail);
@@ -127,61 +345,61 @@
 //         return () => window.removeEventListener("liveInsightsUpdate", handler);
 //     }, []);
 
-//     // STOP interview → Evaluate
+//     // STOP INTERVIEW → Evaluate transcript and navigate
 //     useEffect(() => {
 //         const stopHandler = async () => {
-//             if (!candidateId) return;
+//             if (!candidateId) return alert("Candidate ID missing");
 
 //             const fd = new FormData();
 //             fd.append("candidate_name", candidateName);
 //             fd.append("candidate_id", candidateId);
 //             fd.append("job_description", jdText);
+//             if (jdId) fd.append("jd_id", jdId);
 
-//             const r = await fetch(`${API_BASE}/mcp/interview_bot_beta/evaluate-transcript`, {
-//                 method: "POST",
-//                 body: fd,
-//             });
-
+//             const r = await fetch(
+//                 `${API_BASE}/mcp/interview_bot_beta/evaluate-transcript`,
+//                 { method: "POST", body: fd }
+//             );
 //             const d = await r.json();
 
-//             if (d.ok) {
-//                 navigate("/certificatedata", {
-//                     state: {
-//                         scores: d.scores,
-//                         candidateName,
-//                         candidateId,
-//                         overall: d.overall,
-//                         result: d.result,
-//                         feedback: d.feedback,
-//                         designation: d.designation,
-
-//                         // NEW: Full dataset
-//                         transcript,
-//                         insights,
-//                         anomalyCounts,
-//                     }
-//                 });
-//             } else {
+//             if (!d.ok) {
 //                 alert("Evaluation failed: " + d.error);
+//                 return;
 //             }
+
+//             navigate("/certificatedata", {
+//                 state: {
+//                     ...d,              // backend output
+//                     transcript,        // frontend transcript
+//                     insights,          // face insights
+//                     anomalyCounts,     // anomaly summary
+//                 },
+//             });
 //         };
 
 //         window.addEventListener("stopInterview", stopHandler);
 //         return () => window.removeEventListener("stopInterview", stopHandler);
+
 //     }, [candidateId, transcript, insights, anomalyCounts]);
 
 //     return (
 //         <div className="interview-root">
+
 //             <div className="interview-toolbar-container">
 //                 <InterviewToolbar
 //                     candidateId={candidateId}
 //                     candidateName={candidateName}
 //                     jdText={jdText}
+//                     interviewTime={interviewTime}
 //                 />
+
 //             </div>
 
 //             <div className="interview-layout">
+
+//                 {/* LEFT SIDE */}
 //                 <div className="left-panel">
+
 //                     <div className="video-wrapper">
 //                         <WebcamRecorder
 //                             candidateName={candidateName}
@@ -200,20 +418,28 @@
 //                             <AIChartPanel />
 //                         </div>
 //                     </div>
+
 //                 </div>
 
-//                 <div className="right-panel">
+//                 {/* RIGHT SIDE */}
+//                 {/* <div className="right-panel">
 //                     <TranscriptPanel
 //                         transcript={transcript}
-//                         jdId={location.state?.jd_id || null}
+//                         jdId={jdId}
 //                         jdText={jdText}
 //                     />
+//                 </div> */}
+//                 <div className="right-panel">
+//                     {renderRightContent()}
 //                 </div>
+
+
 //             </div>
 //         </div>
 //     );
 // }
 // FILE: src/interview/InterviewMode.jsx
+
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { API_BASE } from "@/utils/constants";
@@ -242,19 +468,62 @@ export default function InterviewMode() {
 
     const [insights, setInsights] = useState({});
     const [anomalyCounts, setAnomalyCounts] = useState({});
-    const [perQuestion, setPerQuestion] = useState([]);
-
     const [interviewTime, setInterviewTime] = useState(0);
 
-    const [stage, setStage] = useState(1); // 1 = MCQ, 2 = Coding, 3 = AI Interview
-    // =======================================================
-    // ⭐ STAGE MANAGEMENT
-    // =======================================================
+    // ⭐ Stage flow → 1 = MCQ → 2 = Coding → 3 = AI Interview
+    const [stage, setStage] = useState(1);
+
+    // ⭐ MCQ Data
+    const [mcq, setMcq] = useState([]);
+    const [mcqLoaded, setMcqLoaded] = useState(false);
+
+    /* ===========================================================
+       LOAD MCQ FROM BACKEND (ONLY ONCE)
+    =========================================================== */
+    useEffect(() => {
+        async function loadMCQ() {
+            if (mcqLoaded) return;
+            if (stage !== 1) return;
+            if (!candidateId) return;
+
+            const fd = new FormData();
+            fd.append("job_description", jdText);
+            fd.append("candidate_id", candidateId);
+            if (jdId) fd.append("jd_id", jdId);
+
+            try {
+                const r = await fetch(
+                    `${API_BASE}/mcp/interview_bot_beta/generate-mcq`,
+                    { method: "POST", body: fd }
+                );
+
+                const d = await r.json();
+                if (d.ok) {
+                    setMcq(d.mcq);
+                    setMcqLoaded(true);
+                } else {
+                    alert("Failed to load MCQ: " + d.error);
+                }
+            } catch (err) {
+                console.error("MCQ Load Error:", err);
+            }
+        }
+
+        loadMCQ();
+    }, [stage, candidateId, mcqLoaded]);
+
+
+    /* ===========================================================
+       STAGE RENDERING
+    =========================================================== */
 
     function renderRightContent() {
         if (stage === 1) {
             return (
-                <MCQ onComplete={() => setStage(2)} />
+                <MCQ
+                    questions={mcq}
+                    onComplete={() => setStage(2)}
+                />
             );
         }
 
@@ -264,7 +533,7 @@ export default function InterviewMode() {
             );
         }
 
-        // Stage 3 → Transcript Panel
+        // Stage 3 → Main Interview Panel
         return (
             <TranscriptPanel
                 transcript={transcript}
@@ -273,16 +542,16 @@ export default function InterviewMode() {
             />
         );
     }
-    // =======================================================
-    // Interview timer
+
+    /* ===========================================================
+       INTERVIEW TIMER
+    =========================================================== */
     useEffect(() => {
         let timer = null;
 
         const startTimer = () => {
             if (timer) return;
-            timer = setInterval(() => {
-                setInterviewTime((t) => t + 1);
-            }, 1000);
+            timer = setInterval(() => setInterviewTime((t) => t + 1), 1000);
         };
 
         const stopTimer = () => {
@@ -300,7 +569,9 @@ export default function InterviewMode() {
         };
     }, []);
 
-    // Transcript collector
+    /* ===========================================================
+       TRANSCRIPT LISTENER
+    =========================================================== */
     useEffect(() => {
         const handler = (e) => {
             setTranscript((prev) => [...prev, e.detail]);
@@ -309,7 +580,9 @@ export default function InterviewMode() {
         return () => window.removeEventListener("transcriptAdd", handler);
     }, []);
 
-    // Insights collector
+    /* ===========================================================
+       INSIGHTS LISTENER
+    =========================================================== */
     useEffect(() => {
         const handler = (e) => {
             setInsights(e.detail);
@@ -319,7 +592,9 @@ export default function InterviewMode() {
         return () => window.removeEventListener("liveInsightsUpdate", handler);
     }, []);
 
-    // STOP INTERVIEW → Evaluate transcript and navigate
+    /* ===========================================================
+       STOP INTERVIEW → FINAL EVALUATION
+    =========================================================== */
     useEffect(() => {
         const stopHandler = async () => {
             if (!candidateId) return alert("Candidate ID missing");
@@ -343,10 +618,10 @@ export default function InterviewMode() {
 
             navigate("/certificatedata", {
                 state: {
-                    ...d,              // backend output
-                    transcript,        // frontend transcript
-                    insights,          // face insights
-                    anomalyCounts,     // anomaly summary
+                    ...d,
+                    transcript,
+                    insights,
+                    anomalyCounts,
                 },
             });
         };
@@ -355,6 +630,10 @@ export default function InterviewMode() {
         return () => window.removeEventListener("stopInterview", stopHandler);
 
     }, [candidateId, transcript, insights, anomalyCounts]);
+
+    /* ===========================================================
+       MAIN RENDER
+    =========================================================== */
 
     return (
         <div className="interview-root">
@@ -366,12 +645,11 @@ export default function InterviewMode() {
                     jdText={jdText}
                     interviewTime={interviewTime}
                 />
-
             </div>
 
             <div className="interview-layout">
 
-                {/* LEFT SIDE */}
+                {/* LEFT PANEL */}
                 <div className="left-panel">
 
                     <div className="video-wrapper">
@@ -395,18 +673,10 @@ export default function InterviewMode() {
 
                 </div>
 
-                {/* RIGHT SIDE */}
-                {/* <div className="right-panel">
-                    <TranscriptPanel
-                        transcript={transcript}
-                        jdId={jdId}
-                        jdText={jdText}
-                    />
-                </div> */}
+                {/* RIGHT PANEL */}
                 <div className="right-panel">
                     {renderRightContent()}
                 </div>
-
 
             </div>
         </div>

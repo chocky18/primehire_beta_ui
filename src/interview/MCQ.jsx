@@ -1,27 +1,36 @@
 import React, { useState, useEffect } from "react";
+
 export default function MCQ({ onComplete }) {
+    const [mcqs, setMcqs] = useState([]);
     const [submitted, setSubmitted] = useState(false);
 
-    function handleSubmitMCQ() {
+    useEffect(() => {
+        setMcqs(window.generatedMCQ || []);
+    }, []);
+
+    function handleSubmit() {
         setSubmitted(true);
-        onComplete(); // move to next stage
+        onComplete();
     }
 
+    if (!mcqs || mcqs.length === 0) return <div>Loading MCQ...</div>;
     if (submitted) return null;
 
     return (
         <div className="mcq-box">
-            <h3>Q1. Which argument is passed to fflush()?</h3>
-            <p>A. no parameters</p>
-            <p>B. stdin</p>
-            <p>C. stdout</p>
-            <p>D. stderr</p>
+            <h2>Multiple Choice Round</h2>
 
-            <h3>Q2. Output of int x = 1/2; ...</h3>
-            <pre>{`int x = 1/2; ...`}</pre>
-            <p>Answer: 0</p>
+            {mcqs.map((q, idx) => (
+                <div key={idx} className="mcq-question-block">
+                    <h3>Q{idx + 1}. {q.question}</h3>
 
-            <button className="mcq-submit" onClick={handleSubmitMCQ}>
+                    {q.options.map((opt, i) => (
+                        <p key={i}>{opt}</p>
+                    ))}
+                </div>
+            ))}
+
+            <button className="mcq-submit" onClick={handleSubmit}>
                 Submit MCQ
             </button>
         </div>
