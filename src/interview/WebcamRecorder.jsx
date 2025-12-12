@@ -896,22 +896,49 @@ export default function WebcamRecorder({
     useEffect(() => {
         function handleTab() {
             if (!localCandidateId) return;
+
             if (document.hidden) {
                 setTabWarning(true);
-                window.dispatchEvent(new CustomEvent("transcriptAdd", { detail: { role: "system", text: "⚠ Tab switch detected — stay in the interview window." } }));
+
+                window.dispatchEvent(
+                    new CustomEvent("transcriptAdd", {
+                        detail: { role: "system", text: "⚠ Tab switch detected — stay in the interview window." }
+                    })
+                );
+
                 const fd = new FormData();
                 fd.append("candidate_name", candidateName);
                 fd.append("candidate_id", localCandidateId);
                 fd.append("event_type", "tab_switch");
                 fd.append("event_msg", "Tab switch detected");
-                fetch(`${API_BASE}/mcp/interview/face-monitor`, { method: "POST", body: fd }).catch((e) => console.warn("tab switch send failed", e));
+
+                fetch(`${API_BASE}/mcp/interview/face-monitor`, {
+                    method: "POST",
+                    body: fd
+                })
+                    .then(r => r.json())
+                    .then(data => {
+                        // 🔥 SEND TO LIVE INSIGHTS PANEL
+                        window.dispatchEvent(
+                            new CustomEvent("liveInsightsUpdate", {
+                                detail: {
+                                    anomalies: data.anomalies,
+                                    counts: data.anomaly_counts || {}
+                                }
+                            })
+                        );
+                    })
+                    .catch(err => console.error("Tab switch send failed:", err));
+
             } else {
                 setTabWarning(false);
             }
         }
+
         document.addEventListener("visibilitychange", handleTab);
         return () => document.removeEventListener("visibilitychange", handleTab);
     }, [localCandidateId]);
+
 
     /* -------------------------------------------
        Start/stop face loop
