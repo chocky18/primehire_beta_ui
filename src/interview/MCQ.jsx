@@ -1,26 +1,18 @@
 import React, { useState, useEffect } from "react";
 
-export default function MCQ({ onComplete }) {
-    const [mcqs, setMcqs] = useState([]);
+export default function MCQ({ questions = [], onComplete }) {
     const [submitted, setSubmitted] = useState(false);
 
-    useEffect(() => {
-        setMcqs(window.generatedMCQ || []);
-    }, []);
+    if (!questions || questions.length === 0)
+        return <div>Loading MCQ...</div>;
 
-    function handleSubmit() {
-        setSubmitted(true);
-        onComplete();
-    }
-
-    if (!mcqs || mcqs.length === 0) return <div>Loading MCQ...</div>;
     if (submitted) return null;
 
     return (
         <div className="mcq-box">
             <h2>Multiple Choice Round</h2>
 
-            {mcqs.map((q, idx) => (
+            {questions.map((q, idx) => (
                 <div key={idx} className="mcq-question-block">
                     <h3>Q{idx + 1}. {q.question}</h3>
 
@@ -30,7 +22,13 @@ export default function MCQ({ onComplete }) {
                 </div>
             ))}
 
-            <button className="mcq-submit" onClick={handleSubmit}>
+            <button
+                className="mcq-submit"
+                onClick={() => {
+                    setSubmitted(true);
+                    onComplete();
+                }}
+            >
                 Submit MCQ
             </button>
         </div>
