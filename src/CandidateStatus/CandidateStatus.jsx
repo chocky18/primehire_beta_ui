@@ -49,13 +49,18 @@ export default function CandidateStatus() {
               <td>
                 <Link
                   to={`/candidate/${a.attempt_id}`}
-                  style={{ textDecoration: "none", color: "#007bff", cursor: "pointer" }}
+                  style={{ textDecoration: "none", color: "#007bff" }}
                 >
                   {a.email}
                 </Link>
               </td>
 
-              <td>{a.slot_start ? new Date(a.slot_start).toLocaleString() : "—"}</td>
+              <td>
+                {a.slot_start
+                  ? new Date(a.slot_start).toLocaleString()
+                  : "—"}
+              </td>
+
               <td>
                 <span className={`status-pill status-${a.status?.toLowerCase()}`}>
                   {a.status}
@@ -66,6 +71,7 @@ export default function CandidateStatus() {
             </tr>
           ))}
         </tbody>
+
 
       </table>
     </div>
