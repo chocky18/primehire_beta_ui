@@ -69,7 +69,7 @@ export default function Scheduler() {
 
         try {
             const res = await fetch(
-                `${API_BASE}/mcp/tools/interview_bot_beta/scheduler/schedule`,
+                `${API_BASE}/mcp/interview_bot_beta/scheduler/schedule`,
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
