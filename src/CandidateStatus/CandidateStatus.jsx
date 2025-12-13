@@ -56,7 +56,12 @@ export default function CandidateStatus() {
               </td>
 
               <td>{a.slot_start ? new Date(a.slot_start).toLocaleString() : "—"}</td>
-              <td>{a.progress}</td>
+              <td>
+                <span className={`status-pill status-${a.status?.toLowerCase()}`}>
+                  {a.status}
+                </span>
+              </td>
+
               <td>{a.totalScore ?? "—"}</td>
             </tr>
           ))}
