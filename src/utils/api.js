@@ -194,11 +194,34 @@ export const generateJd = async (inputs, setMessages, setIsLoading) => {
   }
 };
 
-export const uploadResumes = async (files) => {
+// export const uploadResumes = async (files) => {
+//   const formData = new FormData();
+//   Array.from(files).forEach((file) => formData.append("files", file));
+
+//   const response = await fetch(`${API_BASE}/mcp/tools/resume/upload`, {
+//     method: "POST",
+//     body: formData,
+//   });
+
+//   if (!response.ok) {
+//     const text = await response.text();
+//     throw new Error(`Status ${response.status} - ${text}`);
+//   }
+
+//   return await response.json();
+// };
+// utils/uploadResumes.js
+
+
+
+export const uploadResumes = async (files, overwrite = false) => {
   const formData = new FormData();
   Array.from(files).forEach((file) => formData.append("files", file));
 
-  const response = await fetch(`${API_BASE}/mcp/tools/resume/upload`, {
+  // 🔥 Correct overwrite support
+  const url = `${API_BASE}/mcp/tools/resume/upload${overwrite ? "?overwrite=true" : ""}`;
+
+  const response = await fetch(url, {
     method: "POST",
     body: formData,
   });
@@ -208,7 +231,7 @@ export const uploadResumes = async (files) => {
     throw new Error(`Status ${response.status} - ${text}`);
   }
 
-  return await response.json();
+  return await response.json(); // duplicate OR processing
 };
 
 /* ------------------------------------------------------------------

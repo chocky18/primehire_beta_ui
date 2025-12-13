@@ -1,128 +1,42 @@
-.primehirebrain-container {
-  padding: 20px;
-  max-width: 1500px;
-  margin: auto;
-}
-
-.brain-title {
-  font-size: 28px;
-  font-weight: 700;
-  margin-bottom: 15px;
-  color: #1a1a1a;
-}
-
-.fetch-btn {
-  background-color: #0288d1 !important;
-  color: #fff !important;
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-weight: 600;
-  margin-bottom: 25px;
-  display: inline-flex;
+.brain-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
   align-items: center;
-  gap: 8px;
 }
 
-/* ================= SECTION TITLE BAR ================= */
-.table-title {
-  background: #0288d1;
-  color: white;
-  padding: 16px 25px;
-  font-size: 18px;
-  font-weight: 600;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+.search-input {
+  padding: 8px 12px;
+  min-width: 280px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
-/* ================= WRAPPER ================= */
-.table-wrapper {
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
-  overflow: hidden;
-  background: #fff;
-  margin-top: 10px;
-}
-
-/* ================= TABLE ================= */
-.candidates-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-}
-
-/* ================= HEADER ================= */
-.candidates-table thead tr {
-  background: #f4f8fb;
-  border-bottom: 1px solid #e2e2e2;
-}
-
-.candidates-table thead th {
-  padding: 14px 20px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
-  text-align: left;
-  white-space: nowrap;
-}
-
-/* ================= ROWS ================= */
-.candidates-table tbody tr {
-  border-bottom: 1px solid #f0f0f0;
-  transition: 0.2s ease-in-out;
-}
-
-.candidates-table tbody tr:hover {
-  background: #f7fbff;
-}
-
-/* ================= CELLS ================= */
+.candidates-table th,
 .candidates-table td {
-  padding: 14px 20px;
+  padding: 8px;
+  text-align: left;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.delete-btn:hover {
+  color: red;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
   font-size: 14px;
-  color: #333;
-  vertical-align: top;
-  line-height: 1.5;
-  max-width: 300px;
+  color: #444;
 }
 
-/* ================= SKILLS WRAPPING ================= */
-.candidates-table td[data-label="Skills"] {
-  max-width: 300px;
-  word-wrap: break-word;
-  white-space: normal;
-}
-
-/* ================= FIX LONG TEXT ================= */
-.candidates-table td[data-label="Email"],
-.candidates-table td[data-label="Company"] {
-  word-break: break-word;
-}
-
-/* ================= RESPONSIVE ================= */
-@media (max-width: 900px) {
-  .candidates-table thead {
-    display: none;
-  }
-
-  .candidates-table tbody tr {
-    display: block;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 12px;
-    background: white;
-  }
-
-  .candidates-table tbody td {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-  }
-
-  .candidates-table tbody td::before {
-    content: attr(data-label);
-    font-weight: 600;
-    color: #666;
-    margin-right: 10px;
-  }
+.resume-count strong {
+  font-size: 15px;
 }
