@@ -463,6 +463,7 @@ const PrimeHireBrain = () => {
                 <th>Name</th>
                 <th>Designation</th>
                 <th>Email</th>
+                <th>Skills</th>
                 <th>Experience</th>
                 <th>Company</th>
                 <th>Updated</th>
@@ -483,6 +484,7 @@ const PrimeHireBrain = () => {
                   <td>{r.full_name}</td>
                   <td>{r.current_title}</td>
                   <td>{r.email}</td>
+                  <td>{r.top_skills}</td>
                   <td>{r.years_of_experience}</td>
                   <td>{r.current_company}</td>
                   <td>{r.last_updated}</td>
