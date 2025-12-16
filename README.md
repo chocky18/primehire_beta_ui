@@ -214,7 +214,7 @@ primehire_beta_ui/
 | Role                    | Name                 | GitHub                                   |
 | ----------------------- | -------------------- | ---------------------------------------- |
 | Lead Engineer | **Naresh Tinnaluri** | [@chocky18](https://github.com/chocky18) |
-| Core Developer          | **Ravi Teja**        | —                                        |
+
 
 
 ---
