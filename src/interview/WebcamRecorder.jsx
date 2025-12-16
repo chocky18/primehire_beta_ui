@@ -995,33 +995,41 @@ export default function WebcamRecorder({
     - Triggers stage 1 after loop started
     --------------------------------------------*/
     async function startInterview() {
+        if (recording) return; // 🛑 safety guard
+
         console.log("▶ INTERVIEW STARTED — Stage:", stage);
         setRecording(true);
         window.dispatchEvent(new Event("startInterviewTimer"));
 
-        // If video already ready, start immediately
         const v = videoRef.current;
+
+        // Case 1: video already ready
         if (v && v.videoWidth > 0) {
-            startFaceLoop();
-            // small delay to ensure loop started and first frame fired
-            setTimeout(() => onStartStage(1), 200);
+            setTimeout(() => {
+                onStartStage(1);     // 1️⃣ mount MCQ
+                startFaceLoop();    // 2️⃣ then start monitoring
+            }, 200);
             return;
         }
 
-        // otherwise poll for readiness, but keep face loop start only when ready
+        // Case 2: wait for video
         let tries = 0;
         waitForVideoRef.current = setInterval(() => {
             const vv = videoRef.current;
             if (vv && vv.videoWidth > 0) {
                 clearInterval(waitForVideoRef.current);
                 waitForVideoRef.current = null;
-                startFaceLoop();
-                console.log("🎥 VIDEO ready -> face loop started");
-                // trigger stage AFTER small delay so rendering doesn't interrupt video
-                setTimeout(() => onStartStage(1), 200);
+
+                setTimeout(() => {
+                    onStartStage(1);   // 1️⃣ mount MCQ
+                    startFaceLoop();  // 2️⃣ then start monitoring
+                    console.log("🎥 VIDEO ready -> face loop started");
+                }, 200);
             } else {
                 tries++;
-                if (tries % 5 === 0) console.log("⏳ Waiting for video to stabilize...");
+                if (tries % 5 === 0) {
+                    console.log("⏳ Waiting for video to stabilize...");
+                }
             }
         }, 200);
     }
