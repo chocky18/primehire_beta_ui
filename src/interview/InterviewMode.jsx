@@ -85,14 +85,20 @@ export default function InterviewMode() {
     //     window.addEventListener("startAIInterview", startAI);
     //     return () => window.removeEventListener("startAIInterview", startAI);
     // }, [candidateId, candidateName, jdText, jdId]);
+    /* ===========================================================
+   AUTO START AI INTERVIEW WHEN STAGE === 3
+=========================================================== */
     useEffect(() => {
-        async function startAI() {
-            if (!candidateId || !interviewToken) {
-                console.error("❌ Missing candidateId or interviewToken");
-                return;
-            }
+        if (stage !== 3) return;
+        if (!candidateId || !interviewToken) {
+            console.error("❌ Missing candidateId or token");
+            return;
+        }
 
-            console.log("🤖 Starting AI Interview with token:", interviewToken);
+        let cancelled = false;
+
+        async function startAI() {
+            console.log("🤖 Triggering AI Interview init");
 
             const fd = new FormData();
             fd.append("init", "true");
@@ -107,11 +113,11 @@ export default function InterviewMode() {
                     `${API_BASE}/mcp/interview_bot_beta/process-answer`,
                     { method: "POST", body: fd }
                 );
-
                 const d = await r.json();
+
                 console.log("AI INIT RESPONSE:", d);
 
-                if (d.next_question) {
+                if (!cancelled && d.next_question) {
                     window.dispatchEvent(
                         new CustomEvent("transcriptAdd", {
                             detail: { role: "ai", text: d.next_question }
@@ -123,9 +129,12 @@ export default function InterviewMode() {
             }
         }
 
-        window.addEventListener("startAIInterview", startAI);
-        return () => window.removeEventListener("startAIInterview", startAI);
-    }, [candidateId, interviewToken, candidateName, jdText, jdId]);
+        startAI();
+
+        return () => { cancelled = true; };
+
+    }, [stage, candidateId, interviewToken, candidateName, jdText, jdId]);
+
 
     /* ===========================================================
        START STAGE HANDLER (triggered by WebcamRecorder Start button)
