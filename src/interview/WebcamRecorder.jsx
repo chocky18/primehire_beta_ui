@@ -848,8 +848,11 @@ export default function WebcamRecorder({
     const lastDispatchRef = useRef(0);
 
     function dispatchInsights(data) {
+        // ❌ DO NOT update UI during MCQ or Coding
+        if (stage === 1 || stage === 2) return;
+
         const now = Date.now();
-        if (now - lastDispatchRef.current < 1000) return; // ⏱ 1 second throttle
+        if (now - lastDispatchRef.current < 1000) return;
         lastDispatchRef.current = now;
 
         window.dispatchEvent(
@@ -861,6 +864,7 @@ export default function WebcamRecorder({
             })
         );
     }
+
 
     /* -------------------------------------------
     Mirror candidate id when it arrives
