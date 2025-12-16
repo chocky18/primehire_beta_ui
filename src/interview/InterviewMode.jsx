@@ -47,6 +47,22 @@ export default function InterviewMode() {
 
     const aiStartedRef = React.useRef(false);
 
+    const lastInsightRef = React.useRef(0);
+
+    // useEffect(() => {
+    //     const handler = (e) => {
+    //         const now = Date.now();
+    //         if (now - lastInsightRef.current < 1000) return; // ⏱️ 1s throttle
+    //         lastInsightRef.current = now;
+
+    //         setInsights(e.detail);
+    //         setAnomalyCounts(e.detail.counts || {});
+    //     };
+
+    //     window.addEventListener("liveInsightsUpdate", handler);
+    //     return () => window.removeEventListener("liveInsightsUpdate", handler);
+    // }, []);
+
     useEffect(() => {
         if (stage !== 3) return;
         if (!candidateId) return;
@@ -58,6 +74,7 @@ export default function InterviewMode() {
 
         startAIInterview();
     }, [stage, candidateId, interviewToken]);
+
 
     /* ===========================================================
        AI INTERVIEW INIT LISTENER
@@ -257,14 +274,14 @@ export default function InterviewMode() {
     /* ===========================================================
        INSIGHTS LISTENER
     =========================================================== */
-    useEffect(() => {
-        const handler = (e) => {
-            setInsights(e.detail);
-            setAnomalyCounts(e.detail.counts || {});
-        };
-        window.addEventListener("liveInsightsUpdate", handler);
-        return () => window.removeEventListener("liveInsightsUpdate", handler);
-    }, []);
+    // useEffect(() => {
+    //     const handler = (e) => {
+    //         setInsights(e.detail);
+    //         setAnomalyCounts(e.detail.counts || {});
+    //     };
+    //     window.addEventListener("liveInsightsUpdate", handler);
+    //     return () => window.removeEventListener("liveInsightsUpdate", handler);
+    // }, []);
 
     /* ===========================================================
        STOP → FINAL EVALUATION

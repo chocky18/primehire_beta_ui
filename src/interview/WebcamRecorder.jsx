@@ -1054,12 +1054,12 @@ export default function WebcamRecorder({
                     detail: {
                         anomalies: data.anomalies || [],
                         boxes: data.boxes || [],
-                        frame: data.frame_base64 || null,
                         faces: data.faces || 0,
                         counts: data.anomaly_counts || {}
                     }
                 })
             );
+
 
             // Also push system transcript messages for each anomaly (frontend uses it too)
             if (data.anomalies && data.anomalies.length) {
