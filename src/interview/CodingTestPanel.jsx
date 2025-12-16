@@ -125,11 +125,9 @@ export default function CodingTestPanel({
     language = "javascript",
     onComplete
 }) {
-    /* -------------------- ALL HOOKS FIRST -------------------- */
     const [code, setCode] = useState("");
     const [output, setOutput] = useState("");
     const [py, setPy] = useState(null);
-    // const [submitted, setSubmitted] = useState(false);
 
     /* -------------------------------------------------------
        LOAD PYODIDE (only for Python)
@@ -137,19 +135,12 @@ export default function CodingTestPanel({
     useEffect(() => {
         if (language !== "python") return;
 
-        let cancelled = false;
-
         async function loadPy() {
-            console.log("🟦 Loading Pyodide...");
             const pyodide = await window.loadPyodide();
-            if (!cancelled) {
-                setPy(pyodide);
-                console.log("🟩 Pyodide loaded");
-            }
+            setPy(pyodide);
         }
 
         loadPy();
-        return () => { cancelled = true; };
     }, [language]);
 
     /* -------------------------------------------------------
@@ -170,29 +161,14 @@ export default function CodingTestPanel({
                 const result = await py.runPythonAsync(code);
                 setOutput(String(result));
             }
-
         } catch (err) {
             setOutput("❌ Error:\n" + err.message);
         }
     }
 
     /* -------------------------------------------------------
-       SUBMIT FINAL ANSWER
+       SUBMIT FINAL ANSWER → parent controls stage
     ------------------------------------------------------- */
-    // function submitAnswer() {
-    //     setSubmitted(true);
-
-    //     if (onComplete) onComplete();
-
-    //     window.dispatchEvent(
-    //         new CustomEvent("transcriptAdd", {
-    //             detail: {
-    //                 role: "system",
-    //                 text: "🧑‍💻 Candidate has submitted the coding test."
-    //             }
-    //         })
-    //     );
-    // }
     function submitAnswer() {
         if (onComplete) onComplete();
 
@@ -206,17 +182,6 @@ export default function CodingTestPanel({
         );
     }
 
-    /* -------------------- SAFE CONDITIONAL RENDER -------------------- */
-    if (submitted) {
-        return (
-            <div className="coding-panel submitted">
-                <h3>✅ Coding Test Submitted</h3>
-                <p>Please continue with the interview.</p>
-            </div>
-        );
-    }
-
-    /* -------------------- NORMAL RENDER -------------------- */
     return (
         <div className="coding-panel">
             <h3 className="coding-title">Coding Challenge</h3>
@@ -230,13 +195,7 @@ export default function CodingTestPanel({
                 defaultLanguage={language}
                 theme="vs-dark"
                 onChange={(value) => setCode(value || "")}
-                defaultValue={`// Write your answer here
-function reverse(str) {
-    return str.split("").reverse().join("");
-}
-
-console.log(reverse("hello"));
-`}
+                defaultValue={`// Write your answer here`}
             />
 
             <div className="coding-buttons">
