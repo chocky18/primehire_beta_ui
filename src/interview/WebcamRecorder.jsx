@@ -844,6 +844,24 @@ export default function WebcamRecorder({
     const [localCandidateId, setLocalCandidateId] = useState(candidateId);
     const [tabWarning, setTabWarning] = useState(false);
 
+    // Throttle ref (persists across renders)
+    const lastDispatchRef = useRef(0);
+
+    function dispatchInsights(data) {
+        const now = Date.now();
+        if (now - lastDispatchRef.current < 1000) return; // ⏱ 1 second throttle
+        lastDispatchRef.current = now;
+
+        window.dispatchEvent(
+            new CustomEvent("liveInsightsUpdate", {
+                detail: {
+                    anomalies: data.anomalies || [],
+                    counts: data.anomaly_counts || {}
+                }
+            })
+        );
+    }
+
     /* -------------------------------------------
     Mirror candidate id when it arrives
     --------------------------------------------*/
@@ -919,14 +937,8 @@ export default function WebcamRecorder({
                     .then(r => r.json())
                     .then(data => {
                         // 🔥 SEND TO LIVE INSIGHTS PANEL
-                        window.dispatchEvent(
-                            new CustomEvent("liveInsightsUpdate", {
-                                detail: {
-                                    anomalies: data.anomalies,
-                                    counts: data.anomaly_counts || {}
-                                }
-                            })
-                        );
+                        dispatchInsights(data);
+
                     })
                     .catch(err => console.error("Tab switch send failed:", err));
 
@@ -1044,21 +1056,22 @@ export default function WebcamRecorder({
 
             const res = await fetch(`${API_BASE}/mcp/interview/face-monitor`, { method: "POST", body: fd });
             const data = await res.json();
+            dispatchInsights(data);
 
             // Defensive logging
-            console.log("📥 Backend response:", data);
+            // console.log("📥 Backend response:", data);
 
             // Normalize and dispatch
-            window.dispatchEvent(
-                new CustomEvent("liveInsightsUpdate", {
-                    detail: {
-                        anomalies: data.anomalies || [],
-                        boxes: data.boxes || [],
-                        faces: data.faces || 0,
-                        counts: data.anomaly_counts || {}
-                    }
-                })
-            );
+            // window.dispatchEvent(
+            //     new CustomEvent("liveInsightsUpdate", {
+            //         detail: {
+            //             anomalies: data.anomalies || [],
+            //             boxes: data.boxes || [],
+            //             faces: data.faces || 0,
+            //             counts: data.anomaly_counts || {}
+            //         }
+            //     })
+            // );
 
 
             // Also push system transcript messages for each anomaly (frontend uses it too)
