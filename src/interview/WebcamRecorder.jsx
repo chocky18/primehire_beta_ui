@@ -845,14 +845,14 @@ export default function WebcamRecorder({
     const [tabWarning, setTabWarning] = useState(false);
 
     /* -------------------------------------------
-       Mirror candidate id when it arrives
+    Mirror candidate id when it arrives
     --------------------------------------------*/
     useEffect(() => {
         if (candidateId) setLocalCandidateId(candidateId);
     }, [candidateId]);
 
     /* -------------------------------------------
-       Init camera (robust to AbortError)
+    Init camera (robust to AbortError)
     --------------------------------------------*/
     useEffect(() => {
         let mounted = true;
@@ -891,7 +891,7 @@ export default function WebcamRecorder({
     }, []);
 
     /* -------------------------------------------
-       Tab visibility handling
+    Tab visibility handling
     --------------------------------------------*/
     useEffect(() => {
         function handleTab() {
@@ -941,7 +941,7 @@ export default function WebcamRecorder({
 
 
     /* -------------------------------------------
-       Start/stop face loop
+    Start/stop face loop
     --------------------------------------------*/
     function startFaceLoop() {
         console.log("🎥 FACE MONITOR STARTED");
@@ -968,10 +968,10 @@ export default function WebcamRecorder({
     }
 
     /* -------------------------------------------
-       Start interview (single button)
-       - Waits for video to be ready, starts face loop
-       - Starts timer, sets recording state
-       - Triggers stage 1 after loop started
+    Start interview (single button)
+    - Waits for video to be ready, starts face loop
+    - Starts timer, sets recording state
+    - Triggers stage 1 after loop started
     --------------------------------------------*/
     async function startInterview() {
         console.log("▶ INTERVIEW STARTED — Stage:", stage);
@@ -1015,7 +1015,7 @@ export default function WebcamRecorder({
     }
 
     /* -------------------------------------------
-       send frame to backend and dispatch liveInsightsUpdate
+    send frame to backend and dispatch liveInsightsUpdate
     --------------------------------------------*/
     async function sendFaceFrame() {
         try {
@@ -1068,44 +1068,44 @@ export default function WebcamRecorder({
         }
     }
 
+    // /* -------------------------------------------
+    // Auto-trigger AI interview when stage becomes 3 (existing behavior)
+    // --------------------------------------------*/
+    // useEffect(() => {
+    //     if (stage !== 3) return;
+    //     if (!recording) return;
+
+    //     console.log("🤖 AUTO-TRIGGER Stage 3 AI INTERVIEW");
+
+    //     let cancelled = false;
+    //     async function beginAIInterview() {
+    //         try {
+    //             const fd = new FormData();
+    //             fd.append("init", "true");
+    //             fd.append("candidate_name", candidateName);
+    //             fd.append("job_description", jdText);
+    //             if (localCandidateId) fd.append("candidate_id", localCandidateId);
+
+    //             const r = await fetch(`${API_BASE}/mcp/interview_bot_beta/process-answer`, { method: "POST", body: fd });
+    //             const d = await r.json();
+    //             if (cancelled) return;
+    //             if (d.candidate_id) {
+    //                 setLocalCandidateId(d.candidate_id);
+    //                 onCandidateId(d.candidate_id);
+    //             }
+    //             if (d.next_question) {
+    //                 window.dispatchEvent(new CustomEvent("transcriptAdd", { detail: { role: "ai", text: d.next_question } }));
+    //             }
+    //         } catch (e) {
+    //             console.error("beginAIInterview error:", e);
+    //         }
+    //     }
+    //     beginAIInterview();
+    //     return () => { cancelled = true; };
+    // }, [stage, recording]);
+
     /* -------------------------------------------
-       Auto-trigger AI interview when stage becomes 3 (existing behavior)
-    --------------------------------------------*/
-    useEffect(() => {
-        if (stage !== 3) return;
-        if (!recording) return;
-
-        console.log("🤖 AUTO-TRIGGER Stage 3 AI INTERVIEW");
-
-        let cancelled = false;
-        async function beginAIInterview() {
-            try {
-                const fd = new FormData();
-                fd.append("init", "true");
-                fd.append("candidate_name", candidateName);
-                fd.append("job_description", jdText);
-                if (localCandidateId) fd.append("candidate_id", localCandidateId);
-
-                const r = await fetch(`${API_BASE}/mcp/interview_bot_beta/process-answer`, { method: "POST", body: fd });
-                const d = await r.json();
-                if (cancelled) return;
-                if (d.candidate_id) {
-                    setLocalCandidateId(d.candidate_id);
-                    onCandidateId(d.candidate_id);
-                }
-                if (d.next_question) {
-                    window.dispatchEvent(new CustomEvent("transcriptAdd", { detail: { role: "ai", text: d.next_question } }));
-                }
-            } catch (e) {
-                console.error("beginAIInterview error:", e);
-            }
-        }
-        beginAIInterview();
-        return () => { cancelled = true; };
-    }, [stage, recording]);
-
-    /* -------------------------------------------
-       Render
+    Render
     --------------------------------------------*/
     return (
         <div className="webcam-glass-shell">
