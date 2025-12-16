@@ -833,7 +833,7 @@ export default function WebcamRecorder({
     jdText,
     onCandidateId,
     stage,
-    onStartStage
+    // onStartStage
 }) {
     const videoRef = useRef(null);
     const streamRef = useRef(null);

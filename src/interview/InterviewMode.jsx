@@ -166,9 +166,9 @@ export default function InterviewMode() {
 
 
 
-    // /* ===========================================================
-    //    START STAGE HANDLER (triggered by WebcamRecorder Start button)
-    // =========================================================== */
+    /* ===========================================================
+       START STAGE HANDLER (triggered by WebcamRecorder Start button)
+    =========================================================== */
     // async function handleStartStage(stageNumber) {
     //     console.log("Starting stage:", stageNumber);
     //     setStage(stageNumber);
@@ -366,7 +366,7 @@ export default function InterviewMode() {
                             jdText={jdText}
                             onCandidateId={setCandidateId}
                             stage={stage}
-                            onStartStage={handleStartStage}
+                        // onStartStage={handleStartStage}
                         />
                     </div>
 
