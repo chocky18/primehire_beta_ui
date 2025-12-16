@@ -129,7 +129,7 @@ export default function CodingTestPanel({
     const [code, setCode] = useState("");
     const [output, setOutput] = useState("");
     const [py, setPy] = useState(null);
-    const [submitted, setSubmitted] = useState(false);
+    // const [submitted, setSubmitted] = useState(false);
 
     /* -------------------------------------------------------
        LOAD PYODIDE (only for Python)
@@ -179,9 +179,21 @@ export default function CodingTestPanel({
     /* -------------------------------------------------------
        SUBMIT FINAL ANSWER
     ------------------------------------------------------- */
-    function submitAnswer() {
-        setSubmitted(true);
+    // function submitAnswer() {
+    //     setSubmitted(true);
 
+    //     if (onComplete) onComplete();
+
+    //     window.dispatchEvent(
+    //         new CustomEvent("transcriptAdd", {
+    //             detail: {
+    //                 role: "system",
+    //                 text: "🧑‍💻 Candidate has submitted the coding test."
+    //             }
+    //         })
+    //     );
+    // }
+    function submitAnswer() {
         if (onComplete) onComplete();
 
         window.dispatchEvent(
