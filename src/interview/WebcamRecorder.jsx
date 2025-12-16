@@ -865,6 +865,25 @@ export default function WebcamRecorder({
         );
     }
 
+    useEffect(() => {
+        function pause() {
+            stopFaceLoop();
+        }
+
+        function resume() {
+            if (recording) {
+                startFaceLoop();
+            }
+        }
+
+        window.addEventListener("pauseFaceMonitor", pause);
+        window.addEventListener("resumeFaceMonitor", resume);
+
+        return () => {
+            window.removeEventListener("pauseFaceMonitor", pause);
+            window.removeEventListener("resumeFaceMonitor", resume);
+        };
+    }, [recording]);
 
     /* -------------------------------------------
     Mirror candidate id when it arrives

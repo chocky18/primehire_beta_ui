@@ -150,7 +150,13 @@ export default function InterviewMode() {
                         detail: { role: "ai", text: d.next_question }
                     })
                 );
+
+                // ✅ SAFE TO RESUME FACE MONITOR NOW
+                setTimeout(() => {
+                    window.dispatchEvent(new Event("resumeFaceMonitor"));
+                }, 300);
             }
+
         } catch (e) {
             console.error("❌ AI init failed:", e);
         }
@@ -208,10 +214,16 @@ export default function InterviewMode() {
                 <CodingTestPanel
                     onComplete={(score) => {
                         setCodingResult(score);
-                        setStage(3);
-                    }}
 
+                        // 🔴 PAUSE FACE MONITOR BEFORE STAGE SWITCH
+                        window.dispatchEvent(new Event("pauseFaceMonitor"));
+
+                        setTimeout(() => {
+                            setStage(3);
+                        }, 100); // let React settle
+                    }}
                 />
+
 
 
             );
