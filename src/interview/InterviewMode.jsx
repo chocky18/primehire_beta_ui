@@ -194,6 +194,42 @@ export default function InterviewMode() {
     //         }
     //     }
     // }
+    /* ===========================================================
+   AUTO LOAD MCQ WHEN STAGE === 1
+=========================================================== */
+    useEffect(() => {
+        if (stage !== 1) return;
+        if (mcqLoaded) return;
+        if (!candidateId) return;
+
+        console.log("📝 Loading MCQs...");
+
+        const loadMCQ = async () => {
+            try {
+                const fd = new FormData();
+                fd.append("job_description", jdText);
+                fd.append("candidate_id", candidateId);
+                if (jdId) fd.append("jd_id", jdId);
+
+                const r = await fetch(
+                    `${API_BASE}/mcp/interview_bot_beta/generate-mcq`,
+                    { method: "POST", body: fd }
+                );
+
+                const d = await r.json();
+                if (d.ok) {
+                    setMcq(d.mcq);
+                    setMcqLoaded(true);
+                } else {
+                    alert("Failed to load MCQ");
+                }
+            } catch (err) {
+                console.error("MCQ load failed:", err);
+            }
+        };
+
+        loadMCQ();
+    }, [stage, candidateId, mcqLoaded]);
 
     /* ===========================================================
        RIGHT PANEL RENDER BASED ON STAGE
