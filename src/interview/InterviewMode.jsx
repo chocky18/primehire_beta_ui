@@ -88,52 +88,43 @@ export default function InterviewMode() {
     /* ===========================================================
    AUTO START AI INTERVIEW WHEN STAGE === 3
 =========================================================== */
-    useEffect(() => {
-        if (stage !== 3) return;
+    async function startAIInterview() {
         if (!candidateId || !interviewToken) {
             console.error("❌ Missing candidateId or token");
             return;
         }
 
-        let cancelled = false;
+        console.log("🤖 Explicitly starting AI interview");
 
-        async function startAI() {
-            console.log("🤖 Triggering AI Interview init");
+        const fd = new FormData();
+        fd.append("init", "true");
+        fd.append("candidate_name", candidateName);
+        fd.append("candidate_id", candidateId);
+        fd.append("job_description", jdText);
+        fd.append("token", interviewToken);
+        if (jdId) fd.append("jd_id", jdId);
 
-            const fd = new FormData();
-            fd.append("init", "true");
-            fd.append("candidate_name", candidateName);
-            fd.append("candidate_id", candidateId);
-            fd.append("job_description", jdText);
-            fd.append("token", interviewToken);
-            if (jdId) fd.append("jd_id", jdId);
+        try {
+            const r = await fetch(
+                `${API_BASE}/mcp/interview_bot_beta/process-answer`,
+                { method: "POST", body: fd }
+            );
 
-            try {
-                const r = await fetch(
-                    `${API_BASE}/mcp/interview_bot_beta/process-answer`,
-                    { method: "POST", body: fd }
+            const d = await r.json();
+            console.log("AI INIT RESPONSE:", d);
+
+            if (d.next_question) {
+                window.dispatchEvent(
+                    new CustomEvent("transcriptAdd", {
+                        detail: { role: "ai", text: d.next_question }
+                    })
                 );
-                const d = await r.json();
-
-                console.log("AI INIT RESPONSE:", d);
-
-                if (!cancelled && d.next_question) {
-                    window.dispatchEvent(
-                        new CustomEvent("transcriptAdd", {
-                            detail: { role: "ai", text: d.next_question }
-                        })
-                    );
-                }
-            } catch (e) {
-                console.error("❌ AI init failed:", e);
             }
+        } catch (e) {
+            console.error("❌ AI init failed:", e);
         }
+    }
 
-        startAI();
-
-        return () => { cancelled = true; };
-
-    }, [stage, candidateId, interviewToken, candidateName, jdText, jdId]);
 
 
     /* ===========================================================
@@ -188,12 +179,11 @@ export default function InterviewMode() {
                         setCodingResult(score);
                         setStage(3);
 
-                        // 🔥 EXPLICIT AI START SIGNAL
-                        setTimeout(() => {
-                            window.dispatchEvent(new Event("startAIInterview"));
-                        }, 300);
+                        // 🔥 DIRECT CALL (NO RACE CONDITION)
+                        startAIInterview();
                     }}
                 />
+
 
             );
         }
