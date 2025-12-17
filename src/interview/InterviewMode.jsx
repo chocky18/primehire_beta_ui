@@ -1160,6 +1160,7 @@ export default function InterviewMode() {
                 jdText={jdText}
                 interviewTime={interviewTime}
                 interviewToken={interviewToken}
+                jdId={jdId}
             />
 
             <div className="interview-layout">

@@ -8,7 +8,8 @@ export default function InterviewToolbar({
     candidateName,
     jdText,
     interviewTime,  // ⬅ new prop
-    interviewToken
+    interviewToken,
+    jdId
 }) {
     const [recording, setRecording] = useState(false);
     const mediaRecorderRef = useRef(null);
