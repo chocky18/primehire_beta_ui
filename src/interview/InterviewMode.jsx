@@ -1075,6 +1075,16 @@ export default function InterviewMode() {
         })();
     }, [stage, candidateId, interviewToken]);
 
+    /* ======================================================
+   HARD RESET AI INIT WHEN ENTERING STAGE 3
+====================================================== */
+    useEffect(() => {
+        if (stage === 3) {
+            console.log("🔁 Resetting AI init on stage=3");
+            aiInitOnceRef.current = false;
+            setAiInterviewStarted(false);
+        }
+    }, [stage]);
 
     /* ---------------- TRANSCRIPT LISTENER (SAFE) ---------------- */
     useEffect(() => {
