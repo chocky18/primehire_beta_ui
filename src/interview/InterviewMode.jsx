@@ -1006,6 +1006,26 @@ export default function InterviewMode() {
         })();
     }, [stage, candidateId, mcqLoaded]);
 
+
+    /* ======================================================
+   FORCE START STAGE 3 (FROM CODING PANEL)
+====================================================== */
+    useEffect(() => {
+        const handler = () => {
+            console.log("🚀 Stage 3 start signal received");
+
+            setStage(prev => (prev === 3 ? prev : 3));
+
+            // 🔁 Reset AI state cleanly
+            aiInitOnceRef.current = false;
+            setAiInterviewStarted(false);
+        };
+
+        window.addEventListener("startStage3", handler);
+        return () => window.removeEventListener("startStage3", handler);
+    }, []);
+
+
     /* ---------------- INIT AI INTERVIEW ---------------- */
     useEffect(() => {
         if (stage !== 3) return;
@@ -1113,7 +1133,7 @@ export default function InterviewMode() {
             return <MCQ questions={mcq} onComplete={(r) => { setMcqResult(r); setStage(2); }} />;
 
         if (stage === 2)
-            return <CodingTestPanel onComplete={(r) => { setCodingResult(r); setStage(3); }} />;
+            return <CodingTestPanel onComplete={(r) => { setCodingResult(r); }} />;
 
         if (stage === 3)
             return <TranscriptPanel transcript={transcript} jdText={jdText} jdId={jdId} />;

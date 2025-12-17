@@ -170,8 +170,10 @@ export default function CodingTestPanel({
        SUBMIT FINAL ANSWER → parent controls stage
     ------------------------------------------------------- */
     function submitAnswer() {
-        if (onComplete) onComplete();
+        // 1️⃣ Inform parent (existing)
+        if (onComplete) onComplete({ submitted: true });
 
+        // 2️⃣ UI transcript (visual only)
         window.dispatchEvent(
             new CustomEvent("transcriptAdd", {
                 detail: {
@@ -180,7 +182,11 @@ export default function CodingTestPanel({
                 }
             })
         );
+
+        // 3️⃣ 🔑 CONTROL SIGNAL → START STAGE 3
+        window.dispatchEvent(new Event("startStage3"));
     }
+
 
     return (
         <div className="coding-panel">
