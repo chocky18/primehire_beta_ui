@@ -454,3 +454,40 @@
     border-radius: 6px;
     border-left: 4px solid #e00;
 }
+
+/* ===============================
+   AI INSIGHTS SCROLL FIX
+================================ */
+
+.anomaly-scroll-box {
+    max-height: 320px;
+    overflow-y: auto;
+    padding-right: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+.q-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.q-answer {
+    font-size: 12px;
+    color: #5374e3;
+    margin-bottom: 8px;
+}
+
+.q-metrics {
+    display: flex;
+    gap: 14px;
+    font-size: 11px;
+    color: #0d0e10;
+}
+
+.q-metrics span strong {
+    color: #0e55e5;
+}
