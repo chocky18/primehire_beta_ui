@@ -978,7 +978,7 @@ export default function InterviewMode() {
     const [transcript, setTranscript] = useState([]);
     const [interviewTime, setInterviewTime] = useState(0);
 
-    const [searchParams] = useSearchParams();
+    // const [searchParams] = useSearchParams();
     const interviewToken =
         location.state?.interviewToken ||
         new URLSearchParams(window.location.search).get("token") ||
@@ -1078,13 +1078,13 @@ export default function InterviewMode() {
     /* ======================================================
    HARD RESET AI INIT WHEN ENTERING STAGE 3
 ====================================================== */
-    useEffect(() => {
-        if (stage === 3) {
-            console.log("🔁 Resetting AI init on stage=3");
-            aiInitOnceRef.current = false;
-            setAiInterviewStarted(false);
-        }
-    }, [stage]);
+    // useEffect(() => {
+    //     if (stage === 3) {
+    //         console.log("🔁 Resetting AI init on stage=3");
+    //         aiInitOnceRef.current = false;
+    //         setAiInterviewStarted(false);
+    //     }
+    // }, [stage]);
 
     /* ---------------- TRANSCRIPT LISTENER (SAFE) ---------------- */
     useEffect(() => {
@@ -1178,8 +1178,8 @@ export default function InterviewMode() {
                     <WebcamRecorder
                         candidateName={candidateName}
                         candidateId={candidateId}
-                        stage={stage}
-                        aiInterviewStarted={aiInterviewStarted}
+                    // stage={stage}
+                    // aiInterviewStarted={aiInterviewStarted}
                     />
 
                     <div className="insight-score-row">

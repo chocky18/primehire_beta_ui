@@ -1861,6 +1861,218 @@
 //         </div>
 //     );
 // }
+
+//-- FILE: src/interview/WebcamRecorder_fixed.jsx
+// import React, { useEffect, useRef, useState } from "react";
+// import { API_BASE } from "@/utils/constants";
+// import "./WebcamRecorder.css";
+
+// export default function WebcamRecorder({
+//     candidateName,
+//     candidateId,
+// }) {
+//     const videoRef = useRef(null);
+//     const streamRef = useRef(null);
+//     const faceLoopRef = useRef(null);
+//     const lastDispatchRef = useRef(0);
+
+//     const [recording, setRecording] = useState(false);
+//     const [localCandidateId, setLocalCandidateId] = useState(candidateId);
+
+//     function dispatchInsights(data) {
+//         window.dispatchEvent(
+//             new CustomEvent("liveInsightsUpdate", {
+//                 detail: {
+//                     anomalies: data.anomalies || [],
+//                     counts: data.anomaly_counts || {}
+//                 }
+//             })
+//         );
+//     }
+
+//     /* ---------------- Sync ID ---------------- */
+//     useEffect(() => {
+//         if (candidateId) setLocalCandidateId(candidateId);
+//     }, [candidateId]);
+
+//     /* ---------------- Camera Preview ---------------- */
+//     useEffect(() => {
+//         let mounted = true;
+
+//         (async () => {
+//             try {
+//                 streamRef.current = await navigator.mediaDevices.getUserMedia({
+//                     video: true,
+//                     audio: true
+//                 });
+//                 if (!mounted) return;
+
+//                 videoRef.current.srcObject = streamRef.current;
+//                 videoRef.current.onloadedmetadata = () =>
+//                     videoRef.current.play().catch(() => { });
+//             } catch (e) {
+//                 console.error("Camera error:", e);
+//             }
+//         })();
+
+//         return () => {
+//             mounted = false;
+//             streamRef.current?.getTracks().forEach(t => t.stop());
+//             stopFaceLoop();
+//         };
+//     }, []);
+
+//     /* ---------------- Start / Stop Interview ---------------- */
+//     function startInterview() {
+//         setRecording(true);
+//         window.dispatchEvent(new Event("startInterviewTimer"));
+//         console.log("▶ INTERVIEW STARTED");
+//     }
+
+//     function stopInterview() {
+//         setRecording(false);
+//         stopFaceLoop();
+//         window.dispatchEvent(new Event("stopInterviewTimer"));
+//         window.dispatchEvent(new Event("stopInterview"));
+//     }
+
+//     /* ---------------- Face Monitor (GLOBAL SESSION) ---------------- */
+//     useEffect(() => {
+//         if (recording) {
+//             startFaceLoop();
+//         } else {
+//             stopFaceLoop();
+//         }
+//     }, [recording]);
+
+//     function startFaceLoop() {
+//         if (faceLoopRef.current) return;
+
+//         console.log("🎥 Face monitor START");
+//         faceLoopRef.current = setInterval(sendFaceFrame, 900);
+//     }
+
+//     function stopFaceLoop() {
+//         if (faceLoopRef.current) {
+//             clearInterval(faceLoopRef.current);
+//             faceLoopRef.current = null;
+//             console.log("🎥 Face monitor STOP");
+//         }
+//     }
+
+//     /* ---------------- Send Frame ---------------- */
+//     async function sendFaceFrame() {
+//         if (!recording || !videoRef.current || !localCandidateId) return;
+
+//         const now = Date.now();
+//         if (now - lastDispatchRef.current < 1200) return;
+//         lastDispatchRef.current = now;
+
+//         const video = videoRef.current;
+//         if (!video.videoWidth || !video.videoHeight) return;
+
+//         const canvas = document.createElement("canvas");
+//         canvas.width = video.videoWidth;
+//         canvas.height = video.videoHeight;
+//         canvas.getContext("2d").drawImage(video, 0, 0);
+
+//         const blob = await new Promise(r =>
+//             canvas.toBlob(r, "image/jpeg", 0.75)
+//         );
+//         if (!blob) return;
+
+//         const fd = new FormData();
+//         fd.append("candidate_name", candidateName);
+//         fd.append("candidate_id", localCandidateId);
+//         fd.append("frame", blob);
+
+//         const res = await fetch(
+//             `${API_BASE}/mcp/interview/face-monitor`,
+//             { method: "POST", body: fd }
+//         );
+
+//         const data = await res.json();
+
+//         window.dispatchEvent(
+//             new CustomEvent("liveInsightsUpdate", {
+//                 detail: {
+//                     anomalies: data.anomalies || [],
+//                     counts: data.anomaly_counts || {}
+//                 }
+//             })
+//         );
+//     }
+
+//     /* -------------------------------------------
+//    TAB VISIBILITY / TAB SWITCH MONITOR
+// -------------------------------------------- */
+//     useEffect(() => {
+//         if (!localCandidateId) return;
+
+//         function handleVisibilityChange() {
+//             if (document.hidden) {
+//                 console.warn("⚠ Tab switch detected");
+
+//                 // Optional: transcript log
+//                 window.dispatchEvent(
+//                     new CustomEvent("transcriptAdd", {
+//                         detail: {
+//                             role: "system",
+//                             text: "⚠ Tab switch detected — stay in the interview window."
+//                         }
+//                     })
+//                 );
+
+//                 const fd = new FormData();
+//                 fd.append("candidate_name", candidateName);
+//                 fd.append("candidate_id", localCandidateId);
+//                 fd.append("event_type", "tab_switch");
+//                 fd.append("event_msg", "Tab switch detected");
+
+//                 fetch(`${API_BASE}/mcp/interview/face-monitor`, {
+//                     method: "POST",
+//                     body: fd
+//                 })
+//                     .then(r => r.json())
+//                     .then(data => {
+//                         // ✅ UPDATE LIVE INSIGHTS
+//                         dispatchInsights(data);
+//                     })
+//                     .catch(err =>
+//                         console.error("❌ Tab switch send failed:", err)
+//                     );
+//             }
+//         }
+
+//         document.addEventListener("visibilitychange", handleVisibilityChange);
+//         return () =>
+//             document.removeEventListener("visibilitychange", handleVisibilityChange);
+
+//     }, [localCandidateId, candidateName]);
+
+//     /* ---------------- Render ---------------- */
+//     return (
+//         <div className="webcam-glass-shell">
+//             <video
+//                 ref={videoRef}
+//                 className="webcam-video"
+//                 autoPlay
+//                 muted
+//                 playsInline
+//             />
+
+//             {!recording ? (
+//                 <button className="webcam-start-btn" onClick={startInterview}>
+//                     Start Interview
+//                 </button>
+//             ) : (
+//                 <button className="webcam-stop-btn" onClick={stopInterview}>
+//                     Stop Interview
+//                 </button>
+//             )}
+//         </div>
+//     );
+// }
 import React, { useEffect, useRef, useState } from "react";
 import { API_BASE } from "@/utils/constants";
 import "./WebcamRecorder.css";
@@ -1877,7 +2089,19 @@ export default function WebcamRecorder({
     const [recording, setRecording] = useState(false);
     const [localCandidateId, setLocalCandidateId] = useState(candidateId);
 
-    /* ---------------- Sync ID ---------------- */
+    /* ---------------- DISPATCH LIVE INSIGHTS ---------------- */
+    function dispatchInsights(data) {
+        window.dispatchEvent(
+            new CustomEvent("liveInsightsUpdate", {
+                detail: {
+                    anomalies: data?.anomalies || [],
+                    counts: data?.anomaly_counts || {}
+                }
+            })
+        );
+    }
+
+    /* ---------------- Sync Candidate ID ---------------- */
     useEffect(() => {
         if (candidateId) setLocalCandidateId(candidateId);
     }, [candidateId]);
@@ -1923,13 +2147,10 @@ export default function WebcamRecorder({
         window.dispatchEvent(new Event("stopInterview"));
     }
 
-    /* ---------------- Face Monitor (GLOBAL SESSION) ---------------- */
+    /* ---------------- Face Monitor Loop ---------------- */
     useEffect(() => {
-        if (recording) {
-            startFaceLoop();
-        } else {
-            stopFaceLoop();
-        }
+        if (recording) startFaceLoop();
+        else stopFaceLoop();
     }, [recording]);
 
     function startFaceLoop() {
@@ -1947,9 +2168,10 @@ export default function WebcamRecorder({
         }
     }
 
-    /* ---------------- Send Frame ---------------- */
+    /* ---------------- Send Face Frame ---------------- */
     async function sendFaceFrame() {
-        if (!recording || !videoRef.current || !localCandidateId) return;
+        if (!recording || document.hidden) return;
+        if (!videoRef.current || !localCandidateId) return;
 
         const now = Date.now();
         if (now - lastDispatchRef.current < 1200) return;
@@ -1973,22 +2195,61 @@ export default function WebcamRecorder({
         fd.append("candidate_id", localCandidateId);
         fd.append("frame", blob);
 
-        const res = await fetch(
-            `${API_BASE}/mcp/interview/face-monitor`,
-            { method: "POST", body: fd }
-        );
+        try {
+            const res = await fetch(
+                `${API_BASE}/mcp/interview/face-monitor`,
+                { method: "POST", body: fd }
+            );
 
-        const data = await res.json();
+            if (!res.ok) return;
 
-        window.dispatchEvent(
-            new CustomEvent("liveInsightsUpdate", {
-                detail: {
-                    anomalies: data.anomalies || [],
-                    counts: data.anomaly_counts || {}
-                }
-            })
-        );
+            const data = await res.json();
+            dispatchInsights(data);
+        } catch (err) {
+            console.error("❌ Face frame send failed:", err);
+        }
     }
+
+    /* ---------------- TAB SWITCH MONITOR ---------------- */
+    useEffect(() => {
+        if (!localCandidateId) return;
+
+        function handleVisibilityChange() {
+            if (!document.hidden) return;
+
+            console.warn("⚠ Tab switch detected");
+
+            window.dispatchEvent(
+                new CustomEvent("transcriptAdd", {
+                    detail: {
+                        role: "system",
+                        text: "⚠ Tab switch detected — stay in the interview window."
+                    }
+                })
+            );
+
+            const fd = new FormData();
+            fd.append("candidate_name", candidateName);
+            fd.append("candidate_id", localCandidateId);
+            fd.append("event_type", "tab_switch");
+            fd.append("event_msg", "Tab switch detected");
+
+            fetch(`${API_BASE}/mcp/interview/face-monitor`, {
+                method: "POST",
+                body: fd
+            })
+                .then(r => r.ok ? r.json() : null)
+                .then(data => data && dispatchInsights(data))
+                .catch(err =>
+                    console.error("❌ Tab switch send failed:", err)
+                );
+        }
+
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        return () =>
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+
+    }, [localCandidateId, candidateName]);
 
     /* ---------------- Render ---------------- */
     return (
