@@ -1327,7 +1327,7 @@ export const useWebSocket = (
             NORMAL FEATURE DETECTION
       ======================================================= */
       if (msg.type === "feature_detected" && msg.data) {
-        lastUserMessageRef.current = msg.user_message || "";
+        // lastUserMessageRef.current = msg.user_message || "";
         await handleIntent(msg.data);
         return;
       }
