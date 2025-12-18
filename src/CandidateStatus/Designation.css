@@ -155,3 +155,110 @@
         font-size: 15px;
     }
 }
+
+/* ===============================
+   STATUS BREAKDOWN (PREMIUM)
+================================ */
+
+.status-row {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    /* ✅ space between chips */
+}
+
+/* Base chip */
+.status-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    /* space between label & number */
+    padding: 6px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 500;
+    background: #f8fafc;
+    color: #1f2937;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    white-space: nowrap;
+}
+
+/* Label text */
+.status-chip span.label {
+    text-transform: capitalize;
+    letter-spacing: 0.2px;
+}
+
+/* Number badge */
+.status-chip span.count {
+    min-width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.7);
+}
+
+/* ===============================
+   STATUS COLORS
+================================ */
+
+.status-chip.completed {
+    background: #ecfdf5;
+    border-color: #a7f3d0;
+    color: #065f46;
+}
+
+.status-chip.completed .count {
+    background: #10b981;
+    color: white;
+}
+
+.status-chip.locked {
+    background: #fff1f2;
+    border-color: #fecdd3;
+    color: #129f4f;
+}
+
+.status-chip.locked .count {
+    background: #1de141;
+    color: white;
+}
+
+.status-chip.scheduled {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1e40af;
+}
+
+.status-chip.scheduled .count {
+    background: #3b82f6;
+    color: white;
+}
+
+.status-chip.in_progress {
+    background: #fefce8;
+    border-color: #fde68a;
+    color: #92400e;
+}
+
+.status-chip.in_progress .count {
+    background: #f59e0b;
+    color: white;
+}
+
+.status-chip.expired {
+    background: #f3f4f6;
+    border-color: #d1d5db;
+    color: #374151;
+}
+
+.status-chip.expired .count {
+    background: #6b7280;
+    color: white;
+}
