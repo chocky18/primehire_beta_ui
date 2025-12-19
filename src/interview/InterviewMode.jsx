@@ -1037,46 +1037,113 @@ export default function InterviewMode() {
         aiInitOnce: aiInitOnceRef.current
     });
 
+    // /* ---------------- INIT AI INTERVIEW ---------------- */
+    // useEffect(() => {
+    //     if (stage !== 3) return;
+    //     // if (!candidateId || !interviewToken) return;
+    //     if (!candidateId) return;
+
+    //     if (aiInitOnceRef.current) return;
+
+    //     aiInitOnceRef.current = true;
+    //     console.log("🤖 Initializing AI Interview");
+
+    //     (async () => {
+    //         const fd = new FormData();
+
+    //         fd.append("init", "true");
+    //         fd.append("candidate_name", candidateName);
+    //         fd.append("candidate_id", candidateId);
+    //         fd.append("job_description", jdText);
+    //         fd.append("token", interviewToken || "");
+    //         if (jdId) fd.append("jd_id", jdId);
+
+    //         const r = await fetch(
+    //             `${API_BASE}/mcp/interview_bot_beta/process-answer`,
+    //             { method: "POST", body: fd }
+    //         );
+    //         const text = await r.text();
+    //         console.log("AI INIT RAW RESPONSE:", text);
+    //         const d = await r.json();
+
+    //         if (!d?.next_question) {
+    //             window.dispatchEvent(
+    //                 new CustomEvent("transcriptAdd", {
+    //                     detail: { role: "ai", text: "Tell me about yourself." }
+    //                 })
+    //             );
+    //             setAiInterviewStarted(true);
+    //         }
+
+
+    //         if (typeof d?.next_question === "string" && d.next_question.trim()) {
+    //             setAiInterviewStarted(true);
+
+    //             window.dispatchEvent(
+    //                 new CustomEvent("transcriptAdd", {
+    //                     detail: { role: "ai", text: d.next_question }
+    //                 })
+    //             );
+    //         } else {
+    //             console.warn("AI init returned no question", d);
+    //         }
+    //     })();
+    // }, [stage, candidateId, interviewToken]);
     /* ---------------- INIT AI INTERVIEW ---------------- */
     useEffect(() => {
         if (stage !== 3) return;
-        // if (!candidateId || !interviewToken) return;
         if (!candidateId) return;
-
         if (aiInitOnceRef.current) return;
 
         aiInitOnceRef.current = true;
         console.log("🤖 Initializing AI Interview");
 
         (async () => {
-            const fd = new FormData();
+            try {
+                const fd = new FormData();
 
-            fd.append("init", "true");
-            fd.append("candidate_name", candidateName);
-            fd.append("candidate_id", candidateId);
-            fd.append("job_description", jdText);
-            fd.append("token", interviewToken || "");
-            if (jdId) fd.append("jd_id", jdId);
+                fd.append("init", "true");
+                fd.append("candidate_name", candidateName);
+                fd.append("candidate_id", candidateId);
+                fd.append("job_description", jdText);
+                fd.append("token", interviewToken || "");
+                if (jdId) fd.append("jd_id", jdId);
 
-            const r = await fetch(
-                `${API_BASE}/mcp/interview_bot_beta/process-answer`,
-                { method: "POST", body: fd }
-            );
-            const d = await r.json();
+                const r = await fetch(
+                    `${API_BASE}/mcp/interview_bot_beta/process-answer`,
+                    { method: "POST", body: fd }
+                );
 
-            if (typeof d?.next_question === "string" && d.next_question.trim()) {
+                const text = await r.text();
+                console.log("AI INIT RAW RESPONSE:", text);
+
+                let d = {};
+                try {
+                    d = JSON.parse(text);
+                } catch (e) {
+                    console.error("❌ Failed to parse AI init response", e);
+                    return;
+                }
+
+                // 🔒 Fallback safety (always start interview)
+                const firstQuestion =
+                    typeof d?.next_question === "string" && d.next_question.trim()
+                        ? d.next_question
+                        : "Tell me about yourself.";
+
                 setAiInterviewStarted(true);
 
                 window.dispatchEvent(
                     new CustomEvent("transcriptAdd", {
-                        detail: { role: "ai", text: d.next_question }
+                        detail: { role: "ai", text: firstQuestion }
                     })
                 );
-            } else {
-                console.warn("AI init returned no question", d);
+
+            } catch (err) {
+                console.error("❌ AI init error:", err);
             }
         })();
-    }, [stage, candidateId, interviewToken]);
+    }, [stage, candidateId]); // 🔥 interviewToken removed on purpose
 
     /* ======================================================
    HARD RESET AI INIT WHEN ENTERING STAGE 3
