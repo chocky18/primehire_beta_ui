@@ -1,161 +1,187 @@
 /* ===============================
-   ROOT THEME
+   ROOT TOKENS (LINKEDIN / NOTION)
 ================================ */
 :root {
-    --bg-main: #f5f7fa;
-    --card-bg: rgba(255, 255, 255, 0.95);
-    --border-soft: #e5e7eb;
+    --bg-page: #f3f6f8;
+    --bg-card: #ffffff;
+    --border: #e5e7eb;
     --text-main: #111827;
     --text-muted: #6b7280;
     --blue: #0a66c2;
-    --blue-soft: #e8f1fb;
-    --green: #16a34a;
-    --red: #dc2626;
-    --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.06);
-    --radius-lg: 16px;
-    --radius-md: 12px;
-}
+    --green: #057642;
+    --red: #b42318;
 
-.vp-logo-header {
-    position: fixed;
-    top: 14px;
-    left: 10%;
-    transform: translateX(-50%);
-    z-index: 200;
+    --radius-lg: 14px;
+    --radius-md: 10px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
-}
-
-/* LOGO IMAGE */
-.vp-logo {
-    height: 40px;
-    width: auto;
-    object-fit: contain;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 /* ===============================
-   PAGE CONTAINER
+   PAGE WRAPPER
 ================================ */
 .vp-container {
-    max-width: 1100px;
-    margin: 40px auto;
-    padding: 32px;
-    background: var(--bg-main);
+    max-width: 960px;
+    margin: 56px auto;
+    padding: 0 20px;
     font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont;
     color: var(--text-main);
+}
+
+/* ===============================
+   LOGO
+================================ */
+.vp-logo-header {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 28px;
+}
+
+.vp-logo {
+    height: 42px;
+    opacity: 0.95;
+}
+
+/* ===============================
+   CARD BASE
+================================ */
+.vp-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-sm);
 }
 
 /* ===============================
    TITLE
 ================================ */
 .vp-title {
-    font-size: 26px;
+    font-size: 22px;
     font-weight: 700;
-    margin-bottom: 24px;
-    color: var(--text-main);
+    margin-bottom: 20px;
 }
 
 /* ===============================
-   CARD BLOCKS
+   SLOT BANNER
 ================================ */
-.vp-input-block,
-.vp-pan-block,
-.vp-camera-row,
-.vp-jd-block {
-    background: var(--card-bg);
-    border: 1px solid var(--border-soft);
-    border-radius: var(--radius-lg);
-    padding: 24px;
-    margin-bottom: 24px;
-    box-shadow: var(--shadow-soft);
+.vp-slot {
+    background: #eef4ff;
+    border: 1px solid #dbe7ff;
+    border-radius: var(--radius-md);
+    padding: 14px 18px;
+    margin-bottom: 28px;
+    font-size: 14px;
+    color: var(--blue);
+    font-weight: 600;
 }
 
 /* ===============================
-   INPUTS
+   FORM INPUTS
 ================================ */
-.vp-input-block label,
-.vp-pan-block label {
+.vp-field {
+    margin-bottom: 20px;
+}
+
+.vp-field label {
+    display: block;
     font-size: 13px;
     font-weight: 600;
     color: var(--text-muted);
-    display: block;
     margin-bottom: 6px;
 }
 
-.vp-input-block input,
-.vp-pan-block input,
-.vp-jd-block textarea {
+.vp-field input {
     width: 100%;
     padding: 12px 14px;
     border-radius: var(--radius-md);
-    border: 1px solid var(--border-soft);
+    border: 1px solid var(--border);
     font-size: 14px;
-    outline: none;
-    transition: all 0.2s ease;
-    background: white;
+    background: #fff;
 }
 
-.vp-input-block input:focus,
-.vp-pan-block input:focus,
-.vp-jd-block textarea:focus {
+.vp-field input:focus {
+    outline: none;
     border-color: var(--blue);
     box-shadow: 0 0 0 3px rgba(10, 102, 194, 0.1);
 }
 
 /* ===============================
-   PAN VALIDATION STATUS
+   PAN STATUS
 ================================ */
 .vp-pan-status {
-    margin-top: 12px;
-    padding: 12px 14px;
+    margin-top: 10px;
+    padding: 10px 14px;
     border-radius: var(--radius-md);
-    font-size: 14px;
-    font-weight: 500;
+    font-size: 13px;
 }
 
 .vp-pan-status.success {
-    background: #ecfdf5;
+    background: #ecfdf3;
     color: var(--green);
-    border: 1px solid #bbf7d0;
 }
 
 .vp-pan-status.error {
-    background: #fef2f2;
+    background: #fef3f2;
     color: var(--red);
-    border: 1px solid #fecaca;
 }
 
 /* ===============================
-   CAMERA ROW
+   CAMERA LAYOUT
 ================================ */
-.vp-camera-row {
+.vp-camera {
     display: grid;
-    grid-template-columns: 1.3fr 1fr;
+    grid-template-columns: 1.4fr 1fr;
     gap: 24px;
 }
 
-.vp-video-box {
+.vp-camera-box {
+    position: relative;
     background: #000;
     border-radius: var(--radius-lg);
     overflow: hidden;
     height: 320px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    cursor: pointer;
 }
 
-.vp-video-box video,
-.vp-video-box img {
+/* VIDEO / IMAGE */
+.vp-camera-box video,
+.vp-camera-box img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.25s ease;
+}
+
+/* HOVER ZOOM */
+.vp-camera-box:hover video,
+.vp-camera-box:hover img {
+    transform: scale(1.04);
+}
+
+/* OVERLAY */
+.vp-camera-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.25);
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    transition: opacity 0.25s ease;
+}
+
+.vp-camera-box:hover .vp-camera-overlay {
+    opacity: 1;
 }
 
 /* ===============================
-   ACTION BUTTONS
+   CAMERA ACTIONS
 ================================ */
 .vp-actions {
     display: flex;
@@ -167,205 +193,64 @@
     padding: 12px 16px;
     font-size: 14px;
     border-radius: var(--radius-md);
-    border: none;
+    border: 1px solid var(--border);
+    background: #fff;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
 }
 
-/* Primary */
-.vp-actions button:first-child,
-.vp-pan-block button {
-    background: linear-gradient(135deg, #0a66c2, #004182);
-    color: white;
+.vp-actions button:hover {
+    background: #f9fafb;
 }
 
-.vp-actions button:first-child:hover,
-.vp-pan-block button:hover {
-    opacity: 0.9;
+/* PRIMARY */
+.vp-primary {
+    background: var(--blue) !important;
+    color: white !important;
+    border-color: var(--blue) !important;
 }
 
-/* Secondary */
-.vp-actions button:not(:first-child) {
-    background: #f3f4f6;
-    color: var(--text-main);
+/* CONTINUE */
+.vp-continue {
+    background: #057642 !important;
+    color: white !important;
+    border-color: #057642 !important;
 }
 
-.vp-actions button:not(:first-child):hover {
-    background: #e5e7eb;
-}
-
-/* Disabled */
+/* DISABLED */
 .vp-actions button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
 /* ===============================
-   STATUS TEXT
+   ACCESS STATES
 ================================ */
-.vp-status {
-    margin-top: 8px;
-    font-size: 13px;
-    color: var(--text-muted);
-}
-
-/* ===============================
-   JD BLOCK
-================================ */
-.vp-jd-block textarea {
-    min-height: 140px;
-    resize: vertical;
-    font-size: 13px;
-    line-height: 1.6;
-}
-
-/* ===============================
-   RESPONSIVE
-================================ */
-@media (max-width: 900px) {
-    .vp-camera-row {
-        grid-template-columns: 1fr;
-    }
-
-    .vp-video-box {
-        height: 260px;
-    }
-}
-
-/* ===============================
-   INTERVIEW SLOT BANNER
-================================ */
-.vp-slot-box {
-    background: linear-gradient(135deg, #e8f1fb, #f5f9ff);
-    border: 1px solid #c7ddf5;
+.vp-state {
+    max-width: 520px;
+    margin: 80px auto;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 18px 22px;
-    margin-bottom: 28px;
-    box-shadow: inset 0 0 0 1px rgba(10, 102, 194, 0.05);
-}
-
-.vp-slot-box strong {
-    display: block;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--blue);
-    margin-bottom: 6px;
-}
-
-.vp-slot-box div {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--text-main);
-}
-
-/* ===============================
-   ACCESS STATES (EARLY / EXPIRED)
-================================ */
-.vp-access-state {
-    background: var(--card-bg);
-    border: 1px solid var(--border-soft);
-    border-radius: var(--radius-lg);
-    padding: 32px;
+    padding: 36px;
     text-align: center;
-    box-shadow: var(--shadow-soft);
+    box-shadow: var(--shadow-md);
 }
 
-.vp-access-state h2 {
-    font-size: 24px;
-    font-weight: 700;
+.vp-state h2 {
+    font-size: 22px;
     margin-bottom: 12px;
 }
 
-.vp-access-state p {
-    font-size: 14px;
-    color: var(--text-muted);
-    margin-bottom: 16px;
-}
-
-.vp-access-state .time-window {
-    display: inline-block;
-    margin-top: 8px;
-    padding: 10px 16px;
-    border-radius: var(--radius-md);
-    font-size: 14px;
-    font-weight: 600;
-}
-
-/* TOO EARLY */
-.vp-access-state.early h2 {
-    color: var(--blue);
-}
-
-.vp-access-state.early .time-window {
-    background: var(--blue-soft);
-    color: var(--blue);
-    border: 1px solid #c7ddf5;
-}
-
-/* EXPIRED */
-.vp-access-state.expired h2 {
-    color: var(--red);
-}
-
-.vp-access-state.expired .time-window {
-    background: #fef2f2;
-    color: var(--red);
-    border: 1px solid #fecaca;
-}
-
 /* ===============================
-   RESCHEDULE SECTION WRAPPER
+   MOBILE
 ================================ */
-.vp-reschedule-wrapper {
-    margin-top: 32px;
-    padding-top: 32px;
-    border-top: 1px dashed var(--border-soft);
-}
+@media (max-width: 900px) {
+    .vp-camera {
+        grid-template-columns: 1fr;
+    }
 
-/* ===============================
-   LOADING / CHECKING STATE
-================================ */
-.vp-loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 280px;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--text-muted);
-}
-
-/* ===============================
-   CONTINUE BUTTON HIGHLIGHT
-================================ */
-.vp-continue-btn {
-    background: linear-gradient(135deg, #16a34a, #15803d) !important;
-    color: white !important;
-}
-
-.vp-continue-btn:hover {
-    opacity: 0.92;
-}
-
-/* ===============================
-   CAMERA STATUS TEXT
-================================ */
-.vp-camera-status {
-    font-size: 13px;
-    margin-top: 8px;
-    color: var(--text-muted);
-}
-
-/* ===============================
-   INLINE WARNING TEXT
-================================ */
-.vp-warning {
-    background: #fffbeb;
-    border: 1px solid #fde68a;
-    color: #92400e;
-    padding: 12px 14px;
-    border-radius: var(--radius-md);
-    font-size: 13px;
-    margin-bottom: 16px;
+    .vp-camera-box {
+        height: 260px;
+    }
 }

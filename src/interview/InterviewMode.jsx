@@ -1040,7 +1040,9 @@ export default function InterviewMode() {
     /* ---------------- INIT AI INTERVIEW ---------------- */
     useEffect(() => {
         if (stage !== 3) return;
-        if (!candidateId || !interviewToken) return;
+        // if (!candidateId || !interviewToken) return;
+        if (!candidateId) return;
+
         if (aiInitOnceRef.current) return;
 
         aiInitOnceRef.current = true;
@@ -1053,7 +1055,7 @@ export default function InterviewMode() {
             fd.append("candidate_name", candidateName);
             fd.append("candidate_id", candidateId);
             fd.append("job_description", jdText);
-            fd.append("token", interviewToken);
+            fd.append("token", interviewToken || "");
             if (jdId) fd.append("jd_id", jdId);
 
             const r = await fetch(
@@ -1160,7 +1162,7 @@ export default function InterviewMode() {
             const d = await r.json();
 
             navigate("/certificatedata", {
-                state: { ...d, mcq: mcqResult, coding: codingResult, transcript }
+                state: { ...d, mcq: mcqResult, coding: codingResult, transcript, anomalyCounts, }
             });
         };
 
