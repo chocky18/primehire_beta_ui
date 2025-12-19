@@ -821,7 +821,8 @@ const PrimeHireBrain = () => {
           onChange={(e) => setSearch(e.target.value)}
         />
 
-        <Button onClick={() => fetchStoredResumes(search)}>
+        <Button
+          className="refresh-btn" onClick={() => fetchStoredResumes(search)}>
           🔄 Refresh
         </Button>
 

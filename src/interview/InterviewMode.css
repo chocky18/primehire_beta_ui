@@ -43,15 +43,10 @@
 
 /* ROW UNDER VIDEO — INSIGHTS + SCORE BOX */
 .insight-score-row {
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-
-    /* FIX HEIGHT ISSUE */
-    height: 350px;
-    /* ← Increase here */
-    min-height: 350px;
-    /* ← Ensures it actually applies */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    transition: all 0.3s ease;
 }
 
 /* LEFT BOX (Live Insights) */

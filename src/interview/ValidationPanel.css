@@ -16,6 +16,26 @@
     --radius-md: 12px;
 }
 
+.vp-logo-header {
+    position: fixed;
+    top: 14px;
+    left: 10%;
+    transform: translateX(-50%);
+    z-index: 200;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+/* LOGO IMAGE */
+.vp-logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+
 /* ===============================
    PAGE CONTAINER
 ================================ */

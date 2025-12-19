@@ -4,6 +4,19 @@
     padding-top: 4rem;
 }
 
+.ip-logo-header {
+    position: fixed;
+    /* FIXED at top */
+    top: 16px;
+    left: 10%;
+    transform: translateX(-50%);
+    z-index: 100;
+
+    display: flex;
+    align-items: center;
+
+}
+
 .ip-glass-wrapper {
     width: 90%;
     max-width: 700px;

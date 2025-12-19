@@ -1,270 +1,310 @@
-/* ===== ROOT ===== */
+/* =================================================
+   ROOT CONTAINER
+================================================= */
 .primehirebrain-container {
   width: 100%;
-  max-width: 100vw;
-  overflow: hidden;
-  padding: 16px;
-  box-sizing: border-box;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 24px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  overflow-x: hidden;
 }
 
-/* ===== TITLE ===== */
+/* =================================================
+   TITLE
+================================================= */
 .brain-title {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 12px;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-/* ===== ACTION BAR ===== */
+/* =================================================
+   ACTION BAR
+================================================= */
 .brain-actions {
   display: flex;
   gap: 12px;
+  margin-bottom: 20px;
   flex-wrap: wrap;
-  margin-bottom: 14px;
   align-items: center;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e5e7eb;
 }
 
 .search-input {
-  padding: 8px 12px;
-  min-width: 260px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-/* ===== TABLE HEADER ===== */
-.table-header {
-  margin-bottom: 8px;
+  flex: 1;
+  min-width: 250px;
+  padding: 10px 14px;
+  border: 2px solid #1a1a1a;
+  border-radius: 10px;
   font-size: 14px;
-  color: #444;
+  font-weight: 600;
 }
 
-/* ===== TABLE WRAPPER ===== */
+.search-input:focus {
+  outline: none;
+  border-color: #38bdf8;
+  box-shadow: 0 6px 18px rgba(56, 189, 248, 0.2);
+}
+
+/* =================================================
+   REPAIR BOX
+================================================= */
+.repair-box {
+  background: #ffffff;
+  border: 2px solid #1a1a1a;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.repair-header {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.badge.running {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.repair-progress {
+  height: 12px;
+  background: #e0f2fe;
+  border-radius: 8px;
+  margin: 12px 0;
+  overflow: hidden;
+}
+
+.repair-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #38bdf8, #0ea5e9);
+  transition: width 0.3s ease;
+}
+
+.refresh-btn.loading {
+  pointer-events: none;
+}
+
+.refresh-btn.loading::before {
+  content: "🔄";
+  margin-right: 6px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.repair-meta {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 14px;
+  color: #0c4a6e;
+}
+
+/* =================================================
+   TABLE HEADER
+================================================= */
+.table-header {
+  background: #ffffff;
+  border: 2px solid #1a1a1a;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* =================================================
+   TABLE WRAPPER
+================================================= */
 .table-wrapper {
   width: 100%;
   overflow-x: auto;
-  overflow-y: hidden;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  -webkit-overflow-scrolling: touch;
+  overflow-y: visible;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
 }
 
-/* ===== TABLE ===== */
+/* =================================================
+   TABLE
+================================================= */
 .candidates-table {
   width: 100%;
-  min-width: 1100px;
-  border-collapse: collapse;
-  background: #fff;
-}
-
-.candidates-table th,
-.candidates-table td {
-  padding: 10px 12px;
-  text-align: left;
-  white-space: nowrap;
+  min-width: 1200px;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #ffffff;
   font-size: 13px;
-  border-bottom: 1px solid #eee;
+  table-layout: auto;
+  /* ✅ FIX */
 }
 
-/* ===== HEADER ===== */
+/* =================================================
+   TABLE HEADER
+================================================= */
 .candidates-table thead {
-  background: #f9fafb;
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
 }
 
-/* ===== STICKY FIRST COLUMN ===== */
-.candidates-table th:first-child,
-.candidates-table td:first-child {
-  position: sticky;
-  left: 0;
-  background: #fff;
-  z-index: 2;
-  box-shadow: 6px 0 6px rgba(0, 0, 0, 0.04);
+.candidates-table th {
+  padding: 14px 12px;
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #ffffff;
+  white-space: nowrap;
 }
 
-/* ===== STICKY LAST COLUMN ===== */
+/* =================================================
+   COLUMN WIDTHS
+================================================= */
+.candidates-table th:nth-child(1),
+.candidates-table td:nth-child(1) {
+  width: 50px;
+  text-align: center;
+}
+
+.candidates-table th:nth-child(2) {
+  width: 160px;
+}
+
+.candidates-table th:nth-child(3) {
+  width: 180px;
+}
+
+.candidates-table th:nth-child(4) {
+  width: 220px;
+}
+
+.candidates-table th:nth-child(5) {
+  width: 300px;
+}
+
+.candidates-table th:nth-child(6) {
+  width: 100px;
+  text-align: center;
+}
+
+.candidates-table th:nth-child(7) {
+  width: 160px;
+}
+
+.candidates-table th:nth-child(8) {
+  width: 170px;
+}
+
+.candidates-table th:nth-child(9) {
+  width: 100px;
+}
+
+/* =================================================
+   TABLE BODY
+================================================= */
+.candidates-table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #e6eef6;
+  color: #374151;
+  vertical-align: middle;
+}
+
+.candidates-table tbody tr:hover {
+  background: rgba(56, 189, 248, 0.05);
+}
+
+/* =================================================
+   SKILLS
+================================================= */
+.skills-cell {
+  white-space: normal;
+  word-break: break-word;
+  font-weight: 600;
+  color: #0284c7;
+}
+
+/* =================================================
+   ✅ STICKY ACTION COLUMN (FIX)
+================================================= */
 .candidates-table th:last-child,
 .candidates-table td:last-child {
   position: sticky;
   right: 0;
-  background: #fff;
-  z-index: 2;
-  box-shadow: -6px 0 6px rgba(0, 0, 0, 0.04);
+  background: #ffffff;
+  z-index: 5;
+  text-align: center;
+  min-width: 100px;
+
 }
 
-/* ===== DELETE BUTTON ===== */
+/* Sticky header color fix */
+.candidates-table thead th:last-child {
+  background: linear-gradient(120deg, #0ea5e9, #0284c7);
+
+}
+
+
 .delete-btn {
-  background: none;
-  border: none;
+  background: transparent;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 18px;
+  padding: 6px 10px;
   cursor: pointer;
-  font-size: 16px;
+  color: #ef4444;
+  transition: all 0.2s ease;
 }
 
 .delete-btn:hover {
-  color: red;
+  background: #fee2e2;
+  border-color: #ef4444;
+  transform: scale(1.1);
 }
 
-/* ===== MOBILE OPTIMIZATION ===== */
-@media (max-width: 768px) {
+/* =================================================
+   CHECKBOX
+================================================= */
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
 
-  /* Hide low-priority columns */
-  .candidates-table th:nth-child(4),
-  .candidates-table td:nth-child(4),
-  .candidates-table th:nth-child(5),
-  .candidates-table td:nth-child(5),
-  .candidates-table th:nth-child(7),
-  .candidates-table td:nth-child(7),
-  .candidates-table th:nth-child(8),
-  .candidates-table td:nth-child(8) {
-    display: none;
+/* =================================================
+   LOADING
+================================================= */
+.primehirebrain-container>p {
+  text-align: center;
+  padding: 40px;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+
+@media (max-width: 768px) {
+  .brain-actions {
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .candidates-table {
-    min-width: 650px;
-  }
-
-  .search-input {
-    min-width: 100%;
-  }
-}
-
-/* ===== SKILLS COLUMN HARD LIMIT ===== */
-.skills-cell {
-  max-width: 220px;
-  /* 🔥 hard stop */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  display: block;
-}
-
-/* Desktop large screens */
-@media (min-width: 1200px) {
-  .skills-cell {
-    max-width: 260px;
-  }
-}
-
-/* Mobile tighter clamp */
-@media (max-width: 768px) {
-  .skills-cell {
-    max-width: 140px;
-  }
-}
-
-/* ======================================================
-   COMPACT GRID MODE — NO SCROLL, NO OVERFLOW
-====================================================== */
-
-/* Force compression */
-.candidates-table.compact {
-  table-layout: fixed;
-  /* 🔥 KEY */
-  width: 100%;
-  min-width: 0 !important;
-  font-size: 11px;
-}
-
-/* Cells */
-.candidates-table.compact th,
-.candidates-table.compact td {
-  padding: 4px 6px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* COLUMN WIDTHS (HARD CAPS) */
-.candidates-table.compact th:nth-child(1),
-.candidates-table.compact td:nth-child(1) {
-  width: 32px;
-  /* checkbox */
-}
-
-.candidates-table.compact th:nth-child(2),
-.candidates-table.compact td:nth-child(2) {
-  width: 130px;
-  /* name */
-}
-
-.candidates-table.compact th:nth-child(3),
-.candidates-table.compact td:nth-child(3) {
-  width: 110px;
-  /* title */
-}
-
-.candidates-table.compact th:nth-child(4),
-.candidates-table.compact td:nth-child(4) {
-  width: 150px;
-  /* email */
-}
-
-.candidates-table.compact th:nth-child(5),
-.candidates-table.compact td:nth-child(5) {
-  width: 160px;
-  /* skills */
-}
-
-.candidates-table.compact th:nth-child(6),
-.candidates-table.compact td:nth-child(6) {
-  width: 60px;
-  /* exp */
-  text-align: center;
-}
-
-.candidates-table.compact th:nth-child(7),
-.candidates-table.compact td:nth-child(7) {
-  width: 120px;
-  /* company */
-}
-
-.candidates-table.compact th:nth-child(8),
-.candidates-table.compact td:nth-child(8) {
-  width: 90px;
-  /* updated */
-}
-
-.candidates-table.compact th:nth-child(9),
-.candidates-table.compact td:nth-child(9) {
-  width: 40px;
-  /* action */
-  text-align: center;
-}
-
-/* Remove sticky behavior in compact */
-.candidates-table.compact th:first-child,
-.candidates-table.compact td:first-child,
-.candidates-table.compact th:last-child,
-.candidates-table.compact td:last-child {
-  position: static;
-  box-shadow: none;
-}
-
-/* Skills tighter clamp */
-.candidates-table.compact .skills-cell {
-  max-width: 160px;
-}
-
-/* Action button smaller */
-.candidates-table.compact .delete-btn {
-  font-size: 14px;
-}
-
-/* ===== MOBILE HARD COMPRESSION ===== */
-@media (max-width: 768px) {
-  .candidates-table.compact {
-    font-size: 10px;
-  }
-
-  .candidates-table.compact th,
-  .candidates-table.compact td {
-    padding: 3px 4px;
-  }
-
-  .candidates-table.compact th:nth-child(4),
-  .candidates-table.compact td:nth-child(4),
-  .candidates-table.compact th:nth-child(7),
-  .candidates-table.compact td:nth-child(7),
-  .candidates-table.compact th:nth-child(8),
-  .candidates-table.compact td:nth-child(8) {
-    display: none;
-    /* still fits fully */
+    min-width: 1000px;
   }
 }
