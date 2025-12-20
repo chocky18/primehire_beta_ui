@@ -1066,12 +1066,22 @@ export default function ValidationPanel() {
     /* =====================================================
          STEP 1: VALIDATE ACCESS (TIME SLOT + TOKEN)
       ===================================================== */
+
     useEffect(() => {
-        if (!candidateId || !jdId || !interviewToken) {
-            console.warn("Missing params, but NOT invalidating interview");
+        // 🔒 HARD STOP: interview already started
+        if (sessionStorage.getItem("interview_started") === "true") {
+            console.warn("🔒 Interview already started — validation skipped");
+            setAccessState("allowed");
             return;
         }
 
+        // 🔍 Required params check
+        if (!candidateId || !jdId || !interviewToken) {
+            console.warn("❌ Missing interview params");
+            setAccessState("error");
+            setErrorMsg("Invalid interview link.");
+            return;
+        }
 
         const validateAccess = async () => {
             try {
@@ -1081,17 +1091,17 @@ export default function ValidationPanel() {
                     `&jd_id=${jdId}` +
                     `&token=${interviewToken}`;
 
+                console.log("🔍 Validating interview access:", url);
+
                 const res = await fetch(url);
-
-
                 const data = await res.json();
 
-                if (!data.ok) {
-                    setSlot({
-                        start: data.slot_start,
-                        end: data.slot_end,
-                    });
+                setSlot({
+                    start: data.slot_start,
+                    end: data.slot_end,
+                });
 
+                if (!data.ok) {
                     if (data.reason === "TOO_EARLY") {
                         setAccessState("early");
                     } else if (data.reason === "EXPIRED") {
@@ -1103,31 +1113,17 @@ export default function ValidationPanel() {
                     return;
                 }
 
-                setSlot({
-                    start: data.slot_start,
-                    end: data.slot_end,
-                });
-
                 setAccessState("allowed");
             } catch (err) {
-                console.error(err);
+                console.error("❌ Validation failed:", err);
                 setAccessState("error");
                 setErrorMsg("Server validation failed.");
             }
         };
 
         validateAccess();
-    }, []);
+    }, [candidateId, jdId, interviewToken]);
 
-    useEffect(() => {
-        if (sessionStorage.getItem("interview_started") === "true") {
-            console.warn("Interview already started — skipping validation");
-            setAccessState("allowed");
-            return;
-        }
-
-        // existing validation logic
-    }, []);
 
 
     /* =====================================================
