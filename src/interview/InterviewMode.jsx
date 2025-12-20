@@ -2023,6 +2023,8 @@ export default function InterviewMode() {
 
     const [transcript, setTranscript] = useState([]);
     const [interviewTime, setInterviewTime] = useState(0);
+    const [aiInitStatus, setAiInitStatus] = useState("idle");
+    // idle | initializing | ready
 
     const interviewToken =
         location.state?.interviewToken ||
@@ -2061,12 +2063,14 @@ export default function InterviewMode() {
     useEffect(() => {
         const handler = () => {
             setStage(3);
+            setAiInitStatus("idle");   // 🔑 reset properly
             aiInitOnceRef.current = false;
         };
 
         window.addEventListener("startStage3", handler);
         return () => window.removeEventListener("startStage3", handler);
     }, []);
+
 
     /* ---------------- INIT AI INTERVIEW ---------------- */
     // useEffect(() => {
