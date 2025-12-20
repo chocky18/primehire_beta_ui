@@ -44,23 +44,18 @@ export default function Scheduler() {
 
         const checkExisting = async () => {
             try {
+                if (!candidateId || !jdId || !jdToken) return;
+
                 const url =
                     `${API_BASE}/mcp/interview_bot_beta/scheduler/validate_access` +
                     `?candidate_id=${encodeURIComponent(candidateId)}` +
                     `&jd_id=${jdId}` +
-                    `&token=${interviewToken}`;
+                    `&token=${jdToken}`;
 
                 const res = await fetch(url);
-
-
-                // const res = await fetch(
-                //     `${API_BASE}/mcp/interview_bot_beta/scheduler/validate_access?candidate_id=${encodeURIComponent(
-                //         candidateId
-                //     )}&jd_id=${jdId}&token=${interviewToken}`
-                // );
-
                 const data = await res.json();
-                if (data.exists) setExisting(data);
+
+                if (data.ok) setExisting(data);
             } catch (e) {
                 console.error("Existing schedule check failed", e);
             }
