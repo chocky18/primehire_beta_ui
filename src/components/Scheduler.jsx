@@ -44,11 +44,19 @@ export default function Scheduler() {
 
         const checkExisting = async () => {
             try {
-                const res = await fetch(
-                    `${API_BASE}/mcp/interview_bot_beta/scheduler/validate_access?candidate_id=${encodeURIComponent(
-                        candidateId
-                    )}&jd_id=${jdId}&token=${interviewToken}`
-                );
+                const url =
+                    `${API_BASE}/mcp/interview_bot_beta/scheduler/validate_access` +
+                    `?candidate_id=${encodeURIComponent(candidateId)}` +
+                    `&jd_id=${jdId}` +
+                    `&token=${interviewToken}`;
+
+                const res = await fetch(url);
+
+                // const res = await fetch(
+                //     `${API_BASE}/mcp/interview_bot_beta/scheduler/validate_access?candidate_id=${encodeURIComponent(
+                //         candidateId
+                //     )}&jd_id=${jdId}&token=${interviewToken}`
+                // );
 
                 const data = await res.json();
                 if (data.exists) setExisting(data);
