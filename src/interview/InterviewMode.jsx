@@ -2024,6 +2024,8 @@ export default function InterviewMode() {
     const [transcript, setTranscript] = useState([]);
     const [interviewTime, setInterviewTime] = useState(0);
     const [aiInitStatus, setAiInitStatus] = useState("idle");
+    const aiInitOnceRef = useRef(false);
+
     // idle | initializing | ready
 
     const interviewToken =
