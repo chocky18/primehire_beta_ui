@@ -2157,6 +2157,7 @@ export default function InterviewMode() {
                 const d = await r.json();
 
                 if (typeof d?.next_question === "string" && d.next_question.trim()) {
+                    sessionStorage.setItem("interview_started", "true");
                     window.dispatchEvent(
                         new CustomEvent("transcriptAdd", {
                             detail: { role: "ai", text: d.next_question },

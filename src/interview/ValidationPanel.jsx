@@ -1119,6 +1119,14 @@ export default function ValidationPanel() {
         validateAccess();
     }, []);
 
+    useEffect(() => {
+        if (sessionStorage.getItem("interview_started")) {
+            console.warn("Interview already started — skipping validation");
+            setAccessState("allowed");
+            return;
+        }
+    }, []);
+
     /* =====================================================
          FETCH JD TEXT (OPTIONAL)
       ===================================================== */
