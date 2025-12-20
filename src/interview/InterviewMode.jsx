@@ -2258,7 +2258,7 @@ export default function InterviewMode() {
                     <WebcamRecorder
                         candidateName={candidateName}
                         candidateId={candidateId}
-                        aiBusyRef={aiBusyRef}   // 🔑 PASS DOWN
+                        faceMonitorEnabled={stage === 1} // 🔑 ONLY STAGE 1 // 🔑 PASS DOWN
                     />
 
                     <div className="insight-score-row">

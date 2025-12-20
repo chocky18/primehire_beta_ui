@@ -2474,7 +2474,7 @@ import "./WebcamRecorder.css";
 export default function WebcamRecorder({
     candidateName,
     candidateId,
-    aiBusyRef, // 🔑 NEW
+    faceMonitorEnabled = false,
 }) {
     const videoRef = useRef(null);
     const streamRef = useRef(null);
@@ -2485,6 +2485,13 @@ export default function WebcamRecorder({
     const [recording, setRecording] = useState(false);
     const [localCandidateId, setLocalCandidateId] = useState(candidateId);
 
+    useEffect(() => {
+        if (!faceMonitorEnabled) {
+            stopFaceLoop(); // 🔥 HARD STOP
+            return;
+        }
+        startFaceLoop();
+    }, [faceMonitorEnabled]);
     /* ---------------- DISPATCH LIVE INSIGHTS ---------------- */
     function dispatchInsights(data) {
         window.dispatchEvent(
@@ -2550,13 +2557,15 @@ export default function WebcamRecorder({
 
     function startFaceLoop() {
         if (faceLoopRef.current) return;
-        faceLoopRef.current = setInterval(sendFaceFrame, 1800);
+        faceLoopRef.current = setInterval(sendFaceFrame, 1200);
+        console.log("🎥 Face monitor START");
     }
 
     function stopFaceLoop() {
         if (faceLoopRef.current) {
             clearInterval(faceLoopRef.current);
             faceLoopRef.current = null;
+            console.log("🛑 Face monitor STOP");
         }
     }
 
