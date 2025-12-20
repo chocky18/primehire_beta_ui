@@ -1366,7 +1366,14 @@ export default function InterviewMode() {
 
     const candidateName = location.state?.candidateName || "Anonymous";
     const jdText = location.state?.jd_text || "";
-    const jdId = location.state?.jd_id || null;
+    // const jdId = location.state?.jd_id || null;
+    const searchParams = new URLSearchParams(window.location.search);
+
+    const jdId =
+        location.state?.jd_id ||
+        searchParams.get("jd_id") ||
+        null;
+
     const initialCandidateId = location.state?.candidateId || null;
 
     const [candidateId] = useState(initialCandidateId);
