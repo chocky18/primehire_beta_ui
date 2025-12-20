@@ -2025,6 +2025,7 @@ export default function InterviewMode() {
     const [interviewTime, setInterviewTime] = useState(0);
     const [aiInitStatus, setAiInitStatus] = useState("idle");
     const aiInitOnceRef = useRef(false);
+    const transcriptReadyRef = useRef(false);
 
     // idle | initializing | ready
 
@@ -2076,6 +2077,7 @@ export default function InterviewMode() {
     /* ---------------- FORCE START STAGE 3 ---------------- */
     useEffect(() => {
         const handler = () => {
+            sessionStorage.setItem("interview_started", "true"); // 🔑 ADD
             setStage(3);
             setAiInitStatus("idle");   // 🔑 reset properly
             aiInitOnceRef.current = false;
@@ -2131,10 +2133,13 @@ export default function InterviewMode() {
     //         }
     //     })();
     // }, [stage, candidateId, interviewToken]);
+
+
     useEffect(() => {
         if (stage !== 3) return;
         if (!candidateId || !interviewToken) return;
         if (aiInitStatus !== "idle") return;
+        if (!transcriptReadyRef.current) return; // 🔑 ADD THIS
 
         setAiInitStatus("initializing");
         aiBusyRef.current = true;
@@ -2157,19 +2162,16 @@ export default function InterviewMode() {
                 const d = await r.json();
 
                 if (typeof d?.next_question === "string" && d.next_question.trim()) {
-                    sessionStorage.setItem("interview_started", "true");
                     window.dispatchEvent(
                         new CustomEvent("transcriptAdd", {
                             detail: { role: "ai", text: d.next_question },
                         })
                     );
-
-                    setAiInitStatus("ready"); // 🔒 LOCK AFTER SUCCESS
+                    setAiInitStatus("ready");
                 } else {
-                    setAiInitStatus("idle"); // retry allowed
+                    setAiInitStatus("idle");
                 }
             } catch (e) {
-                console.error("AI init failed:", e);
                 setAiInitStatus("idle");
             } finally {
                 aiBusyRef.current = false;
@@ -2183,8 +2185,16 @@ export default function InterviewMode() {
             if (!e?.detail?.role || !e?.detail?.text) return;
             setTranscript((prev) => [...prev, e.detail]);
         };
+
         window.addEventListener("transcriptAdd", handler);
-        return () => window.removeEventListener("transcriptAdd", handler);
+
+        // 🔑 IMPORTANT
+        transcriptReadyRef.current = true;
+
+        return () => {
+            transcriptReadyRef.current = false;
+            window.removeEventListener("transcriptAdd", handler);
+        };
     }, []);
 
     /* ---------------- TIMER ---------------- */
