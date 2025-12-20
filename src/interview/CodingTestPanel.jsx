@@ -116,6 +116,7 @@
 //         </div>
 //     );
 // }
+// FILE: src/interview/CodingTestPanel.jsx
 import React, { useState, useEffect } from "react";
 import Editor from "@monaco-editor/react";
 import "./CodingTestPanel.css";
@@ -123,15 +124,13 @@ import "./CodingTestPanel.css";
 export default function CodingTestPanel({
     question = "Write a function to reverse a string.",
     language = "javascript",
-    onComplete
+    onComplete,
 }) {
     const [code, setCode] = useState("");
     const [output, setOutput] = useState("");
     const [py, setPy] = useState(null);
 
-    /* -------------------------------------------------------
-       LOAD PYODIDE (only for Python)
-    ------------------------------------------------------- */
+    /* ---------------- LOAD PYODIDE (PYTHON ONLY) ---------------- */
     useEffect(() => {
         if (language !== "python") return;
 
@@ -143,21 +142,19 @@ export default function CodingTestPanel({
         loadPy();
     }, [language]);
 
-    /* -------------------------------------------------------
-       RUN CODE
-    ------------------------------------------------------- */
+    /* ---------------- RUN CODE ---------------- */
     async function runCode() {
         setOutput("⏳ Running...");
 
         try {
             if (language === "javascript") {
-                const safeFn = new Function(code);
-                const result = safeFn();
+                const fn = new Function(code);
+                const result = fn();
                 setOutput(String(result));
             }
 
             if (language === "python") {
-                if (!py) return setOutput("⏳ Loading Python engine...");
+                if (!py) return setOutput("⏳ Loading Python...");
                 const result = await py.runPythonAsync(code);
                 setOutput(String(result));
             }
@@ -166,42 +163,30 @@ export default function CodingTestPanel({
         }
     }
 
-    /* -------------------------------------------------------
-       SUBMIT FINAL ANSWER → parent controls stage
-    ------------------------------------------------------- */
+    /* ---------------- SUBMIT ---------------- */
     function submitAnswer() {
-        // 1️⃣ Inform parent (existing)
-        if (onComplete) onComplete({ submitted: true });
+        if (!onComplete) return;
 
-        // 2️⃣ UI transcript (visual only)
-        window.dispatchEvent(
-            new CustomEvent("transcriptAdd", {
-                detail: {
-                    role: "system",
-                    text: "🧑‍💻 Candidate has submitted the coding test."
-                }
-            })
-        );
-
-        // 3️⃣ 🔑 CONTROL SIGNAL → START STAGE 3
-        window.dispatchEvent(new Event("startStage3"));
+        onComplete({
+            submitted: true,
+            systemMessage: "🧑‍💻 Candidate has submitted the coding test.",
+            code,
+            language,
+        });
     }
-
 
     return (
         <div className="coding-panel">
             <h3 className="coding-title">Coding Challenge</h3>
 
-            <div className="coding-question">
-                {question}
-            </div>
+            <div className="coding-question">{question}</div>
 
             <Editor
                 height="350px"
-                defaultLanguage={language}
                 theme="vs-dark"
-                onChange={(value) => setCode(value || "")}
-                defaultValue={`// Write your answer here`}
+                defaultLanguage={language}
+                defaultValue="// Write your answer here"
+                onChange={(v) => setCode(v || "")}
             />
 
             <div className="coding-buttons">
