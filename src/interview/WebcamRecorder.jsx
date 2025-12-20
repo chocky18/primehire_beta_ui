@@ -2675,6 +2675,17 @@ export default function WebcamRecorder({
 
     const [recording, setRecording] = useState(false);
 
+    function startFaceLoop() {
+        if (faceLoopRef.current) return;
+        faceLoopRef.current = setInterval(sendFaceFrame, 1800);
+    }
+
+    function stopFaceLoop() {
+        if (faceLoopRef.current) {
+            clearInterval(faceLoopRef.current);
+            faceLoopRef.current = null;
+        }
+    }
     /* ---------------- CAMERA PREVIEW ---------------- */
     useEffect(() => {
         let mounted = true;
