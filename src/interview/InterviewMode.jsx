@@ -1346,8 +1346,385 @@
 //         </div>
 //     );
 // }
+// import React, { useState, useEffect, useRef } from "react";
+// import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+// import { API_BASE } from "@/utils/constants";
+
+// import WebcamRecorder from "./WebcamRecorder";
+// import TranscriptPanel from "./TranscriptPanel";
+// import LiveInsightsPanel from "./LiveInsightsPanel";
+// import AIChartPanel from "./AIChartPanel";
+// import InterviewToolbar from "./InterviewToolbar";
+// import MCQ from "./MCQ";
+// import CodingTestPanel from "./CodingTestPanel";
+
+// import "./InterviewMode.css";
+
+// export default function InterviewMode() {
+//     const location = useLocation();
+//     const navigate = useNavigate();
+
+//     const candidateName = location.state?.candidateName || "Anonymous";
+//     const jdText = location.state?.jd_text || "";
+//     // const jdId = location.state?.jd_id || null;
+//     const searchParams = new URLSearchParams(window.location.search);
+
+//     const jdId =
+//         location.state?.jd_id ||
+//         searchParams.get("jd_id") ||
+//         null;
+
+//     const initialCandidateId = location.state?.candidateId || null;
+
+//     const [candidateId] = useState(initialCandidateId);
+//     const [stage, setStage] = useState(1);
+//     const [aiInterviewStarted, setAiInterviewStarted] = useState(false);
+
+//     const [mcq, setMcq] = useState([]);
+//     const [mcqLoaded, setMcqLoaded] = useState(false);
+//     const [mcqResult, setMcqResult] = useState(null);
+//     const [codingResult, setCodingResult] = useState(null);
+
+//     const [transcript, setTranscript] = useState([]);
+//     const [interviewTime, setInterviewTime] = useState(0);
+
+//     // const [searchParams] = useSearchParams();
+//     const interviewToken =
+//         location.state?.interviewToken ||
+//         new URLSearchParams(window.location.search).get("token") ||
+//         null;
+
+//     const aiInitOnceRef = useRef(false);
+
+//     /* ---------------- LOAD MCQs ---------------- */
+//     useEffect(() => {
+//         if (stage !== 1 || mcqLoaded || !candidateId) return;
+
+//         (async () => {
+//             const fd = new FormData();
+//             fd.append("job_description", jdText);
+//             fd.append("candidate_id", candidateId);
+//             if (jdId) fd.append("jd_id", jdId);
+
+//             const r = await fetch(`${API_BASE}/mcp/interview_bot_beta/generate-mcq`, {
+//                 method: "POST",
+//                 body: fd,
+//             });
+//             const d = await r.json();
+
+//             if (d?.ok && Array.isArray(d.mcq)) {
+//                 setMcq(d.mcq);
+//                 setMcqLoaded(true);
+//             }
+//         })();
+//     }, [stage, candidateId, mcqLoaded]);
+
+//     /* ======================================================
+//      FORCE START STAGE 3 (FROM CODING PANEL)
+//   ====================================================== */
+//     useEffect(() => {
+//         const handler = () => {
+//             console.log("🚀 Stage 3 start signal received");
+
+//             setStage((prev) => (prev === 3 ? prev : 3));
+
+//             // 🔁 Reset AI state cleanly
+//             aiInitOnceRef.current = false;
+//             setAiInterviewStarted(false);
+//         };
+
+//         window.addEventListener("startStage3", handler);
+//         return () => window.removeEventListener("startStage3", handler);
+//     }, []);
+
+//     // console.log("AI INIT CHECK:", {
+//     //     stage,
+//     //     candidateId,
+//     //     interviewToken,
+//     //     aiInitOnce: aiInitOnceRef.current,
+//     // });
+
+//     /* ---------------- INIT AI INTERVIEW ---------------- */
+//     // useEffect(() => {
+//     //     if (stage !== 3) return;
+//     //     if (!candidateId || !interviewToken) return;
+//     //     if (aiInitOnceRef.current) return;
+
+//     //     aiInitOnceRef.current = true;
+//     //     console.log("🤖 Initializing AI Interview");
+
+//     //     (async () => {
+//     //         const fd = new FormData();
+
+//     //         fd.append("init", "true");
+//     //         fd.append("candidate_name", candidateName);
+//     //         fd.append("candidate_id", candidateId);
+//     //         fd.append("job_description", jdText);
+//     //         fd.append("token", interviewToken);
+//     //         if (jdId) fd.append("jd_id", jdId);
+
+//     //         const r = await fetch(
+//     //             `${API_BASE}/mcp/interview_bot_beta/process-answer`,
+//     //             { method: "POST", body: fd }
+//     //         );
+//     //         const d = await r.json();
+
+//     //         if (typeof d?.next_question === "string" && d.next_question.trim()) {
+//     //             setAiInterviewStarted(true);
+
+//     //             window.dispatchEvent(
+//     //                 new CustomEvent("transcriptAdd", {
+//     //                     detail: { role: "ai", text: d.next_question },
+//     //                 })
+//     //             );
+//     //         } else {
+//     //             console.warn("AI init returned no question", d);
+//     //         }
+//     //     })();
+//     // }, [stage, candidateId, interviewToken]);
+//     // useEffect(() => {
+//     //     // Reset lock whenever we leave stage 3
+//     //     if (stage !== 3) {
+//     //         aiInitOnceRef.current = false;
+//     //         return;
+//     //     }
+
+//     //     if (!candidateId || !interviewToken) return;
+//     //     if (aiInitOnceRef.current) return;
+
+//     //     aiInitOnceRef.current = true;
+//     //     console.log("🤖 Initializing AI Interview");
+
+//     //     (async () => {
+//     //         try {
+//     //             const fd = new FormData();
+//     //             fd.append("init", "true");
+//     //             fd.append("candidate_name", candidateName);
+//     //             fd.append("candidate_id", candidateId);
+//     //             fd.append("job_description", jdText);
+//     //             fd.append("token", interviewToken);
+//     //             if (jdId) fd.append("jd_id", jdId);
+
+//     //             const r = await fetch(
+//     //                 `${API_BASE}/mcp/interview_bot_beta/process-answer`,
+//     //                 { method: "POST", body: fd }
+//     //             );
+
+//     //             if (!r.ok) {
+//     //                 throw new Error(`Init failed: ${r.status}`);
+//     //             }
+
+//     //             const d = await r.json();
+
+//     //             if (typeof d?.next_question === "string" && d.next_question.trim()) {
+//     //                 setAiInterviewStarted(true);
+
+//     //                 window.dispatchEvent(
+//     //                     new CustomEvent("transcriptAdd", {
+//     //                         detail: { role: "ai", text: d.next_question },
+//     //                     })
+//     //                 );
+//     //             } else {
+//     //                 console.warn("AI init returned no question", d);
+//     //             }
+//     //         } catch (err) {
+//     //             console.error("❌ AI init failed, retry enabled", err);
+
+//     //             // 🔑 CRITICAL FIX: allow retry
+//     //             aiInitOnceRef.current = false;
+//     //         }
+//     //     })();
+//     // }, [stage, candidateId, interviewToken, jdId]);
+//     useEffect(() => {
+//         if (stage !== 3) {
+//             aiInitOnceRef.current = false;
+//             return;
+//         }
+
+//         if (!candidateId || !interviewToken) return;
+//         if (aiInitOnceRef.current) return;
+
+//         aiInitOnceRef.current = true;
+
+//         const timer = setTimeout(() => {
+//             (async () => {
+//                 try {
+//                     console.log("🤖 Initializing AI Interview");
+
+//                     const fd = new FormData();
+//                     fd.append("init", "true");
+//                     fd.append("candidate_name", candidateName);
+//                     fd.append("candidate_id", candidateId);
+//                     fd.append("job_description", jdText);
+//                     fd.append("token", interviewToken);
+//                     if (jdId) fd.append("jd_id", jdId);
+
+//                     const r = await fetch(
+//                         `${API_BASE}/mcp/interview_bot_beta/process-answer`,
+//                         { method: "POST", body: fd }
+//                     );
+
+//                     if (!r.ok) throw new Error("Init failed");
+
+//                     const d = await r.json();
+
+//                     if (d?.next_question) {
+//                         setAiInterviewStarted(true);
+//                         window.dispatchEvent(
+//                             new CustomEvent("transcriptAdd", {
+//                                 detail: { role: "ai", text: d.next_question },
+//                             })
+//                         );
+//                     }
+//                 } catch (e) {
+//                     console.error("❌ AI init failed — retry enabled", e);
+//                     aiInitOnceRef.current = false;
+//                 }
+//             })();
+//         }, 400); // 🔑 key delay
+
+//         return () => clearTimeout(timer);
+//     }, [stage, candidateId, interviewToken, jdId]);
+
+
+//     /* ======================================================
+//      HARD RESET AI INIT WHEN ENTERING STAGE 3
+//   ====================================================== */
+//     // useEffect(() => {
+//     //     if (stage === 3) {
+//     //         console.log("🔁 Resetting AI init on stage=3");
+//     //         aiInitOnceRef.current = false;
+//     //         setAiInterviewStarted(false);
+//     //     }
+//     // }, [stage]);
+
+//     /* ---------------- TRANSCRIPT LISTENER (SAFE) ---------------- */
+//     useEffect(() => {
+//         const handler = (e) => {
+//             const msg = e.detail;
+//             if (!msg || typeof msg !== "object") return;
+//             if (!msg.role || typeof msg.text !== "string") return;
+
+//             setTranscript((prev) => [...prev, msg]);
+//         };
+
+//         window.addEventListener("transcriptAdd", handler);
+//         return () => window.removeEventListener("transcriptAdd", handler);
+//     }, []);
+
+//     /* ---------------- TIMER ---------------- */
+//     useEffect(() => {
+//         let timer = null;
+
+//         const start = () => {
+//             if (!timer)
+//                 timer = setInterval(() => setInterviewTime((t) => t + 1), 1000);
+//         };
+//         const stop = () => {
+//             clearInterval(timer);
+//             timer = null;
+//         };
+
+//         window.addEventListener("startInterviewTimer", start);
+//         window.addEventListener("stopInterviewTimer", stop);
+
+//         return () => {
+//             stop();
+//             window.removeEventListener("startInterviewTimer", start);
+//             window.removeEventListener("stopInterviewTimer", stop);
+//         };
+//     }, []);
+
+//     /* ---------------- STOP INTERVIEW ---------------- */
+//     useEffect(() => {
+//         const stopHandler = async () => {
+//             const fd = new FormData();
+//             fd.append("candidate_name", candidateName);
+//             fd.append("candidate_id", candidateId);
+//             fd.append("job_description", jdText);
+//             fd.append("mcq_result", JSON.stringify(mcqResult));
+//             fd.append("coding_result", JSON.stringify(codingResult));
+//             if (jdId) fd.append("jd_id", jdId);
+
+//             const r = await fetch(
+//                 `${API_BASE}/mcp/interview_bot_beta/evaluate-transcript`,
+//                 { method: "POST", body: fd }
+//             );
+//             const d = await r.json();
+
+//             navigate("/certificatedata", {
+//                 state: { ...d, mcq: mcqResult, coding: codingResult, transcript },
+//             });
+//         };
+
+//         window.addEventListener("stopInterview", stopHandler);
+//         return () => window.removeEventListener("stopInterview", stopHandler);
+//     }, [candidateId, mcqResult, codingResult, transcript]);
+
+//     /* ---------------- RIGHT PANEL ---------------- */
+//     const renderRightPanel = () => {
+//         if (stage === 1)
+//             return (
+//                 <MCQ
+//                     questions={mcq}
+//                     onComplete={(r) => {
+//                         setMcqResult(r);
+//                         setStage(2);
+//                     }}
+//                 />
+//             );
+
+//         if (stage === 2)
+//             return (
+//                 <CodingTestPanel
+//                     onComplete={(r) => {
+//                         setCodingResult(r);
+//                     }}
+//                 />
+//             );
+
+//         if (stage === 3)
+//             return (
+//                 <TranscriptPanel transcript={transcript} jdText={jdText} jdId={jdId} />
+//             );
+
+//         return null;
+//     };
+
+//     return (
+//         <div className="interview-root">
+
+//             <InterviewToolbar
+//                 candidateId={candidateId}
+//                 candidateName={candidateName}
+//                 jdText={jdText}
+//                 interviewTime={interviewTime}
+//                 interviewToken={interviewToken}
+//                 jdId={jdId}
+//             />
+
+//             <div className="interview-layout">
+//                 <div className="left-panel">
+//                     <WebcamRecorder
+//                         candidateName={candidateName}
+//                         candidateId={candidateId}
+//                     // stage={stage}
+//                     // aiInterviewStarted={aiInterviewStarted}
+//                     />
+
+//                     <div className="insight-score-row">
+//                         <LiveInsightsPanel />
+//                         <AIChartPanel />
+//                     </div>
+//                 </div>
+
+//                 <div className="right-panel">{renderRightPanel()}</div>
+//             </div>
+//         </div>
+//     );
+// }
 import React, { useState, useEffect, useRef } from "react";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { API_BASE } from "@/utils/constants";
 
 import WebcamRecorder from "./WebcamRecorder";
@@ -1364,39 +1741,44 @@ export default function InterviewMode() {
     const location = useLocation();
     const navigate = useNavigate();
 
+    /* ---------------- BASIC CONTEXT ---------------- */
     const candidateName = location.state?.candidateName || "Anonymous";
     const jdText = location.state?.jd_text || "";
-    // const jdId = location.state?.jd_id || null;
-    const searchParams = new URLSearchParams(window.location.search);
 
+    const searchParams = new URLSearchParams(window.location.search);
     const jdId =
         location.state?.jd_id ||
         searchParams.get("jd_id") ||
         null;
 
     const initialCandidateId = location.state?.candidateId || null;
-
     const [candidateId] = useState(initialCandidateId);
+
+    const interviewToken =
+        location.state?.interviewToken ||
+        searchParams.get("token") ||
+        null;
+
+    /* ---------------- STAGE STATE ---------------- */
     const [stage, setStage] = useState(1);
     const [aiInterviewStarted, setAiInterviewStarted] = useState(false);
 
+    /* ---------------- MCQ + CODING ---------------- */
     const [mcq, setMcq] = useState([]);
     const [mcqLoaded, setMcqLoaded] = useState(false);
     const [mcqResult, setMcqResult] = useState(null);
     const [codingResult, setCodingResult] = useState(null);
 
+    /* ---------------- TRANSCRIPT + TIMER ---------------- */
     const [transcript, setTranscript] = useState([]);
     const [interviewTime, setInterviewTime] = useState(0);
 
-    // const [searchParams] = useSearchParams();
-    const interviewToken =
-        location.state?.interviewToken ||
-        new URLSearchParams(window.location.search).get("token") ||
-        null;
-
+    /* ---------------- AI INIT GUARD ---------------- */
     const aiInitOnceRef = useRef(false);
 
-    /* ---------------- LOAD MCQs ---------------- */
+    /* ======================================================
+       LOAD MCQs (STAGE 1)
+    ====================================================== */
     useEffect(() => {
         if (stage !== 1 || mcqLoaded || !candidateId) return;
 
@@ -1406,10 +1788,10 @@ export default function InterviewMode() {
             fd.append("candidate_id", candidateId);
             if (jdId) fd.append("jd_id", jdId);
 
-            const r = await fetch(`${API_BASE}/mcp/interview_bot_beta/generate-mcq`, {
-                method: "POST",
-                body: fd,
-            });
+            const r = await fetch(
+                `${API_BASE}/mcp/interview_bot_beta/generate-mcq`,
+                { method: "POST", body: fd }
+            );
             const d = await r.json();
 
             if (d?.ok && Array.isArray(d.mcq)) {
@@ -1417,18 +1799,16 @@ export default function InterviewMode() {
                 setMcqLoaded(true);
             }
         })();
-    }, [stage, candidateId, mcqLoaded]);
+    }, [stage, candidateId, mcqLoaded, jdId, jdText]);
 
     /* ======================================================
-     FORCE START STAGE 3 (FROM CODING PANEL)
-  ====================================================== */
+       FORCE STAGE 3 (FROM CODING PANEL)
+    ====================================================== */
     useEffect(() => {
         const handler = () => {
             console.log("🚀 Stage 3 start signal received");
 
-            setStage((prev) => (prev === 3 ? prev : 3));
-
-            // 🔁 Reset AI state cleanly
+            setStage(3);
             aiInitOnceRef.current = false;
             setAiInterviewStarted(false);
         };
@@ -1437,53 +1817,10 @@ export default function InterviewMode() {
         return () => window.removeEventListener("startStage3", handler);
     }, []);
 
-    // console.log("AI INIT CHECK:", {
-    //     stage,
-    //     candidateId,
-    //     interviewToken,
-    //     aiInitOnce: aiInitOnceRef.current,
-    // });
-
-    /* ---------------- INIT AI INTERVIEW ---------------- */
-    // useEffect(() => {
-    //     if (stage !== 3) return;
-    //     if (!candidateId || !interviewToken) return;
-    //     if (aiInitOnceRef.current) return;
-
-    //     aiInitOnceRef.current = true;
-    //     console.log("🤖 Initializing AI Interview");
-
-    //     (async () => {
-    //         const fd = new FormData();
-
-    //         fd.append("init", "true");
-    //         fd.append("candidate_name", candidateName);
-    //         fd.append("candidate_id", candidateId);
-    //         fd.append("job_description", jdText);
-    //         fd.append("token", interviewToken);
-    //         if (jdId) fd.append("jd_id", jdId);
-
-    //         const r = await fetch(
-    //             `${API_BASE}/mcp/interview_bot_beta/process-answer`,
-    //             { method: "POST", body: fd }
-    //         );
-    //         const d = await r.json();
-
-    //         if (typeof d?.next_question === "string" && d.next_question.trim()) {
-    //             setAiInterviewStarted(true);
-
-    //             window.dispatchEvent(
-    //                 new CustomEvent("transcriptAdd", {
-    //                     detail: { role: "ai", text: d.next_question },
-    //                 })
-    //             );
-    //         } else {
-    //             console.warn("AI init returned no question", d);
-    //         }
-    //     })();
-    // }, [stage, candidateId, interviewToken]);
+    /* ======================================================
+       AI INTERVIEW INIT (STAGE 3) — SAFE + DELAYED
+    ====================================================== */
     useEffect(() => {
-        // Reset lock whenever we leave stage 3
         if (stage !== 3) {
             aiInitOnceRef.current = false;
             return;
@@ -1493,68 +1830,55 @@ export default function InterviewMode() {
         if (aiInitOnceRef.current) return;
 
         aiInitOnceRef.current = true;
-        console.log("🤖 Initializing AI Interview");
 
-        (async () => {
-            try {
-                const fd = new FormData();
-                fd.append("init", "true");
-                fd.append("candidate_name", candidateName);
-                fd.append("candidate_id", candidateId);
-                fd.append("job_description", jdText);
-                fd.append("token", interviewToken);
-                if (jdId) fd.append("jd_id", jdId);
+        const timer = setTimeout(() => {
+            (async () => {
+                try {
+                    console.log("🤖 Initializing AI Interview");
 
-                const r = await fetch(
-                    `${API_BASE}/mcp/interview_bot_beta/process-answer`,
-                    { method: "POST", body: fd }
-                );
+                    const fd = new FormData();
+                    fd.append("init", "true");
+                    fd.append("candidate_name", candidateName);
+                    fd.append("candidate_id", candidateId);
+                    fd.append("job_description", jdText);
+                    fd.append("token", interviewToken);
+                    if (jdId) fd.append("jd_id", jdId);
 
-                if (!r.ok) {
-                    throw new Error(`Init failed: ${r.status}`);
-                }
-
-                const d = await r.json();
-
-                if (typeof d?.next_question === "string" && d.next_question.trim()) {
-                    setAiInterviewStarted(true);
-
-                    window.dispatchEvent(
-                        new CustomEvent("transcriptAdd", {
-                            detail: { role: "ai", text: d.next_question },
-                        })
+                    const r = await fetch(
+                        `${API_BASE}/mcp/interview_bot_beta/process-answer`,
+                        { method: "POST", body: fd }
                     );
-                } else {
-                    console.warn("AI init returned no question", d);
+
+                    if (!r.ok) throw new Error("AI init failed");
+
+                    const d = await r.json();
+
+                    if (typeof d?.next_question === "string") {
+                        setAiInterviewStarted(true);
+
+                        window.dispatchEvent(
+                            new CustomEvent("transcriptAdd", {
+                                detail: { role: "ai", text: d.next_question },
+                            })
+                        );
+                    }
+                } catch (err) {
+                    console.error("❌ AI init failed — retry enabled", err);
+                    aiInitOnceRef.current = false;
                 }
-            } catch (err) {
-                console.error("❌ AI init failed, retry enabled", err);
+            })();
+        }, 400); // 🔑 stabilization delay
 
-                // 🔑 CRITICAL FIX: allow retry
-                aiInitOnceRef.current = false;
-            }
-        })();
-    }, [stage, candidateId, interviewToken, jdId]);
-
+        return () => clearTimeout(timer);
+    }, [stage, candidateId, interviewToken, jdId, jdText, candidateName]);
 
     /* ======================================================
-     HARD RESET AI INIT WHEN ENTERING STAGE 3
-  ====================================================== */
-    // useEffect(() => {
-    //     if (stage === 3) {
-    //         console.log("🔁 Resetting AI init on stage=3");
-    //         aiInitOnceRef.current = false;
-    //         setAiInterviewStarted(false);
-    //     }
-    // }, [stage]);
-
-    /* ---------------- TRANSCRIPT LISTENER (SAFE) ---------------- */
+       TRANSCRIPT LISTENER
+    ====================================================== */
     useEffect(() => {
         const handler = (e) => {
             const msg = e.detail;
-            if (!msg || typeof msg !== "object") return;
-            if (!msg.role || typeof msg.text !== "string") return;
-
+            if (!msg || !msg.role || !msg.text) return;
             setTranscript((prev) => [...prev, msg]);
         };
 
@@ -1562,14 +1886,17 @@ export default function InterviewMode() {
         return () => window.removeEventListener("transcriptAdd", handler);
     }, []);
 
-    /* ---------------- TIMER ---------------- */
+    /* ======================================================
+       INTERVIEW TIMER
+    ====================================================== */
     useEffect(() => {
         let timer = null;
 
         const start = () => {
             if (!timer)
-                timer = setInterval(() => setInterviewTime((t) => t + 1), 1000);
+                timer = setInterval(() => setInterviewTime(t => t + 1), 1000);
         };
+
         const stop = () => {
             clearInterval(timer);
             timer = null;
@@ -1585,7 +1912,9 @@ export default function InterviewMode() {
         };
     }, []);
 
-    /* ---------------- STOP INTERVIEW ---------------- */
+    /* ======================================================
+       STOP INTERVIEW → FINAL EVALUATION
+    ====================================================== */
     useEffect(() => {
         const stopHandler = async () => {
             const fd = new FormData();
@@ -1609,9 +1938,11 @@ export default function InterviewMode() {
 
         window.addEventListener("stopInterview", stopHandler);
         return () => window.removeEventListener("stopInterview", stopHandler);
-    }, [candidateId, mcqResult, codingResult, transcript]);
+    }, [candidateId, mcqResult, codingResult, transcript, jdId, jdText, candidateName, navigate]);
 
-    /* ---------------- RIGHT PANEL ---------------- */
+    /* ======================================================
+       RIGHT PANEL
+    ====================================================== */
     const renderRightPanel = () => {
         if (stage === 1)
             return (
@@ -1635,15 +1966,21 @@ export default function InterviewMode() {
 
         if (stage === 3)
             return (
-                <TranscriptPanel transcript={transcript} jdText={jdText} jdId={jdId} />
+                <TranscriptPanel
+                    transcript={transcript}
+                    jdText={jdText}
+                    jdId={jdId}
+                />
             );
 
         return null;
     };
 
+    /* ======================================================
+       RENDER
+    ====================================================== */
     return (
         <div className="interview-root">
-
             <InterviewToolbar
                 candidateId={candidateId}
                 candidateName={candidateName}
@@ -1658,8 +1995,7 @@ export default function InterviewMode() {
                     <WebcamRecorder
                         candidateName={candidateName}
                         candidateId={candidateId}
-                    // stage={stage}
-                    // aiInterviewStarted={aiInterviewStarted}
+                        aiInterviewStarted={aiInterviewStarted}
                     />
 
                     <div className="insight-score-row">
