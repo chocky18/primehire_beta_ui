@@ -2841,6 +2841,7 @@ export default function InterviewMode() {
     }, [stage, attemptId]);
 
     /* ================= AI INIT (ONCE) ================= */
+    /* ================= AI INIT (ONCE) ================= */
     useEffect(() => {
         if (stage !== 3 || aiInitDone || !attemptId || !interviewToken) return;
 
@@ -2864,14 +2865,25 @@ export default function InterviewMode() {
                 );
 
                 const data = await res.json();
+
                 if (data?.next_question) {
-                    setTranscript([{ role: "ai", text: data.next_question }]);
+                    window.dispatchEvent(
+                        new CustomEvent("transcriptAdd", {
+                            detail: {
+                                role: "ai",
+                                text: data.next_question,
+                            },
+                        })
+                    );
                 }
+            } catch (e) {
+                console.error("AI init failed:", e);
             } finally {
                 aiBusyRef.current = false;
             }
         })();
     }, [stage]);
+
 
     /* ================= TIMER ================= */
     useEffect(() => {
