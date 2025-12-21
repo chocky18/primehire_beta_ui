@@ -2897,6 +2897,7 @@ export default function InterviewMode() {
             const fd = new FormData();
             fd.append("attempt_id", attemptId);
             fd.append("candidate_name", candidateName);
+            fd.append("candidate_id", candidateId);
             fd.append("job_description", jdText);
             fd.append("mcq_result", JSON.stringify(mcqResult));
             fd.append("coding_result", JSON.stringify(codingResult));
