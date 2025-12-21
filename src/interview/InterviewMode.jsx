@@ -2604,6 +2604,38 @@ export default function InterviewMode() {
         })();
     }, [stage]);
 
+    // /* ================= AI INIT (ONCE) ================= */
+    // useEffect(() => {
+    //     if (stage !== 3 || aiInitDone || !candidateId || !interviewToken) return;
+
+    //     setAiInitDone(true);
+    //     aiBusyRef.current = true;
+
+    //     (async () => {
+    //         try {
+    //             const fd = new FormData();
+    //             fd.append("init", "true");
+    //             fd.append("candidate_name", candidateName);
+    //             fd.append("candidate_id", candidateId);
+    //             fd.append("job_description", jdText);
+    //             fd.append("token", interviewToken);
+    //             if (jdId) fd.append("jd_id", jdId);
+
+    //             const r = await fetch(
+    //                 `${API_BASE}/mcp/interview_bot_beta/process-answer`,
+    //                 { method: "POST", body: fd }
+    //             );
+    //             const d = await r.json();
+
+    //             if (d?.next_question) {
+    //                 setTranscript([{ role: "ai", text: d.next_question }]);
+    //             }
+    //         } finally {
+    //             aiBusyRef.current = false;
+    //         }
+    //     })();
+    // }, [stage]);
+
     /* ================= AI INIT (ONCE) ================= */
     useEffect(() => {
         if (stage !== 3 || aiInitDone || !candidateId || !interviewToken) return;
@@ -2621,20 +2653,32 @@ export default function InterviewMode() {
                 fd.append("token", interviewToken);
                 if (jdId) fd.append("jd_id", jdId);
 
-                const r = await fetch(
+                const res = await fetch(
                     `${API_BASE}/mcp/interview_bot_beta/process-answer`,
                     { method: "POST", body: fd }
                 );
-                const d = await r.json();
 
-                if (d?.next_question) {
-                    setTranscript([{ role: "ai", text: d.next_question }]);
+                if (!res.ok) {
+                    console.error("AI init failed:", res.status);
+                    return;
                 }
+
+                const data = await res.json();
+
+                if (data?.next_question) {
+                    setTranscript(prev => [
+                        ...prev,
+                        { role: "ai", text: data.next_question }
+                    ]);
+                }
+            } catch (err) {
+                console.error("AI init error:", err);
             } finally {
                 aiBusyRef.current = false;
             }
         })();
     }, [stage]);
+
 
     /* ================= TIMER ================= */
     useEffect(() => {
