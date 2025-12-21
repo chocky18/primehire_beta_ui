@@ -281,6 +281,7 @@
 
 // export default React.memo(LiveInsightsPanel);
 // FILE: src/interview/LiveInsightsPanel.jsx
+// FILE: src/interview/LiveInsightsPanel.jsx
 import React, { useEffect, useState } from "react";
 import "./LiveInsightsPanel.css";
 
@@ -294,22 +295,32 @@ function LiveInsightsPanel() {
         const handler = (e) => {
             const payload = e.detail || {};
 
-            const nextAnomalies = Array.isArray(payload.anomalies)
+            const incomingAnomalies = Array.isArray(payload.anomalies)
                 ? payload.anomalies
                 : [];
 
-            const nextCounts = payload.counts
-                ? { ...payload.counts } // ✅ FORCE NEW OBJECT
-                : {};
+            const incomingCounts = payload.counts || {};
 
-            setLive({
-                anomalies: nextAnomalies,
-                counts: nextCounts
+            // ✅ CRITICAL FIX: MERGE COUNTS
+            setLive((prev) => {
+                const mergedCounts = { ...prev.counts };
+
+                Object.entries(incomingCounts).forEach(([key, value]) => {
+                    mergedCounts[key] = value;
+                });
+
+                return {
+                    anomalies: incomingAnomalies.length
+                        ? [...prev.anomalies, ...incomingAnomalies]
+                        : prev.anomalies,
+                    counts: mergedCounts,
+                };
             });
         };
 
         window.addEventListener("liveInsightsUpdate", handler);
-        return () => window.removeEventListener("liveInsightsUpdate", handler);
+        return () =>
+            window.removeEventListener("liveInsightsUpdate", handler);
     }, []);
 
     const C = live.counts || {};
@@ -345,3 +356,4 @@ function LiveInsightsPanel() {
 }
 
 export default React.memo(LiveInsightsPanel);
+

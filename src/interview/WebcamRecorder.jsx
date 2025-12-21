@@ -3466,14 +3466,14 @@ export default function WebcamRecorder({
     /* =====================================================
        TAB SWITCH → BACKEND EVENT (ONCE PER ATTEMPT)
     ===================================================== */
+    /* =====================================================
+   TAB SWITCH → BACKEND EVENT (EVERY TIME)
+===================================================== */
     useEffect(() => {
         if (!attemptId) return;
 
         const onVisibilityChange = async () => {
             if (!document.hidden) return;
-            if (tabReportedRef.current) return;
-
-            tabReportedRef.current = true;
 
             try {
                 const fd = new FormData();
@@ -3507,6 +3507,7 @@ export default function WebcamRecorder({
         return () =>
             document.removeEventListener("visibilitychange", onVisibilityChange);
     }, [attemptId, candidateId, candidateName]);
+
 
 
     /* =====================================================
