@@ -618,9 +618,9 @@ export default function ProfileTable({
             <button className="send-option">
               <Mail size={16} /> Email
             </button>
-            <button className="send-option">
+            {/* <button className="send-option">
               <MessageSquare size={16} /> WhatsApp
-            </button>
+            </button> */}
           </div>
         )}
 
@@ -867,17 +867,17 @@ function ProfileTableRow({
           </button>
 
           {/* ---------------- WHATSAPP ---------------- */}
-          <button
+          {/* <button
             className={`action-btn whatsapp ${!whatsappAvailable ? "disabled" : ""}`}
             disabled={waLoading || !whatsappAvailable}
             onClick={handleWhatsApp}
           >
             {waLoading ? <Loader2 className="spin" /> : <MessageSquare size={16} />}
             WhatsApp
-          </button>
+          </button> */}
 
           {/* ---------------- STATUS ---------------- */}
-          <button
+          {/* <button
             className="action-btn status"
             disabled={statusLoading}
             onClick={async () => {
@@ -898,14 +898,14 @@ function ProfileTableRow({
           >
             {statusLoading ? <Loader2 className="spin" /> : <BsGraphUpArrow size={16} />}
             Status
-          </button>
+          </button> */}
 
-          {statusInfo && (
+          {/* {statusInfo && (
             <div className="status-popup">
               <div>{statusInfo.progress || "Not Started"}</div>
               <div>Round: {statusInfo.interview_round || 1}</div>
             </div>
-          )}
+          )} */}
 
           {/* ---------------- SEND TO CLIENT ---------------- */}
           <button className="action-btn bot" onClick={() => setShowClient(!showClient)}>

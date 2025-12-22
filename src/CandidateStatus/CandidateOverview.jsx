@@ -375,8 +375,8 @@ export default function CandidateOverview() {
     const jd = data.jd || {};
 
     /* ---------------- RESOLVE EVALUATION ---------------- */
-    const evaluation =
-        attempt.anomalies?.find(a => a.evaluation)?.evaluation || {};
+    const evaluation = data.evaluation || {};
+
 
     const {
         technical = 0,

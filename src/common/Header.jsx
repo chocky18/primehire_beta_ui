@@ -23,9 +23,9 @@ const Header = ({ onRefresh }) => {
             Refresh
           </button>
 
-          <button className="ph-btn-primary">
+          {/* <button className="ph-btn-primary">
             Sign In
-          </button>
+          </button> */}
 
         </div>
 
