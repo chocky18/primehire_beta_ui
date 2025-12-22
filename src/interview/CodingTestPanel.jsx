@@ -116,7 +116,93 @@
 //         </div>
 //     );
 // }
-// FILE: src/interview/CodingTestPanel.jsx
+// // FILE: src/interview/CodingTestPanel.jsx
+// import React, { useState, useEffect } from "react";
+// import Editor from "@monaco-editor/react";
+// import "./CodingTestPanel.css";
+
+// export default function CodingTestPanel({
+//     question = "Write a function to reverse a string.",
+//     language = "javascript",
+//     onComplete,
+// }) {
+//     const [code, setCode] = useState("");
+//     const [output, setOutput] = useState("");
+//     const [py, setPy] = useState(null);
+
+//     /* ---------------- LOAD PYODIDE (PYTHON ONLY) ---------------- */
+//     useEffect(() => {
+//         if (language !== "python") return;
+
+//         async function loadPy() {
+//             const pyodide = await window.loadPyodide();
+//             setPy(pyodide);
+//         }
+
+//         loadPy();
+//     }, [language]);
+
+//     /* ---------------- RUN CODE ---------------- */
+//     async function runCode() {
+//         setOutput("⏳ Running...");
+
+//         try {
+//             if (language === "javascript") {
+//                 const fn = new Function(code);
+//                 const result = fn();
+//                 setOutput(String(result));
+//             }
+
+//             if (language === "python") {
+//                 if (!py) return setOutput("⏳ Loading Python...");
+//                 const result = await py.runPythonAsync(code);
+//                 setOutput(String(result));
+//             }
+//         } catch (err) {
+//             setOutput("❌ Error:\n" + err.message);
+//         }
+//     }
+
+//     /* ---------------- SUBMIT ---------------- */
+//     function submitAnswer() {
+//         if (!onComplete) return;
+
+//         onComplete({
+//             submitted: true,
+//             systemMessage: "🧑‍💻 Candidate has submitted the coding test.",
+//             code,
+//             language,
+//         });
+//     }
+
+//     return (
+//         <div className="coding-panel">
+//             <h3 className="coding-title">Coding Challenge</h3>
+
+//             <div className="coding-question">{question}</div>
+
+//             <Editor
+//                 height="350px"
+//                 theme="vs-dark"
+//                 defaultLanguage={language}
+//                 defaultValue="// Write your answer here"
+//                 onChange={(v) => setCode(v || "")}
+//             />
+
+//             <div className="coding-buttons">
+//                 <button className="run-btn" onClick={runCode}>
+//                     ▶ Run Code
+//                 </button>
+
+//                 <button className="submit-btn" onClick={submitAnswer}>
+//                     ✔ Submit Coding Test
+//                 </button>
+//             </div>
+
+//             <pre className="coding-output">{output}</pre>
+//         </div>
+//     );
+// }
 import React, { useState, useEffect } from "react";
 import Editor from "@monaco-editor/react";
 import "./CodingTestPanel.css";
@@ -130,7 +216,7 @@ export default function CodingTestPanel({
     const [output, setOutput] = useState("");
     const [py, setPy] = useState(null);
 
-    /* ---------------- LOAD PYODIDE (PYTHON ONLY) ---------------- */
+    /* ================= LOAD PYODIDE ================= */
     useEffect(() => {
         if (language !== "python") return;
 
@@ -142,13 +228,19 @@ export default function CodingTestPanel({
         loadPy();
     }, [language]);
 
-    /* ---------------- RUN CODE ---------------- */
+    /* ================= RUN CODE ================= */
     async function runCode() {
         setOutput("⏳ Running...");
 
         try {
             if (language === "javascript") {
-                const fn = new Function(code);
+                // safer execution
+                const fn = new Function(`
+          ${code}
+          return typeof solution === "function"
+            ? solution()
+            : undefined;
+        `);
                 const result = fn();
                 setOutput(String(result));
             }
@@ -163,15 +255,22 @@ export default function CodingTestPanel({
         }
     }
 
-    /* ---------------- SUBMIT ---------------- */
+    /* ================= SUBMIT ================= */
     function submitAnswer() {
         if (!onComplete) return;
 
+        // basic scoring heuristic (can improve later)
+        const score =
+            code && code.trim().length > 20
+                ? Math.min(100, 40 + code.length)
+                : 0;
+
         onComplete({
-            submitted: true,
-            systemMessage: "🧑‍💻 Candidate has submitted the coding test.",
-            code,
+            score,
+            solution: code, // ✅ CERTIFICATE EXPECTS THIS
             language,
+            output,
+            question,
         });
     }
 
@@ -184,8 +283,8 @@ export default function CodingTestPanel({
             <Editor
                 height="350px"
                 theme="vs-dark"
-                defaultLanguage={language}
-                defaultValue="// Write your answer here"
+                language={language}
+                value={code}
                 onChange={(v) => setCode(v || "")}
             />
 
@@ -194,7 +293,11 @@ export default function CodingTestPanel({
                     ▶ Run Code
                 </button>
 
-                <button className="submit-btn" onClick={submitAnswer}>
+                <button
+                    className="submit-btn"
+                    disabled={!code.trim()}
+                    onClick={submitAnswer}
+                >
                     ✔ Submit Coding Test
                 </button>
             </div>
