@@ -3478,8 +3478,8 @@ export default function WebcamRecorder({
             try {
                 const fd = new FormData();
                 fd.append("attempt_id", attemptId);
-                fd.append("candidate_id", candidateId);
-                fd.append("candidate_name", candidateName);
+                // fd.append("candidate_id", candidateId);
+                // fd.append("candidate_name", candidateName);
                 fd.append("event_type", "tab_switch");
                 fd.append("event_msg", "Tab switch detected");
 
@@ -3613,8 +3613,8 @@ export default function WebcamRecorder({
 
             const fd = new FormData();
             fd.append("attempt_id", attemptId);
-            fd.append("candidate_id", candidateId);
-            fd.append("candidate_name", candidateName);
+            // fd.append("candidate_id", candidateId);
+            // fd.append("candidate_name", candidateName);
             fd.append("frame", blob);
 
             const res = await fetch(`${API_BASE}/mcp/interview/face-monitor`, {
