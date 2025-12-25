@@ -59,9 +59,9 @@ const Header = ({ onRefresh }) => {
             <RefreshCcw className="ph-btn-icon" />
             Refresh
           </button>
-           <Button  className="me-2">
+           {/* <Button  className="me-2">
         <FaBarsStaggered />
-      </Button>
+      </Button> */}
 
           {/* <button className="ph-btn-primary">
             Sign In
