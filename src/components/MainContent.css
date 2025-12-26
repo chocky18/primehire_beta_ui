@@ -28,7 +28,7 @@
   justify-content: center;
   align-items: flex-start;
   text-align: center;
-  flex-direction: column;
+  /* flex-direction: column; */
 
   position: relative;
   overflow: visible !important;
@@ -118,7 +118,7 @@
 .mc-actions-grid {
   width: 100%;
   max-width: 1200px;
-  margin: 50px auto 65px;
+  margin: 0px auto 65px;
 
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));

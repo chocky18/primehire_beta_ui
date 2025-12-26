@@ -34,13 +34,14 @@
 .jd-button {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 8px 14px;
+    gap: 5px;
+    padding: 3px 10px !important;
     font-weight: 600;
     border-radius: 10px;
     cursor: pointer;
-    border: 2px solid transparent;
+    border: 1px solid transparent;
     transition: all 0.25s ease;
+    font-size: 16px !important;
 }
 
 .jd-button:hover {
@@ -99,25 +100,31 @@
 ========================= */
 .jd-table {
     width: 100%;
-    border-collapse: separate;
+    border-collapse: collapse !important;
     border-spacing: 0;
     border-radius: 12px;
     overflow: hidden;
     font-size: 14px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
+.jd-table thead{
+background: linear-gradient(90deg, #1e3a8a, #2563eb, #3b82f6);
+    /* background: linear-gradient(135deg, #0ea5e9, #0284c7); */
+}    
 
 .jd-table th {
-    background: linear-gradient(135deg, #0ea5e9, #0284c7);
+    /* background: linear-gradient(135deg, #0ea5e9, #0284c7); */
     color: #fff;
     padding: 12px 10px;
     font-weight: 700;
     text-transform: uppercase;
     font-size: 12px;
 }
-
+.jd-table tbody tr {
+    border-bottom: 1px solid #e5e7eb !important;
+}
 .jd-table td {
-    border-bottom: 1px solid #e5e7eb;
+    /* border-bottom: 1px solid #e5e7eb; */
     padding: 12px 10px;
 }
 
@@ -178,7 +185,7 @@
 
 /* ADD MORE BUTTON */
 .jd-add-questions {
-    margin-top: 8px;
+    margin-top: 0px;
     background: #ffffff;
     color: #4f46e5;
     border: 1px dashed #4f46e5;

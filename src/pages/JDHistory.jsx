@@ -6,6 +6,10 @@ import { Copy, Eye, RefreshCcw, PlusSquare, Edit, Send } from "lucide-react";
 import { API_BASE } from "@/utils/constants";
 import "./JDHistory.css";
 import ProfileTable from "@/chat/ProfileTable";
+import { IoEye } from "react-icons/io5";
+import { FaHandshake } from "react-icons/fa";
+import { MdAddComment } from "react-icons/md";
+
 
 const JDHistory = () => {
     const [history, setHistory] = useState([]);
@@ -336,22 +340,35 @@ const JDHistory = () => {
                                 <td>{new Date(row.created_at).toLocaleString()}</td>
 
                                 <td className="jd-actions">
+                                    <div className="hr-toolbar">
                                     <button className="jd-button jd-view" onClick={() => openJD(row.id)}>
-                                        <Eye size={14} /> View
+                                        {/* <Eye size={14} />  */}
+                                        <IoEye />   
+
                                     </button>
 
+                                    <span className="toolbar">View</span>
+                                    </div>
+ <div className="hr-toolbar">
                                     <button className="jd-button jd-matcher" onClick={() => openMatcher(row.id)}>
-                                        🤝 Matcher
+                                        <FaHandshake />
+ 
                                     </button>
-
+ <span className="toolbar">Matcher</span>
+                                    </div>
+                                     <div className="hr-toolbar">
                                     <button className="jd-button jd-add-questions" onClick={() => openAddQuestions(row)}>
-                                        <PlusSquare size={14} /> Add Questions
+                                        {/* <PlusSquare size={14} />  */}
+                                        <MdAddComment />
+
                                     </button>
 
                                     {/* <button className="jd-button jd-send-client" onClick={() => sendToClient(row)}>
                                         <Send size={18} style={{ marginRight: "6px" }} />
                                         Send to Client
                                     </button> */}
+                                     <span className="toolbar">Add Questions</span>
+                                    </div>
                                 </td>
                             </tr>
                         ))}

@@ -101,7 +101,7 @@
 ======================================================== */
 .ph-chatinput-fixed {
     position: fixed;
-    bottom: 25px;
+    bottom: 0px;
     left: var(--sidebar-width, 260px);
     width: calc(100% - var(--sidebar-width, 260px));
     display: flex;
@@ -109,7 +109,7 @@
     background: transparent;
 
     padding: 18px 0;
-    z-index: 300;
+    z-index: 9;
 }
 
 [data-state="collapsed"] .ph-chatinput-fixed {
