@@ -9,6 +9,7 @@ import ProfileTable from "@/chat/ProfileTable";
 import { IoEye } from "react-icons/io5";
 import { FaHandshake } from "react-icons/fa";
 import { MdAddComment } from "react-icons/md";
+import { MdWorkHistory } from "react-icons/md";
 
 
 const JDHistory = () => {
@@ -312,7 +313,7 @@ const JDHistory = () => {
     return (
         <div className="jd-history-container">
             <div className="jd-header">
-                <h1 className="jd-title">📄 Generated JD History</h1>
+                <h1 className="jd-title"><MdWorkHistory /> Generated JD History</h1>
                 <button className="jd-button jd-refresh" onClick={fetchHistory}>
                     <RefreshCcw size={16} /> Refresh
                 </button>

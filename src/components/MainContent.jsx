@@ -5,6 +5,7 @@ import ValidationPanel from "@/interview/ValidationPanel";
 import InstructionsPanel from "@/interview/InstructionsPanel";
 import InterviewMode from "@/interview/InterviewMode";
 import ChatInput from "@/chat/ChatInput";
+import { FaFilePen } from "react-icons/fa6";
 
 import "./MainContent.css";
 

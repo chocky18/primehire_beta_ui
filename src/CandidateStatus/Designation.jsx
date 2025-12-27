@@ -205,6 +205,8 @@ import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { API_BASE } from "@/utils/constants";
 import "./Designation.css";
+import { FaSuitcase } from "react-icons/fa6";
+
 
 const Designation = () => {
     const [jobs, setJobs] = useState([]);
@@ -261,7 +263,7 @@ const Designation = () => {
     return (
         <div className="designation-container jd-history-container">
             <h2 className="heading">
-                <span>📄</span> Job Designations
+                <span><FaSuitcase /></span> Job Designations
             </h2>
 
             {loading ? (

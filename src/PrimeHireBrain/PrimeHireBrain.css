@@ -189,12 +189,13 @@
 }
 
 .candidates-table th {
-  padding: 14px 12px;
-  font-size: 11px;
-  text-transform: uppercase;
-  font-weight: 700;
-  color: #ffffff;
-  white-space: nowrap;
+    padding: 7px 12px;
+    font-size: 13px;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #ffffff;
+    white-space: nowrap;
+    vertical-align: middle !important;
 }
 
 /* =================================================

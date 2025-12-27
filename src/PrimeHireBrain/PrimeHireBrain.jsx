@@ -684,6 +684,8 @@ import { Button } from "@/components/ui/button";
 import { API_BASE } from "@/utils/constants";
 import "./PrimeHireBrain.css";
 import { LuRefreshCw } from "react-icons/lu";
+import { FaUserAlt } from "react-icons/fa";
+import { AiFillDelete } from "react-icons/ai";
 
 
 const PrimeHireBrain = () => {
@@ -874,7 +876,7 @@ const PrimeHireBrain = () => {
       {resumes.length > 0 && (
         <>
           <div className="table-header">
-            📄 Total Candidates: <strong>{resumes.length}</strong>
+            <FaUserAlt />  Total Candidates: <strong>{resumes.length}</strong>
           </div>
 
           <div className="table-wrapper">
@@ -925,7 +927,8 @@ const PrimeHireBrain = () => {
                           deleteCandidates([r.candidate_id])
                         }
                       >
-                        🗑
+                        <AiFillDelete />
+
                       </button>
                     </td>
                   </tr>
