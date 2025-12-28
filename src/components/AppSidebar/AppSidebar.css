@@ -164,16 +164,16 @@ div[data-sidebar][class*="group peer"] {
 
 
 .ph-toggle {
-  position: absolute;
-  top: 16px;
-  right: -12px;
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 999px;
-  padding: 4px;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  z-index: 20;
+    position: absolute;
+    top: 16px;
+    right: 0;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 999px;
+    padding: 5px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    z-index: 20;
 }
 
 .ph-btn {
