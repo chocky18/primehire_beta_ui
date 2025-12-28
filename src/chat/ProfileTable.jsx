@@ -1201,14 +1201,14 @@ const ProfileTableRow = ({ item, jdId, jdText, responses, whatsappAvailable, onR
       <td>{item.phone}</td>
       <td>{item.email}</td>
       <td>{item.experience_years}Y</td>
-      <td>{(item.skills || []).join(", ")}</td>
+      <td><p className="txt_ht">{(item.skills || []).join(", ")}</p></td>
       <td className="actions-cell">
-        <div className="action-group">
+        <div className="action-group d-flex">
           <button className="action-btn mail" onClick={handleEmailSend} disabled={mailLoading}>
-            {mailLoading ? <Loader2 className="spin" /> : <Mail size={16} />} Mail
+            {mailLoading ? <Loader2 className="spin" /> : <Mail size={16} />}
           </button>
           <button className="action-btn bot" onClick={() => setShowClient(p => !p)}>
-            <Send size={16} /> To Client
+            <Send size={16} />
           </button>
           {showClient && (
             <div className="client-mail-box">

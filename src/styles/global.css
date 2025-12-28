@@ -840,3 +840,8 @@ tbody tr:nth-child(2n) {
     transition: all 0.25s ease;
     margin: 0px 5px;
 }
+
+.txt_ht{
+    height: 60px;
+    overflow-y: scroll !important;
+}

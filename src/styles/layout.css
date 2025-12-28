@@ -49,7 +49,7 @@
     overflow-x: hidden;
 
     transition: width .25s ease;
-    z-index: 9999;
+    z-index: 99;
 }
 
 [data-state="collapsed"] .ph-sidebar {
