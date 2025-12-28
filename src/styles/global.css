@@ -705,9 +705,10 @@ body .ph-chatinput-fixed {
     }
     .ci-task-btn {
         padding: 2.5px 12px !important;
+        margin: 0px 3px !important;
     }
     .ci-top-buttons {
-    gap: 3px;
+    gap: 3px 0px !important;
 }
 }
 
