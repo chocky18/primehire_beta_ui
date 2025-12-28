@@ -558,6 +558,9 @@ margin-left: 100px;
     .mc-title {
     font-size: 2rem !important;
     }
+    .ph-header{
+        padding: 5px 0 !important;
+    }
  .ph-sidebar {
     height: 100%;
     min-width: 220px !important;
@@ -601,6 +604,13 @@ body .ph-chatinput-fixed {
 }
 .ph-header {
     height: auto !important;
+}
+    .ci-chip-row {
+        gap: 2 !important;
+        padding-bottom: 0px;
+}
+.ci-center {
+    gap: 5px;
 }
 }
 @media only screen and (max-width: 640px) {
@@ -684,6 +694,12 @@ body .ph-chatinput-fixed {
 .mailmind-container {
         padding: 25px 10px !important;
     }
+    .ci-task-btn {
+        padding: 2px 8px !important;
+    }
+    .ci-top-buttons {
+    gap: 3px;
+}
 }
 
 span.sk-bg-clrs {
