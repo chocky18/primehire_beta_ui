@@ -89,6 +89,9 @@ import {
 
 import "./AppSidebar.css";
 import { FaUserCheck } from "react-icons/fa";
+import { FaBars } from "react-icons/fa";
+import { IoClose } from "react-icons/io5";
+
 
 const features = [
     { id: "MailMind", label: "MailMind", icon: <Brain size={18} /> },
@@ -101,10 +104,9 @@ export default function AppSidebar({ open, setOpen, selectedFeature, onFeatureSe
     // const [open, setOpen] = useState(true);
 
     return (
+        <>
         <div className={`ph-sidebar ${open ? "open" : "closed"}`}>
-            <div className="ph-toggle" onClick={() => setOpen(!open)}>
-                {open ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
-            </div>
+           
 
 
             <SidebarContent>
@@ -131,6 +133,11 @@ export default function AppSidebar({ open, setOpen, selectedFeature, onFeatureSe
                 </SidebarGroup>
             </SidebarContent>
         </div>
+
+         <div className="ph-toggle" onClick={() => setOpen(!open)}>
+                {open ? <FaBars size={18} /> : <IoClose  size={18} />}
+            </div>
+            </>
     );
 }
 

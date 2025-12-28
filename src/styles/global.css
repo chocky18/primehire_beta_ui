@@ -476,7 +476,7 @@ margin-left: 100px;
 }
 .toolbar {
     position: absolute;
-    left: 0px;
+    left: -23px;
     top: 33px;
     margin: 0;
     cursor: pointer;
@@ -486,10 +486,12 @@ margin-left: 100px;
     color: #fff;
     text-align: center;
     border-radius: 10px;
-    font-size: 14px;
-    padding: 0;
-    margin: auto;
-        transition-duration: 300ms;
+    font-size: 12px;
+    padding: 2px 5px;
+    margin: 0px auto;
+    transition-duration: 300ms;
+    width: 80px;
+    line-height: 18px;
 }
 
 .mc-action-card h3{
@@ -562,13 +564,21 @@ margin-left: 100px;
     .ph-header{
         padding: 5px 0 !important;
     }
- .ph-sidebar {
-    height: 100%;
-    min-width: 220px !important;
-    width: 220px !important;
+ /* .ph-sidebar {
     display: none !important;
-    }
-
+    } */
+.ph-toggle {
+    position: fixed;
+    top: 80px;
+    right: 0px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 999px;
+    padding: 4px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    z-index: 99;
+}
     .ph-main {
     flex: 1;
     margin-left: 0px !important;
@@ -682,7 +692,8 @@ body .ph-chatinput-fixed {
     width: 25px !important;
     height: 25px !important;
     top: 10px !important;
-    left: 3px !important;
+    left: -3px !important;
+    
 }
 
 }
@@ -721,10 +732,20 @@ body .ph-chatinput-fixed {
     .ci-top-buttons {
     gap: 3px 0px !important;
 }
+
+    .ci-textarea-wrapper {
+        padding-left: 9.5% !important;
+        padding-right: 9.5% !important;
+    }
 }
 @media only screen and (max-width: 400px) {
         .mc-action-card {
         padding: 15px 10px !important;
+    }
+        .ci-task-btn {
+        padding: 2.5px 10px !important;
+        margin: 0px 2px !important;
+        font-size: 13px !important;
     }
 }
 span.sk-bg-clrs {
@@ -784,4 +805,11 @@ tbody tr:nth-child(2n) {
 }
 .mc-accent{
         display: inline-block;
+}
+
+
+
+
+.ci-suggestions{
+    display: none !important;
 }
