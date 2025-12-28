@@ -337,9 +337,9 @@
 @media (max-width: 768px) {
 
   /* Hide desktop table */
-  .profiles-table {
+  /* .profiles-table {
     display: none !important;
-  }
+  } */
 
   /* Show mobile cards */
   .mobile-cards-container {

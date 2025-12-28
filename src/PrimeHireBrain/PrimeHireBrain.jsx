@@ -686,6 +686,7 @@ import "./PrimeHireBrain.css";
 import { LuRefreshCw } from "react-icons/lu";
 import { FaUserAlt } from "react-icons/fa";
 import { AiFillDelete } from "react-icons/ai";
+import { FaBrain } from "react-icons/fa";
 
 
 const PrimeHireBrain = () => {
@@ -814,7 +815,7 @@ const PrimeHireBrain = () => {
 
   return (
     <div className="jd-history-container">
-      <h2 className="brain-title">PrimeHire Brain</h2>
+      <h2 className="jd-title"> <FaBrain /> PrimeHire Brain</h2>
 
       {/* ACTION BAR */}
       <div className="brain-actions">
@@ -875,7 +876,7 @@ const PrimeHireBrain = () => {
 
       {resumes.length > 0 && (
         <>
-          <div className="table-header">
+          <div className="table-header d-flex justify-space-between">
             <FaUserAlt />  Total Candidates: <strong>{resumes.length}</strong>
           </div>
 

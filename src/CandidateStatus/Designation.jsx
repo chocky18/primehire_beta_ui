@@ -206,6 +206,7 @@ import { ChevronRight } from "lucide-react";
 import { API_BASE } from "@/utils/constants";
 import "./Designation.css";
 import { FaSuitcase } from "react-icons/fa6";
+import { FaUsers } from "react-icons/fa";
 
 
 const Designation = () => {
@@ -262,7 +263,7 @@ const Designation = () => {
     --------------------------------------------------------- */
     return (
         <div className="designation-container jd-history-container">
-            <h2 className="heading">
+            <h2 className="jd-title">
                 <span><FaSuitcase /></span> Job Designations
             </h2>
 
@@ -278,10 +279,10 @@ const Designation = () => {
                         className="designation-card"
                     >
                         <div className="card-content">
-                            <h3 className="jd-title">{item.designation}</h3>
+                            <h3 className="jd-titlee">{item.designation}</h3>
 
                             <p className="sub-info">
-                                👥 {item.candidateCount} Candidate
+                                <FaUsers /> {item.candidateCount} Candidate
                                 {item.candidateCount !== 1 ? "s" : ""}
                             </p>
 

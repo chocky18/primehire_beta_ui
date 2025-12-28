@@ -10,6 +10,8 @@ import { IoEye } from "react-icons/io5";
 import { FaHandshake } from "react-icons/fa";
 import { MdAddComment } from "react-icons/md";
 import { MdWorkHistory } from "react-icons/md";
+import { TbTargetArrow } from "react-icons/tb";
+
 
 
 const JDHistory = () => {
@@ -313,7 +315,7 @@ const JDHistory = () => {
     return (
         <div className="jd-history-container">
             <div className="jd-header">
-                <h1 className="jd-title"><MdWorkHistory /> Generated JD History</h1>
+                <h2 className="jd-title"><MdWorkHistory /> Generated JD History</h2>
                 <button className="jd-button jd-refresh" onClick={fetchHistory}>
                     <RefreshCcw size={16} /> Refresh
                 </button>
@@ -395,8 +397,8 @@ const JDHistory = () => {
                     <div className="jd-modal matcher-modal">
                         <button className="jd-modal-close" onClick={() => setMatcherJD(null)}>✖</button>
 
-                        <h2 className="jd-modal-title">🤝 Matches for: {matcherJD.designation}</h2>
-                        <p className="jd-modal-skills">Required Skills: <b>{matcherJD.skills}</b></p>
+                        <h2 className="jd-modal-title d-flex justify-space-between"><TbTargetArrow /> Matches for: {matcherJD.designation}</h2>
+                        <p className="jd-modal-skills">Required Skills: <b><span className="sk-bg-clrs">{matcherJD.skills}</span></b></p>
 
                         <div className="matcher-content">
                             {matcherJD.matches && matcherJD.matches.length > 0 ? (

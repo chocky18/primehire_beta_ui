@@ -106,9 +106,9 @@ export default function CandidateStatus() {
   }, [jd_id]);
 
   return (
-    <div className="candidate-container">
+    <div className="candidate-container  container">
 
-
+<div className="jd-history-container">
       <div className="top-logo">
         <Link to={"/"}><img src={logo} alt="Company Logo" /></Link>
       </div>
@@ -160,6 +160,7 @@ export default function CandidateStatus() {
           ))}
         </tbody>
       </table>
+    </div>
     </div>
   );
 }
