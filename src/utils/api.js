@@ -302,7 +302,7 @@ export const sendMailMessage = async (item, jdId, jdTextFromMatcher = null) => {
        BUILD CORRECT SCHEDULER LINK (NOT validation_panel)
     ========================================================== */
     const schedulerLink =
-      `https://primehire-beta-ui.vercel.app/scheduler?candidateId=` +
+      `https://agentic.primehire.ai/scheduler?candidateId=` +
       `${encodeURIComponent(candidateId)}&candidateName=` +
       `${encodeURIComponent(candidateName)}&jd_token=${jdToken}&jd_id=${finalJdId}`;
 
