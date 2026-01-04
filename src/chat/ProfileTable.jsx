@@ -1,4 +1,3 @@
-
 // src/components/ProfileTable.jsx
 import React, { useState, useEffect } from "react";
 import { Mail, MessageSquare, Send, Loader2 } from "lucide-react";
@@ -10,7 +9,7 @@ import "./ProfileTable.css";
 
 const ProfileTable = ({ data = [], index = 0, jdId = null, jdText = "" }) => {
   const [filterQuery, setFilterQuery] = useState("");
-  const [minScoreFilter, setMinScoreFilter] = useState(0);
+  const [minScoreFilter, setMinScoreFilter] = useState(50);
   const [sortConfig, setSortConfig] = useState({ key: "finalScore", direction: "desc" });
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [responses, setResponses] = useState({});
@@ -51,7 +50,8 @@ const ProfileTable = ({ data = [], index = 0, jdId = null, jdText = "" }) => {
     let filtered = matches.filter((m) => {
       if (m.finalScore < minScoreFilter) return false;
       if (selectedCategory === "best" && m.finalScore < 85) return false;
-      if (selectedCategory === "good" && (m.finalScore < 60 || m.finalScore >= 85)) return false;
+      if (selectedCategory === "good" && (m.finalScore < 75 || m.finalScore >= 85)) return false;
+      if (selectedCategory === "least" && (m.finalScore < 50 || m.finalScore >= 75)) return false;
 
       if (!filterQuery) return true;
 
@@ -73,10 +73,11 @@ const ProfileTable = ({ data = [], index = 0, jdId = null, jdText = "" }) => {
 
   const displayedMatches = sortAndFilterMatches(prepared);
 
-  const summary = { best: 0, good: 0 };
+  const summary = { best: 0, good: 0, least: 0 };
   prepared.forEach((p) => {
     if (p.finalScore >= 85) summary.best++;
-    else if (p.finalScore >= 60) summary.good++;
+    else if (p.finalScore >= 75) summary.good++;
+    else if (p.finalScore >= 50) summary.least++;
   });
 
   const deriveId = (it) => it.candidate_id || it.email || it.phone || it._pine_id || it.name || "";
@@ -87,12 +88,11 @@ const ProfileTable = ({ data = [], index = 0, jdId = null, jdText = "" }) => {
 
   return (
     <div className="profile-box">
-      {/* filters */}
       <div className="filters-row">
         <h2 className="title">🎯 Profile Matches</h2>
         <div className="filter-inputs">
           <input className="input-box" placeholder="Filter by name or skill..." value={filterQuery} onChange={(e) => setFilterQuery(e.target.value)} />
-          <input className="input-box small" type="number" min={0} max={100} placeholder="Min Score" value={minScoreFilter} onChange={(e) => setMinScoreFilter(Number(e.target.value))} />
+          <input className="input-box small" type="number" min={50} max={100} placeholder="Min Score" value={minScoreFilter} onChange={(e) => setMinScoreFilter(Number(e.target.value))} />
           <button className="sort-btn" onClick={() => setSortConfig(p => ({ ...p, direction: p.direction === "asc" ? "desc" : "asc" }))}>
             Sort {sortConfig.direction === "asc" ? "▲" : "▼"}
           </button>
@@ -107,8 +107,10 @@ const ProfileTable = ({ data = [], index = 0, jdId = null, jdText = "" }) => {
         <div className="review-badges">
           <span className={`badge best ${selectedCategory === "best" ? "active" : ""}`} onClick={() => setSelectedCategory("best")}>🏆 Best ({summary.best})</span>
           <span className={`badge good ${selectedCategory === "good" ? "active" : ""}`} onClick={() => setSelectedCategory("good")}>👍 Good ({summary.good})</span>
+          <span className={`badge least ${selectedCategory === "least" ? "active" : ""}`} onClick={() => setSelectedCategory("least")}>⚠ Least ({summary.least})</span>
         </div>
       </div>
+
       <div className="over_scrl_table">
         <table className="profiles-table">
           <thead>
@@ -155,7 +157,7 @@ const ProfileTableRow = ({ item, jdId, jdText, responses, whatsappAvailable, onR
   const [waLoading, setWaLoading] = useState(false);
 
   const score = item.finalScore;
-  const matchLevel = score >= 85 ? "Best match" : "Good match";
+  const matchLevel = score >= 85 ? "Best match" : score >= 75 ? "Good match" : "Least match";
   const barWidth = Math.min(Math.max(score, 5), 100) + "%";
   const candidateId = item.candidate_id || item.email || item.phone || item._pine_id || item.name || "";
 
@@ -171,8 +173,8 @@ const ProfileTableRow = ({ item, jdId, jdText, responses, whatsappAvailable, onR
       <td>
         <div className="name-cell">
           <span className="name">{item.name}</span>
-          <span className={`match-label ${score >= 85 ? "match-best" : "match-good"}`}>{matchLevel}</span>
-          <div className={`bar-fill ${score >= 85 ? "best" : "good"}`} style={{ width: barWidth }} />
+          <span className={`match-label ${score >= 85 ? "match-best" : score >= 75 ? "match-good" : "match-least"}`}>{matchLevel}</span>
+          <div className={`bar-fill ${score >= 85 ? "best" : score >= 75 ? "good" : "least"}`} style={{ width: barWidth }} />
         </div>
       </td>
       <td>{item.designation}</td>
