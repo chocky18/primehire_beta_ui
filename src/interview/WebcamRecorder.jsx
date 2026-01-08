@@ -182,6 +182,8 @@ export default function WebcamRecorder({
             const blob = await new Promise((r) =>
                 canvas.toBlob(r, "image/jpeg", 0.6)
             );
+            console.log("📤 Sending frame", blob.size);
+
             if (!blob) {
                 scheduleNext();
                 return;
@@ -192,6 +194,7 @@ export default function WebcamRecorder({
             // fd.append("candidate_id", candidateId);
             // fd.append("candidate_name", candidateName);
             fd.append("frame", blob);
+            console.log("📤 Frame FormData", fd.get("frame"));
 
             const res = await fetch(`${API_BASE}/mcp/interview/face-monitor`, {
                 method: "POST",
