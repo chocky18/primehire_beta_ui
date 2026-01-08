@@ -45,11 +45,21 @@ export default function InterviewMode() {
 
     useEffect(() => {
         const handler = (e) => {
+            console.log("📡 LiveInsights event:", e.detail);
             if (!e.detail?.counts) return;
-            setAnomalyCounts((prev) => ({
-                ...prev,
-                ...e.detail.counts,
-            }));
+            setAnomalyCounts((prev) => {
+                const next = { ...prev };
+                for (const [k, v] of Object.entries(e.detail.counts)) {
+                    next[k] = (next[k] || 0) + v;
+                }
+                console.log("📊 Updated anomalyCounts:", next);
+                return next;
+            });
+
+            // setAnomalyCounts((prev) => ({
+            //     ...prev,
+            //     ...e.detail.counts,
+            // }));
         };
 
         window.addEventListener("liveInsightsUpdate", handler);
