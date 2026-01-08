@@ -42,8 +42,7 @@ function LiveInsightsPanel() {
                 ? payload.anomalies
                 : [];
 
-            // const incomingCounts = payload.counts || {};
-            const incomingCounts = normalizeCounts(payload.counts || {});
+            const incomingCounts = payload.counts || {};
 
             // ===============================
             // 1️⃣ UPDATE UI STATE (SAFE MERGE)
